@@ -101,7 +101,6 @@ Phase 7 – Project Finalization & Deployment (Week 16)
 Conducted testing and debugging, polished UI/UX elements, integrated GitHub API for live project portfolios, and deployed the platform. Prepared documentation and final submission materials..
 
 ---
-===
 ## Tools Used
 ---
 - HTML5 & CSS3: For structural and visual architecture.
