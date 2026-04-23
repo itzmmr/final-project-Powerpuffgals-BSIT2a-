@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Features | NEXUSWrites</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;1,400;0,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles/styles.css">
+</head>
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-dark fixed-top shadow-sm">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="index.html">
+        <img src="../NEXUSWrites.jpg" alt="Logo" style="height: 50px; margin-right: 12px;"> 
+        <div class="d-none d-sm-block">
+          <span class="nexus-font text-white">NEXUS</span><span class="writes-font text-white">Writes</span>
+        </div>
+      </a>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="overview.html">Overview</a></li>
+          <li class="nav-item"><a class="nav-link active" href="features.html">Features</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <section class="hero-section" style="background-color: var(--nexus-gradient-start);">
+    <div class="container">
+      <div class="hero-card">
+        <h1 class="hero-title symphony-font">NEXUSWrites Features</h1>
+        <p class="tagline-font fs-4 text-muted">Engineered for Technical Excellence</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="container mt-5 mb-5">
+    <div class="row align-items-center mb-5">
+      <div class="col-md-6 order-md-2 mb-4">
+        <img src="https://images.unsplash.com/photo-1587620962725-abab7fe55159?auto=format&fit=crop&q=80" class="img-fluid rounded-4 shadow" alt="Media Management">
+      </div>
+      <div class="col-md-6 order-md-1">
+        <h2 class="section-title text-start">Tech-Centric CRUD & Cloud Media</h2>
+        <p class="overview-text">A primary dashboard for managing technical content. To ensure high performance, the system uses <strong>Cloudinary</strong> for image hosting. By storing only optimized URL strings in the <strong>MongoDB</strong> database, the platform displays high-resolution diagrams without slowing down the application or bloating server storage.</p>
+      </div>
+    </div>
+
+    <div class="row align-items-center mb-5">
+      <div class="col-md-6 mb-4">
+        <img src="https://images.unsplash.com/photo-1618401471353-b98aade8103a?auto=format&fit=crop&q=80" class="img-fluid rounded-4 shadow" alt="GitHub Integration">
+      </div>
+      <div class="col-md-6">
+        <h2 class="section-title text-start">Live GitHub Portfolio Integration</h2>
+        <p class="overview-text">To bridge the gap between documentation and real-world code, the platform utilizes a "Read-Only" integration via the <strong>GitHub REST API</strong>. By providing a GitHub username, the system dynamically fetches and displays a user’s public repositories directly on their profile, turning their blog into a verified technical resume.</p>
+      </div>
+    </div>
+
+    <div class="row align-items-center mb-5">
+      <div class="col-md-6 order-md-2 mb-4">
+        <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80" class="img-fluid rounded-4 shadow" alt="Security">
+      </div>
+      <div class="col-md-6 order-md-1">
+        <h2 class="section-title text-start">Age-Gated Secure Authentication</h2>
+        <p class="overview-text">A robust security layer featuring a mandatory <strong>Date of Birth (DOB) check</strong> during registration. User security is prioritized by protecting passwords with <strong>Bcrypt.js hashing</strong> and managing sessions via <strong>JSON Web Tokens (JWT)</strong>, ensuring community standards are met server-side.</p>
+      </div>
+    </div>
+
+    <div class="row align-items-center mb-5">
+      <div class="col-md-6 mb-4">
+        <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80" class="img-fluid rounded-4 shadow" alt="Discussions">
+      </div>
+      <div class="col-md-6">
+        <h2 class="section-title text-start">Hierarchical Discussion System</h2>
+        <p class="overview-text">To foster professional networking, the platform includes a <strong>"Nested" threaded comment system</strong>. This allows for organized technical debates and troubleshooting where replies are logically grouped under specific parent comments, making it easy for users to follow complex solution paths.</p>
+      </div>
+    </div>
+
+    <div class="row align-items-center mb-5">
+      <div class="col-md-6 order-md-2 mb-4">
+        <div class="p-5 bg-dark text-white rounded-4 shadow">
+          <h1 class="writes-font">CATEGORIES</h1>
+          <hr class="bg-info">
+          <p>#CyberSecurity #WebSystems #AI</p>
+        </div>
+      </div>
+      <div class="col-md-6 order-md-1">
+        <h2 class="section-title text-start">Dynamic Technical Categorization</h2>
+        <p class="overview-text">A specialized filtering system that requires users to tag posts under specific IT fields (e.g., <strong>CyberSecurity, Web Systems, AI</strong>). This allows for a structured "Explore" page where users can filter content by tech stack, ensuring the platform remains an organized documentation hub.</p>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer text-center">
+    <div class="container">
+      <p class="mb-0 opacity-75 small">&copy; 2026 NEXUSWrites | Polangui, Albay</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
