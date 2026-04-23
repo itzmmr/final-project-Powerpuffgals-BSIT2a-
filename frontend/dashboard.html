@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - NEXUSWrites</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/dashboard.css">
+</head>
+<body>
+    
+    <nav class="navbar navbar-expand-lg sticky-top" style="background-color: #1a535c;">
+    <div class="container-fluid px-lg-5">
+        <a class="navbar-brand d-flex align-items-center fw-bold" href="dashboard.html" style="text-decoration: none;">
+            <div class="logo-box me-2"></div>
+            <span class="nexus-brand" style="color: white;">NEXUS</span><span class="writes-brand" style="color: #4ecdc4;">Writes</span>
+        </a>
+        <div class="d-flex align-items-center gap-3">
+            <div class="dropdown">
+                <button class="btn text-white p-0 position-relative" data-bs-toggle="dropdown">
+                    <i class="fas fa-bell fs-4"></i>
+                    <span id="nav-notification-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" 
+                          style="display:none; font-size: 0.6rem;">
+                        0
+                    </span>
+                </button>
+                <div class="dropdown-menu dropdown-menu-end shadow p-3 rounded-4" style="width: 300px;">
+                    <h6 class="fw-bold" data-key="notifications">Notifications</h6>
+                    <hr>
+                    <div id="dropdown-notification-list">
+                        <p class="small text-muted text-center">No new notifications.</p>
+                    </div>
+                </div>
+            </div>
+           <div class="nav-item">
+    <a class="nav-link d-flex align-items-center text-white" href="profile.html">
+        <i class="fas fa-user-circle fs-3 me-2"></i>
+        <span id="navUsername" class="fw-semibold d-none d-md-inline">User</span>
+    </a>
+</div>
+        </div>
+    </div>
+</nav>
+
+  <div class="container-fluid px-lg-5 flex-grow-1">
+    <div class="row">
+        <div class="col-lg-3">
+            <aside class="sidebar-left">
+               <div class="search-wrapper mb-4 rounded-pill border p-2 d-flex align-items-center bg-white shadow-sm">
+    <i class="fas fa-search text-muted ms-2 me-2"></i>
+    <a href="homesearch.html" style="text-decoration: none; width: 100%; display: flex;">
+        <input type="text" class="form-control border-0 shadow-none p-0 bg-transparent" 
+               placeholder="Search tutorials..." readonly style="cursor: pointer;">
+    </a>
+</div>
+                <a href="dashboard.html" class="fb-icon-item active-link"><i class="fas fa-home"></i><span data-key="home">Home</span></a>
+                <a href="following.html" class="fb-icon-item"><i class="fas fa-user-check"></i><span data-key="following">Following</span></a>
+                
+                
+                <a href="github.html" class="fb-icon-item"><i class="fab fa-github"></i><span>GitHub</span></a>
+                <a href="settings.html" class="fb-icon-item"><i class="fas fa-sliders-h"></i><span data-key="settings">Settings</span></a>
+                
+               <div class="flex-grow-5"></div>
+                
+                <a href="javascript:void(0)" class="fb-icon-item mt-auto" onclick="logout()">
+        <i class="fas fa-sign-out-alt"></i>
+        <span data-key="logout">Logout</span>
+    </a>
+</aside>
+            </aside>
+        </div>
+
+            <div class="col-lg-7">
+                <main class="feed-area py-4">
+                    <div class="card fb-card p-4">
+                        <div class="d-flex align-items-center mb-4">
+                            <i class="fas fa-user-circle fa-4x text-muted me-3"></i>
+                            <div>
+                                <h4 class="mb-0 fw-bold" id="feedUsername">Welcome!</h4>
+                                <p class="welcome-text-small text-muted mb-0" data-key="sharePrompt">What tutorial would you like to share today?</p>
+                            </div>
+                        </div>
+                        <button class="fake-input" onclick="openPostModal()">
+                            <i class="fas fa-edit me-2 text-primary"></i> <span data-key="post">Post a tutorial...</span>
+                        </button>
+                    </div>
+                    <div id="postsContainer"></div>
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container text-center">
+            <div class="footer-brand mb-3">
+                <span class="nexus-brand">NEXUS</span><span class="writes-brand">Writes</span>
+            </div>
+            <p class="text-white-50 small" data-key="footerText">© 2024 NEXUSWrites. Your Tech. Your Story.</p>
+        </div>
+    </footer>
+
+    <div class="modal fade" id="postModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg" style="background-color: var(--nexus-card-white)">
+                <div class="modal-header border-0 text-white" style="background: var(--nexus-teal)">
+                    <h5 class="modal-title fw-bold" id="modalTitle"><span data-key="createNew">Create New Tutorial</span></h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form id="postForm">
+                        <input type="hidden" id="editPostId">
+                        
+                        <div class="mb-3">
+                            <label for="postTitle" class="form-label fw-bold" data-key="tutTitle">Tutorial Title</label>
+                            <input type="text" class="form-control p-2" id="postTitle" placeholder="Enter an engaging title..." required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="postCategorySelect" class="form-label fw-bold">Category</label>
+                            <div class="input-group">
+                                <select class="form-select" id="postCategorySelect" onchange="checkCustomCategory(this)">
+                                    <option value="General" selected>General Tech</option>
+                                    <option value="Web Development">Web Development</option>
+                                    <option value="Mobile Apps">Mobile Apps</option>
+                                    <option value="AI & ML">AI & Machine Learning</option>
+                                    <option value="Data Science">Data Science</option>
+                                    <option value="UI/UX Design">UI/UX Design</option>
+                                    <option value="Cybersecurity">Cybersecurity</option>
+                                    <option value="Cloud Computing">Cloud Computing</option>
+                                    <option value="Blockchain">Blockchain</option>
+                                    <option value="IoT">Internet of Things</option>
+                                    <option value="OTHER">-- Input my own category --</option>
+                                </select>
+                                <input type="text" class="form-control d-none" id="postCategoryCustom" placeholder="Enter your category...">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="postContent" class="form-label fw-bold" data-key="tutContent">Content</label>
+                            <textarea class="form-control p-2" id="postContent" rows="6" placeholder="Write your technical story here..." required></textarea>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="postTags" class="form-label fw-bold" data-key="tutTags">Tags</label>
+                                <input type="text" class="form-control" id="postTags" placeholder="e.g. JavaScript, AI, Design">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="postPhotoFile" class="form-label fw-bold">Add Image</label>
+                                <input type="file" class="form-control" id="postPhotoFile" accept="image/*">
+                                <div id="previewContainer" class="mt-2 d-none">
+                                    <img src="" id="filePreviewImg" style="width:100%; max-height:150px; object-fit:cover; border-radius:10px; border: 2px solid var(--nexus-cyan)">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-end mt-3">
+                            <button type="button" class="btn btn-nexus px-5 shadow-sm" onclick="handlePostSubmit()">
+                                <i class="fas fa-paper-plane me-2"></i><span id="submitBtnText" data-key="publish">Publish</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>
