@@ -1,0 +1,296 @@
+/* SETTINGS STYLES */
+
+:root {
+    --nexus-teal: #1a535c; 
+    --nexus-cyan: #4ecdc4;
+    --nexus-light-bg: #f4f7f6;
+    --nexus-card-white: #ffffff;
+    --text-dark: #2c3e50;
+    --text-muted: #64748b;
+    --border-soft: rgba(78, 205, 196, 0.2);
+    --header-footer-bg: #1a535c;
+    /* Increased height to stabilize layout and prevent jumping */
+    --nav-height: 95px; 
+}
+
+/* --- DARK MODE OVERRIDES --- */
+body.dark-mode {
+    --nexus-light-bg: #0f172a;
+    --nexus-card-white: #1e293b;
+    --text-dark: #f8fafc;
+    --text-muted: #94a3b8;
+    --border-soft: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode h2, body.dark-mode h4, body.dark-mode h6,
+body.dark-mode .fb-icon-item span, body.dark-mode .settings-item h6, 
+body.dark-mode .accordion-button, body.dark-mode .form-label,
+body.dark-mode .dropdown-item {
+    color: #ffffff !important;
+}
+
+body { 
+    background-color: var(--nexus-light-bg) !important; 
+    color: var(--text-dark); 
+    font-family: 'Inter', sans-serif; 
+    transition: background 0.3s, color 0.3s; 
+    min-height: 100vh; 
+    display: flex; 
+    flex-direction: column; 
+    overflow-x: hidden;
+}
+
+/* --- NAVBAR & BRANDING --- */
+.navbar, footer { 
+    background-color: var(--header-footer-bg) !important; 
+    border-bottom: 4px solid var(--nexus-cyan) !important;
+    z-index: 1050;
+}
+.navbar { padding: 0.8rem 0; }
+
+.nexus-brand {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    color: #ffffff;
+    font-size: 1.25rem;
+    letter-spacing: 1px;
+    line-height: 1;
+}
+
+.writes-brand {
+    font-family: 'Dancing Script', cursive;
+    color: #4ecdc4;
+    font-size: 1.4rem;
+    line-height: 1;
+    margin-left: 3px;
+}
+
+.logo-box {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-image: url('../images/NEXUSWritesLogo.png'); 
+    background-size: 115%; 
+    background-position: center;
+    background-repeat: no-repeat;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+/* --- SIDEBAR --- */
+.sidebar-left { padding: 1.5rem 1rem; height: calc(100vh - 80px); position: sticky; top: 80px; }
+.fb-icon-item { padding: 12px 20px !important; margin-bottom: 8px; font-weight: 600; border-radius: 12px; color: var(--text-dark) !important; display: flex; align-items: center; text-decoration: none; transition: 0.2s; }
+.fb-icon-item:hover, .fb-icon-item.active-link { background: rgba(78, 205, 196, 0.15) !important; border-right: 4px solid var(--nexus-cyan); }
+.fb-icon-item i { width: 30px; color: var(--nexus-teal); font-size: 1.2rem; }
+body.dark-mode .fb-icon-item i { color: var(--nexus-cyan) !important; }
+
+/* Search Wrapper */
+.search-wrapper { background: white; border-radius: 35px; border: 1px solid var(--border-soft); padding: 8px 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+body.dark-mode .search-wrapper { background: #1e293b; }
+
+/* --- CONTENT CARD --- */
+/* Layout for each individual card */
+.settings-card {
+  display: flex;
+  align-items: center;
+  background: #f8fafc;
+  padding: 16px 20px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  border: 1px solid #f1f5f9; /* Subtle border for definition */
+}
+
+.settings-card:hover {
+  background: #f8fafc;
+}
+
+/* Icon Container */
+.icon-box {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 16px;
+}
+
+.profile-bg { background-color: #6366f1; } /* Purple/Blue for Profile */
+
+/* Text Styling */
+.card-text {
+  flex-grow: 1;
+}
+
+.card-text h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.card-text p {
+  margin: 0;
+  font-size: 14px;
+  color: #64748b;
+}
+
+.arrow {
+  color: #475569; /* Refined to be darker and consistent */
+}
+
+.content-card { 
+    background: var(--nexus-card-white) !important; 
+    border-radius: 15px; 
+    padding: 50px 40px; 
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08); 
+    border-top: 5px solid var(--nexus-cyan) !important;
+    position: relative;
+    margin-bottom: 3rem;
+}
+
+.settings-item { 
+    padding: 20px; border-radius: 15px; transition: 0.3s; 
+    cursor: pointer; margin-bottom: 15px;
+    display: flex; align-items: center; 
+    background: rgba(0, 0, 0, 0.03);
+    border: 1px solid transparent;
+}
+.settings-item:hover { 
+    background: rgba(78, 205, 196, 0.11); 
+    border-color: var(--nexus-cyan); 
+    transform: translateY(-2px); 
+}
+
+.settings-icon { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; margin-right: 18px; color: white !important; }
+
+.btn-exit {
+    position: absolute; top: 25px; right: 30px;
+    background: rgba(0,0,0,0.05); border: none; border-radius: 50%;
+    width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
+    color: var(--text-muted); transition: 0.3s;
+}
+.btn-exit:hover { background: #ff5e5e; color: white; }
+
+.view-section { display: none; animation: fadeIn 0.4s ease-out; }
+.view-section.active { display: block; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.btn-nexus { background: var(--nexus-teal); color: white; border: none; border-radius: 30px; padding: 14px 35px; font-weight: 700; transition: 0.3s; }
+.btn-nexus:hover { background: #133d44; color: var(--nexus-cyan); }
+
+footer { background-color: var(--header-footer-bg) !important; border-top: 4px solid var(--nexus-cyan) !important; padding: 40px 0; margin-top: auto; }
+
+/* Keep the structure exactly as before, just updating the colors */
+/* Update ONLY this existing section in your CSS */
+
+#avatarWrapper {
+    width: 120px;       /* Keep your desired size */
+    height: 120px;
+    border-radius: 50%;   /* THIS MAKES IT A PERFECT CIRCLE */
+    
+    background: #f0f2f5; /* Light background for the placeholder */
+    border: 3px dashed #cbd5e0; /* Dashed border for the uploader */
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    /* Hide the broken image icon initially */
+#editAvatarPreview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: none; 
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+    overflow: hidden;    /* IMPROTANT: This clips the future image to the circle shape */
+    
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+#avatarWrapper:hover {
+    border-color: #1C5A60; /* The new teal color on hover */
+    background: #e2e8f0;
+}
+
+.modal-header {
+    background: #1C5A60; /* The exact teal from your image */
+    color: white;
+    border-bottom: none;
+}
+
+/* Update the profile icon background in your settings card */
+.profile-bg {
+    background-color: #1C5A60 !important;
+}
+
+/* The Save Changes button */
+.btn-nexus {
+    background-color: #1C5A60;
+    color: white;
+    border: none;
+    padding: 10px 30px;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.btn-nexus:hover {
+    background-color: #15464a; /* A slightly darker shade for hover */
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(28, 90, 96, 0.3);
+    color: white;
+}
+
+/* Input focus highlights */
+.form-control:focus, .form-select:focus {
+    border-color: #1C5A60;
+    box-shadow: 0 0 0 3px rgba(28, 90, 96, 0.15);
+}
+
+/* Avatar hover border */
+#avatarWrapper:hover {
+    border-color: #1C5A60;
+    background: #f0f4f5;
+}
+
+/* Checkbox accents (optional but looks nice) */
+input[type="checkbox"]:checked {
+    background-color: #1C5A60;
+    border-color: #1C5A60;
+}
+
+.btn-nexus-primary {
+    background-color: #1d4e56; /* Dark teal from your image */
+    color: white;
+    border: none;
+    border-radius: 50px; /* Makes it pill-shaped */
+    padding: 12px 35px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-nexus-primary:hover {
+    background-color: #153b41;
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.btn-nexus-primary i {
+    font-size: 1.1rem;
+}

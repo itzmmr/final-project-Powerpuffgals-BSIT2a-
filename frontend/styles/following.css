@@ -1,0 +1,113 @@
+
+        :root {
+            --nexus-teal: #1a535c; 
+            --nexus-cyan: #4ecdc4;
+            --nexus-light-bg: #f4f7f6;
+            --nexus-card-white: #ffffff;
+            --text-dark: #2c3e50;
+            --text-muted: #64748b;
+            --border-soft: rgba(78, 205, 196, 0.2);
+            --header-footer-bg: #1a535c;
+        }
+
+        /* --- VISIBILITY & DARK MODE OVERRIDES --- */
+        body.dark-mode {
+            --nexus-light-bg: #0f172a;
+            --nexus-card-white: #1e293b;
+            --text-dark: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-soft: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Global Text Visibility for Dark Mode */
+        body.dark-mode h2, body.dark-mode h4, body.dark-mode h5, body.dark-mode h6,
+        body.dark-mode .text-muted, body.dark-mode .fb-icon-item span,
+        body.dark-mode .dropdown-item {
+            color: #ffffff !important;
+        }
+
+        body { 
+            background-color: var(--nexus-light-bg) !important; 
+            color: var(--text-dark); 
+            font-family: 'Inter', sans-serif; 
+            transition: background 0.3s, color 0.3s; 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+        }
+
+        /* --- NAVBAR & BRANDING --- */
+        .navbar, footer { 
+            background-color: var(--header-footer-bg) !important; 
+            border-bottom: 4px solid var(--nexus-cyan) !important;
+            z-index: 1050;
+        }
+        .navbar { padding: 0.8rem 0; }
+        
+        .nexus-brand {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            color: #ffffff;
+            font-size: 1.25rem;
+            letter-spacing: 1px;
+            line-height: 1;
+        }
+
+        .writes-brand {
+            font-family: 'Dancing Script', cursive;
+            color: #4ecdc4;
+            font-size: 1.4rem;
+            line-height: 1;
+            margin-left: 3px;
+        }
+
+        .logo-box {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-image: url('../images/NEXUSWritesLogo.png'); 
+            background-size: 115%; 
+            background-position: center;
+            background-repeat: no-repeat;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* --- SIDEBAR --- */
+        .sidebar-left { padding: 1.5rem 1rem; height: calc(100vh - 80px); position: sticky; top: 80px; }
+        .fb-icon-item { padding: 12px 20px !important; margin-bottom: 8px; font-weight: 600; border-radius: 12px; color: var(--text-dark) !important; display: flex; align-items: center; text-decoration: none; transition: 0.2s; }
+        .fb-icon-item:hover, .fb-icon-item.active-link { background: rgba(78, 205, 196, 0.15) !important; border-right: 4px solid var(--nexus-cyan); }
+        .fb-icon-item i { width: 30px; color: var(--nexus-teal); font-size: 1.2rem; }
+        body.dark-mode .fb-icon-item i { color: var(--nexus-cyan) !important; }
+
+        /* Search Wrapper */
+        .search-wrapper { background: white; border-radius: 35px; border: 1px solid var(--border-soft); padding: 8px 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        body.dark-mode .search-wrapper { background: #1e293b; }
+
+        /* --- CONTENT CARD --- */
+        .content-card { 
+            background: var(--nexus-card-white) !important; 
+            border-radius: 15px; 
+            padding: 50px 40px; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08); 
+            border-top: 5px solid var(--nexus-cyan) !important;
+        }
+        .placeholder-icon { font-size: 5rem; margin-bottom: 25px; }
+        .btn-nexus { background: var(--nexus-teal); color: white; border-radius: 8px; font-weight: 700; border: none; padding: 10px 25px; transition: 0.3s; }
+        .btn-nexus:hover { background: #133d44; color: var(--nexus-cyan); }
+
+        /* Footer */
+        footer { border-top: 4px solid var(--nexus-cyan) !important; padding: 40px 0; margin-top: auto; }
+        
+        /* Dropdown Visibility */
+        .dropdown-menu { background-color: var(--nexus-card-white) !important; border: 1px solid var(--border-soft) !important; }
+        body.dark-mode .dropdown-menu { background-color: #1e293b !important; }
+    
+        .active-follow {
+    background-color: #1a535c !important;
+    color: white !important;
+    border-color: #4ecdc4 !important;
+}

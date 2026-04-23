@@ -1,4 +1,3 @@
-/* --- CUSTOM FONT FALLBACKS --- */
 @font-face { font-family: 'Symphony'; src: url('../fonts/Symphony.ttf'); }
 @font-face { font-family: 'Stoic'; src: url('../fonts/Stoic.otf'); }
 
@@ -9,6 +8,56 @@
   --nexus-gradient-end: #a9cce3;
   --white: #ffffff;
   --text-main: #2c3e50;
+  --text-muted: #6c757d;
+  --navbar-gradient: linear-gradient(135deg, var(--nexus-dark-teal), #2471a3);
+  --hero-gradient: linear-gradient(rgba(209, 242, 235, 0.6), rgba(169, 204, 227, 0.4));
+  --auth-overlay: linear-gradient(rgba(209, 242, 235, 0.8), rgba(169, 204, 227, 0.6));
+  --hero-card-bg: rgba(255, 255, 255, 0.92);
+  --hero-img-url: url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=1600');
+}
+
+/* --- FOOTER & BRANDING STYLES --- */
+:root {
+    --nexus-teal: #1a535c; 
+    --nexus-cyan: #4ecdc4;
+    --header-footer-bg: #1a535c;
+}
+
+footer { 
+    background-color: var(--header-footer-bg) !important; 
+    border-top: 4px solid var(--nexus-cyan) !important; 
+    padding: 50px 0; 
+    margin-top: auto; /* Pushes footer to bottom on short pages */
+}
+
+/* Footer Brand Typography */
+.nexus-brand {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    color: #ffffff;
+    font-size: 1.25rem;
+    letter-spacing: 1px;
+    line-height: 1;
+}
+
+.writes-brand {
+    font-family: 'Dancing Script', cursive;
+    color: var(--nexus-cyan);
+    font-size: 1.4rem;
+    line-height: 1;
+    margin-left: 3px;
+}
+
+/* --- DARK MODE OVERRIDES --- */
+body.dark-mode footer {
+    /* If you want a different dark mode footer color, change it here */
+    background-color: #0f172a !important; 
+    border-top: 4px solid var(--nexus-cyan) !important;
+}
+
+/* Ensure the small footer text stays visible in dark mode */
+body.dark-mode footer .text-white-50 {
+    color: rgba(255, 255, 255, 0.6) !important;
 }
 
 html { scrollbar-gutter: stable; }
@@ -22,7 +71,7 @@ body {
   font-family: 'Old Standard TT', serif;
 }
 
-/* TYPOGRAPHY - NEXUS IS BOLD, WRITES IS THIN */
+/* --- Typography Classes --- */
 .nexus-font { 
     font-family: 'Montserrat', sans-serif !important; 
     font-weight: 800 !important; 
@@ -41,9 +90,9 @@ body {
     font-style: italic; 
 }
 
-/* NAVBAR */
+/* --- Navbar --- */
 .navbar {
-  background: linear-gradient(135deg, var(--nexus-dark-teal), #2471a3);
+  background: var(--navbar-gradient);
   padding: 0.6rem 0;
   min-height: 75px;
   border-bottom: 2px solid var(--nexus-cyan);
@@ -56,103 +105,73 @@ body {
   filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.2));
 }
 
-.nav-text-only { 
-  font-family: 'Montserrat', sans-serif; 
-  font-weight: 800;
-  color: var(--nexus-cyan) !important;
-  font-size: 0.95rem;
-  padding: 0.5rem 1rem;
-  display: block;
-}
-
 .nav-link { 
   font-family: 'Montserrat', sans-serif; 
   font-weight: 300;
   color: rgba(255,255,255,0.9) !important;
   transition: color 0.3s ease;
 }
-.nav-link:hover { color: var(--nexus-cyan) !important; }
+.nav-link:hover, .nav-link.active { color: var(--nexus-cyan) !important; }
 
-/* HERO */
+/* --- Hero Section --- */
 .hero-section {
-  background: linear-gradient(rgba(209, 242, 235, 0.6), rgba(169, 204, 227, 0.4)), 
-              url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=1600');
+  background: var(--hero-gradient), var(--hero-img-url);
   background-size: cover;
   background-position: center;
-  padding: 7rem 0 5rem;
   text-align: center;
+  padding: 140px 0 80px 0;
 }
 
 .hero-card {
-  background: rgba(255, 255, 255, 0.92);
+  background: var(--hero-card-bg);
   backdrop-filter: blur(8px);
-  padding: 2.5rem;
+  padding: 3rem; 
   border-radius: 30px;
-  display: inline-block;
+  display: block; 
+  margin-left: auto; 
+  margin-right: auto; 
   width: 100%;
-  max-width: 850px;
+  max-width: 1000px; 
   box-shadow: 0 20px 40px rgba(0,0,0,0.1);
   border: 1px solid rgba(78, 205, 196, 0.2);
+  margin-top: 20px;
 }
 
 .hero-title { font-size: 3.5rem; margin-bottom: 0.5rem; }
 .hero-title .nexus-font { color: var(--nexus-dark-teal); }
 .hero-title .writes-font { color: #2471a3; }
 
-/* SECTIONS */
-section { padding: 3rem 0; }
+/* --- Sections --- */
+section { padding: 4rem 0; }
 
 .section-title {
-    font-family: 'Montserrat', sans-serif;
-    color: var(--nexus-dark-teal);
-    margin-bottom: 2rem;
+    font-family: 'Montserrat', sans-serif !important;
+    color: var(--nexus-dark-teal) !important;
+    margin-bottom: 2.5rem !important; 
     position: relative;
-    font-weight: 800;
+    font-weight: 800 !important;
     text-transform: uppercase;
     letter-spacing: 2px;
+    display: inline-block; 
+    padding-bottom: 12px; 
 }
 
-/* OVERVIEW SPECIFIC */
 #overview { 
     background-color: var(--nexus-gradient-start); 
-    padding: 3rem 0 !important; 
+    padding: 3rem 0; 
 }
 
-.section-title.text-start::after {
-    left: 0;
-    transform: none;
-}
 .section-title::after {
     content: '';
     width: 60px; height: 4px;
     background: var(--nexus-cyan);
     position: absolute;
-    bottom: -8px; left: 50%;
+    bottom: 0; 
+    left: 50%;
     transform: translateX(-50%);
 }
 
-.overview-text, .hero-description, .feature-card p, footer p { 
-    font-family: 'Old Standard TT', serif; 
-    font-size: 1.1rem; 
-    line-height: 1.7; 
-}
-
-/* FEATURES */
-.feature-card {
-  border: none;
-  border-radius: 15px;
-  transition: all 0.3s ease;
-  overflow: hidden;
-  background: var(--white);
-}
-.feature-card:hover { transform: translateY(-10px); box-shadow: 0 12px 25px rgba(0,0,0,0.1); }
-.feature-img {
-  height: 180px;
-  background-size: cover;
-  background-position: center;
-}
-
-/* BUTTONS - UNIFIED SIZE AND STYLE */
+/* --- Buttons --- */
 .btn-nexus {
   font-family: 'Montserrat', sans-serif !important;
   font-weight: 800;
@@ -162,7 +181,7 @@ section { padding: 3rem 0; }
   background: linear-gradient(90deg, var(--nexus-dark-teal), #2471a3);
   color: white !important;
   border: none;
-  padding: 12px 35px !important; /* Unified padding */
+  padding: 12px 35px;
   border-radius: 50px;
   transition: all 0.3s ease;
   text-decoration: none;
@@ -176,10 +195,727 @@ section { padding: 3rem 0; }
   box-shadow: 0 6px 20px rgba(0,0,0,0.15);
 }
 
-/* FOOTER */
+/* --- Login & Sign Up Shared Styles --- */
+.auth-body {
+    background: var(--auth-overlay), var(--hero-img-url);
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    min-height: 100vh;
+}
+
+.auth-card {
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(10px);
+    border-radius: 30px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+    border: 1px solid rgba(78, 205, 196, 0.3);
+    margin: auto;
+}
+
+.section-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--nexus-dark-teal);
+    font-weight: 800;
+    border-bottom: 2px solid var(--nexus-cyan);
+    padding-bottom: 5px;
+    margin-bottom: 20px;
+    display: inline-block;
+}
+
+.form-label-nexus {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: var(--nexus-dark-teal);
+    margin-bottom: 8px;
+}
+
+/* --- Login Specific --- */
+.login-card-container { 
+    max-width: 500px;
+}
+
+.nexus-emblem {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.input-group-nexus-text {
+    background-color: transparent;
+    border-right: none;
+    color: var(--nexus-cyan);
+}
+
+.form-control-nexus {
+    border-left: none;
+    font-family: 'Old Standard TT', serif;
+}
+
+.form-control-nexus:focus {
+    box-shadow: none;
+    border-color: #dee2e6;
+}
+
+/* --- Sign Up Specific --- */
+.signup-card-container {
+    max-width: 550px;
+    width: 100%;
+}
+
+.interest-list {
+    max-height: 200px;
+    overflow-y: auto;
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 15px;
+    border: 1px solid #eee;
+}
+
+.interest-list::-webkit-scrollbar { width: 5px; }
+.interest-list::-webkit-scrollbar-thumb { background: var(--nexus-cyan); border-radius: 10px; }
+
+#avatarWrapper { width: 100px; height: 100px; margin: 0 auto 10px; cursor: pointer; position: relative; }
+#avatarPreview { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid var(--nexus-cyan); display: none; }
+.avatar-placeholder { width: 100%; height: 100%; border-radius: 50%; background: #eee; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: #ccc; border: 2px dashed var(--nexus-cyan); }
+
+
+/* --- ADDITIONAL FIXES FOR IMAGES & LAYOUT --- */
+
+/* Fix for standard images in sections */
+.img-fluid {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border: 1px solid rgba(78, 205, 196, 0.3);
+}
+
+/* Feature Card Image Handling */
+.feature-card {
+    background: var(--white);
+    border: 1px solid rgba(78, 205, 196, 0.1) !important;
+    border-radius: 20px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 35px rgba(26, 83, 92, 0.15);
+}
+
+/* This ensures the background images show up if you use the div method */
+.feature-img {
+    height: 220px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-bottom: 3px solid var(--nexus-cyan);
+}
+/* --- Feature Card Typography Updates --- */
+
+.feature-card .card-body {
+    padding: 2.5rem; /* Keeps your requested spacing */
+}
+
+/* Bigger Feature Titles */
+.feature-card .card-body h5 {
+    color: var(--nexus-dark-teal);
+    margin-bottom: 15px;
+    font-size: 1.45rem !important; /* Made this significantly larger */
+    font-weight: 800 !important;
+}
+
+/* Bigger Feature Descriptions */
+.feature-card .card-body p {
+    font-size: 1.10rem !important; /* Increased from the default small size */
+    line-height: 1.6;
+    color: var(--text-main); /* Makes it slightly darker for better readability */
+}
+
+/* Standardizing the Card Image */
+.card-img-top {
+    height: 220px;
+    object-fit: cover;
+    border-bottom: 3px solid var(--nexus-cyan);
+}
+
+/* Layout alignment */
+#overview .row {
+    display: flex;
+    align-items: center;
+}
+
+/* Typography fix for the Features section title */
+#features .section-title {
+    display: block;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    width: fit-content;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    .hero-card {
+        padding: 1.5rem;
+    }
+    .navbar-brand span {
+        font-size: 1.2rem;
+    }
+}
+
+/* --- Overview Section Specific Fixes --- */
+
+#overview .overview-text {
+    font-family: 'Old Standard TT', serif !important;
+    font-size: 1.30rem !important; /* Makes it much bigger and readable */
+    line-height: 1.8 !important;   /* Adds breathing room between lines */
+    color: var(--text-main) !important;
+    margin-bottom: 2.5rem !important;
+    max-width: 800px;             /* Keeps the text from stretching too far */
+}
+
+/* Fixes the "OVERVIEW" title alignment to the left like in your screenshot */
+#overview .section-title {
+    font-size: 1.45rem !important;
+    text-align: left !important;
+    display: block !important;
+    padding-bottom: 15px !important;
+}
+
+/* Moves the cyan underline to the left to match the text */
+#overview .section-title::after {
+    left: 0 !important;
+    transform: none !important;
+}
+
+/* Makes the "READ MORE" button slightly larger to match the new text size */
+#overview .btn-nexus {
+    font-size: 1.0rem !important;
+    padding: 13px 39px !important;
+}
+
+
+/* Targets all paragraphs inside rows to ensure consistent sizing */
+.row p {
+    font-family: 'Old Standard TT', serif !important;
+    font-size: 1.20rem !important;
+    line-height: 1.8 !important;
+    color: var(--text-main) !important;
+    margin-bottom: 1.5rem !important;
+}
+
+/* Specific styling for the headings like "OUR PURPOSE" */
+.row h2.section-title, 
+.row h2 {
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 800 !important;
+    font-size: 1.7rem !important;
+    color: var(--nexus-dark-teal) !important;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 1.5rem !important;
+}
+
+/* Ensures the images in these sections have nice rounded corners and shadow */
+.row img {
+    border-radius: 25px !important;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1) !important;
+    transition: transform 0.3s ease;
+}
+
+.row img:hover {
+    transform: scale(1.02);
+}
+
+/* Adds a bit more vertical space between the zig-zag rows */
+.row.align-items-center {
+    padding: 1.0rem 0;
+}
+
+/* --- Clean Icon-Only Exit Arrow --- */
+.exit-arrow {
+    position: fixed;
+    left: 25px;
+    top: 25px;
+    z-index: 4000;
+    text-decoration: none !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    background: var(--nexus-dark-teal); /* Solid background so it's visible */
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transition: all 0.3s ease;
+}
+
+.exit-arrow i {
+    color: var(--white) !important; /* Makes the arrow icon white */
+    font-size: 1.2rem;
+    margin: 0;
+    padding: 0;
+}
+
+.exit-arrow:hover {
+    background: var(--nexus-cyan);
+    transform: scale(1.1);
+}
+
+/* Hide the arrow on the actual homepage so it doesn't look weird */
+body#home-page .exit-arrow {
+    display: none;
+}
+
+.logo-img {
+    height: 45px;
+    width: auto;
+    display: block;
+}
+
+/* Ensure the navbar brand doesn't squish the logo */
+.navbar-brand {
+    display: flex;
+    align-items: center;
+}
+
+/* Branding Typography */
+        .nexus-brand {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        color: #ffffff;
+        font-size: 1.25rem;
+        letter-spacing: 1px;
+        line-height: 1;
+}
+
+        .writes-brand {
+        font-family: 'Dancing Script', cursive;
+        color: #4ecdc4;
+        font-size: 1.4rem;
+        line-height: 1;
+        margin-left: 3px;
+}
+
+        /* The Fuller Circular Logo */
+        .logo-box {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        /* Use the PNG file name exactly as it is in your folder */
+        background-image: url('../images/NEXUSWritesLogo.png'); 
+        background-size: 115%; /* Makes it fuller by scaling the image slightly past the edges */
+        background-position: center;
+        background-repeat: no-repeat;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+}
+
+/* Styling the Date Input to look like a calendar button */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    filter: invert(30%) sepia(20%) saturate(500%) hue-rotate(130deg) brightness(95%) contrast(80%);
+    /* This makes the icon match your moss/teal theme */
+}
+
+#regDob {
+    font-family: 'Montserrat', sans-serif;
+    color: #444;
+    padding: 12px;
+}
+
+.input-group-text {
+    border-color: #dee2e6;
+    color: var(--nexus-dark-teal);
+}
+
+/* Custom rounded corners for the input group */
+.rounded-start-3 {
+    border-top-left-radius: 12px !important;
+    border-bottom-left-radius: 12px !important;
+}
+
+.rounded-end-3 {
+    border-top-right-radius: 12px !important;
+    border-bottom-right-radius: 12px !important;
+}
+
+ 
+    .features-hero-section {
+      padding-top: 100px !important;
+    }
+  
+/* --- Footer --- */
 .footer { 
   background-color: var(--nexus-dark-teal); 
   color: white; 
   padding: 3rem 0; 
   border-top: 4px solid var(--nexus-cyan);
 }
+
+/* DASHBOARD STYLES */
+
+
+        :root {
+            --nexus-teal: #1a535c; 
+            --nexus-cyan: #4ecdc4;
+            --nexus-light-bg: #f4f7f6;
+            --nexus-card-white: #ffffff;
+            --text-dark: #2c3e50;
+            --text-muted: #64748b;
+            --border-soft: rgba(78, 205, 196, 0.2);
+            --header-footer-bg: #1a535c;
+        }
+
+        /* --- VISIBILITY & DARK MODE OVERRIDES --- */
+        body.dark-mode {
+            --nexus-light-bg: #0f172a;
+            --nexus-card-white: #1e293b;
+            --text-dark: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-soft: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Dropdown & Notification Visibility Fixes */
+        .dropdown-menu {
+            background-color: var(--nexus-card-white) !important;
+            border: 1px solid var(--border-soft) !important;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .dropdown-item, .dropdown-menu h6, .dropdown-menu p {
+            color: #2c3e50 !important;
+        }
+
+        body.dark-mode .dropdown-menu {
+            background-color: #1e293b !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        }
+
+        body.dark-mode .dropdown-item, 
+        body.dark-mode .dropdown-menu h6, 
+        body.dark-mode .dropdown-menu p,
+        body.dark-mode .dropdown-menu span {
+            color: #ffffff !important;
+        }
+
+        body.dark-mode .dropdown-item:hover {
+            background-color: rgba(78, 205, 196, 0.2) !important;
+        }
+
+        /* Global Text Visibility */
+        body.dark-mode #feedUsername, 
+        body.dark-mode .post-body-text, 
+        body.dark-mode .stat-text,
+        body.dark-mode .comment-box,
+        body.dark-mode .modal-title,
+        body.dark-mode label,
+        body.dark-mode .action-btn,
+        body.dark-mode .welcome-text-small,
+        body.dark-mode .form-control,
+        body.dark-mode .form-select,
+        body.dark-mode h4, body.dark-mode h5, body.dark-mode h6,
+        body.dark-mode .fb-icon-item span,
+        body.dark-mode .small {
+            color: #ffffff !important;
+        }
+
+        /* Fix visibility of modal text in dark mode */
+        body.dark-mode .modal-content .form-control,
+        body.dark-mode .modal-content .form-select {
+            color: #ffffff !important;
+            background-color: #111827 !important; /* Darker bg inside inputs */
+            border-color: rgba(255,255,255,0.1) !important;
+        }
+        body.dark-mode .modal-content .form-control::placeholder {
+            color: #9ca3af !important;
+        }
+        /* Ensure specific modal elements have correct color */
+        body.dark-mode .modal-content h5.modal-title,
+        body.dark-mode .modal-content label {
+            color: #ffffff !important;
+        }
+
+        /* Specific visibility for "Share thoughts..." comment input */
+        .comment-input-field {
+            color: var(--text-dark) !important;
+            background-color: var(--nexus-card-white) !important;
+        }
+        .comment-input-field::placeholder {
+            color: var(--text-muted) !important;
+            opacity: 0.8;
+        }
+        body.dark-mode .comment-input-field {
+            color: #ffffff !important;
+            background-color: #0f172a !important;
+            border: 1px solid var(--border-soft) !important;
+        }
+        body.dark-mode .comment-input-field::placeholder {
+            color: #cbd5e1 !important;
+        }
+
+        body.dark-mode i:not(.fa-heart.text-danger) {
+            color: var(--nexus-cyan) !important;
+        }
+
+        .post-title-display { color: var(--nexus-teal); font-weight: 800; }
+        body.dark-mode .post-title-display { color: var(--nexus-cyan) !important; }
+/* --- NEXUSWRITES THEME INTERCHANGE: MASTER CODE --- */
+
+/* LIGHT MODE: Deep Blue Cards on Light Page BG */
+.comment-thread-container {
+    background-color: #f8fafc; 
+    padding: 20px;
+    border-radius: 12px;
+}
+
+.comment-box {
+    background-color: #1e293b !important; /* Deep Blue Box */
+    color: #ffffff !important;
+    border-left: 5px solid #2dd4bf !important; /* Teal accent */
+}
+
+.comment-author-name {
+    color: #22d3ee !important; /* Bright Cyan text */
+}
+
+.comment-text-body {
+    color: #ffffff !important;
+}
+
+/* Action buttons below the blue box (on light background) */
+.action-btn {
+    color: #1e293b !important; /* Visible Dark Blue */
+    font-weight: 700 !important;
+    text-decoration: none !important;
+    display: inline-flex;
+    align-items: center;
+}
+
+/* --- DARK MODE BUTTON VISIBILITY FIX --- */
+
+/* Force the Like and Reply buttons to be visible Cyan/Teal by default */
+body.dark-mode .action-btn {
+    color: #22d3ee !important; /* Bright Cyan - matches your Ivy Angel name color */
+    opacity: 1 !important;     /* Removes any transparency */
+    font-weight: 700 !important;
+}
+
+/* Force the icons (thumbs up/reply) to match the text color */
+body.dark-mode .action-btn i {
+    color: #22d3ee !important;
+}
+
+/* Keep Edit/Delete in their specific colors but ensure they are bright */
+body.dark-mode .action-btn.text-success { 
+    color: #4ade80 !important; /* Bright Green */
+}
+
+body.dark-mode .action-btn.text-danger { 
+    color: #f87171 !important; /* Bright Red */
+}
+
+/* Hover effect so they turn White when you point at them */
+body.dark-mode .action-btn:hover,
+body.dark-mode .action-btn:hover i {
+    color: #ffffff !important;
+    text-decoration: underline;
+}
+/* THE INPUT BOX: Always White (Light & Dark) */
+.comment-input-field, 
+#commentInput,
+.input-group .form-control {
+    background-color: #ffffff !important;
+    color: #0f172a !important; 
+    border: 2px solid #2dd4bf !important;
+}
+
+.comment-input-field::placeholder,
+#commentInput::placeholder {
+    color: #64748b !important;
+    opacity: 1 !important;
+}
+
+/* Specific Dark Mode Input Override to keep it white */
+body.dark-mode .comment-input-field,
+body.dark-mode #commentInput,
+body.dark-mode .input-group .form-control {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+    border: 2px solid #22d3ee !important;
+}
+
+body.dark-mode .comment-input-field:focus {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+}
+
+/* Safety colors for Edit/Delete */
+.action-btn.text-success { color: #22c55e !important; }
+.action-btn.text-danger { color: #ef4444 !important; }
+
+/* Make 'Following' turn red or show 'Unfollow' on hover */
+.follow-link:hover {
+    filter: brightness(1.2);
+    text-decoration: underline;
+}
+
+body.dark-mode .follow-link:hover {
+    color: #f87171 !important; /* Turns soft red on hover in dark mode */
+}
+
+        /* --- GENERAL LAYOUT --- */
+        body { 
+            background-color: var(--nexus-light-bg) !important; 
+            color: var(--text-dark); 
+            font-family: 'Inter', sans-serif; 
+            transition: background 0.3s, color 0.3s; 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+        }
+
+        .navbar, footer { 
+            background-color: var(--header-footer-bg) !important; 
+            border-bottom: 4px solid var(--nexus-cyan) !important;
+            z-index: 1050;
+        }
+        .navbar { padding: 0.8rem 0; }
+        footer { border-top: 4px solid var(--nexus-cyan) !important; padding: 50px 0; margin-top: auto; }
+
+        .nexus-brand { font-family: 'Montserrat', sans-serif; font-weight: 800; color: #ffffff; font-size: 1.5rem; letter-spacing: 1px; }
+        .writes-brand { font-family: 'Dancing Script', cursive; color: var(--nexus-cyan); font-size: 1.6rem; }
+        .logo-box { background: white; border-radius: 50%; padding: 5px; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; }
+
+        /* Branding Typography */
+        .nexus-brand {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        color: #ffffff;
+        font-size: 1.25rem;
+        letter-spacing: 1px;
+        line-height: 1;
+}
+
+        .writes-brand {
+        font-family: 'Dancing Script', cursive;
+        color: #4ecdc4;
+        font-size: 1.4rem;
+        line-height: 1;
+        margin-left: 3px;
+}
+
+        /* The Fuller Circular Logo */
+        .logo-box {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        /* Use the PNG file name exactly as it is in your folder */
+        background-image: url('../images/NEXUSWritesLogo.png'); 
+        background-size: 115%; /* Makes it fuller by scaling the image slightly past the edges */
+        background-position: center;
+        background-repeat: no-repeat;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+
+        .comment-actions {
+        position: relative;
+        z-index: 50 !important; /* Force the buttons to stay on top */
+        pointer-events: auto !important; /* Ensure they are clickable */
+}
+
+    .nested-replies {
+    margin-top: 10px;
+    clear: both; /* Ensure it doesn't float over the actions */
+}
+}
+        /* --- SIDEBAR --- */
+        .sidebar-left { padding: 1.5rem 1rem; height: calc(100vh - 80px); position: sticky; top: 80px; }
+        .fb-icon-item { padding: 12px 20px !important; margin-bottom: 8px; font-weight: 600; border-radius: 12px; color: var(--text-dark) !important; display: flex; align-items: center; text-decoration: none; transition: 0.2s; }
+        .fb-icon-item:hover, .fb-icon-item.active-link { background: rgba(78, 205, 196, 0.15) !important; border-right: 4px solid var(--nexus-cyan); }
+        .fb-icon-item i { width: 30px; color: var(--nexus-teal); font-size: 1.2rem; }
+
+        /* --- FEED --- */
+        .feed-area { max-width: 850px; margin: 0 auto; }
+        .fb-card { border: none; border-radius: 15px; background: var(--nexus-card-white) !important; box-shadow: 0 4px 15px rgba(0,0,0,0.08); margin-bottom: 25px; border-top: 4px solid var(--nexus-cyan) !important; position: relative; }
+        .post-img { width: 100%; border-radius: 12px; margin: 15px 0; object-fit: cover; max-height: 550px; border: 1px solid var(--border-soft); }
+        .interaction-row { border-top: 1px solid var(--border-soft); border-bottom: 1px solid var(--border-soft); padding: 12px 0; margin: 15px 0; display: flex; gap: 30px; }
+        .interaction-btn { cursor: pointer; display: flex; align-items: center; gap: 8px; font-weight: 700; transition: 0.2s; }
+        
+        .category-badge { background: var(--nexus-cyan); color: var(--nexus-teal); font-size: 0.75rem; font-weight: 700; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; margin-bottom: 10px; display: inline-block; }
+
+        /* --- COMMENTS --- */
+        .comment-thread { margin-bottom: 15px; }
+        .comment-box { background: rgba(0,0,0,0.04); border-radius: 12px; padding: 12px 15px; font-size: 0.95rem; margin-bottom: 4px; border: 1px solid var(--border-soft); display: inline-block; min-width: 220px; }
+        .comment-actions { display: flex; align-items: center; gap: 15px; padding-left: 12px; margin-bottom: 8px; }
+        .action-btn { font-size: 0.78rem; font-weight: 700; cursor: pointer; color: var(--text-muted); text-decoration: none; display: flex; align-items: center; gap: 4px; }
+        .nested-replies { padding-left: 25px; border-left: 2px solid var(--nexus-cyan); margin-top: 5px; }
+        .reply-input-container { margin: 10px 0; display: none; }
+        .reply-input-container.active { display: block; }
+        
+        .btn-nexus { background: var(--nexus-teal); color: white; border-radius: 8px; font-weight: 700; border: none; padding: 10px 20px; transition: 0.3s; }
+        .btn-nexus:hover { background: #133d44; color: var(--nexus-cyan); }
+        .fake-input { background: var(--nexus-light-bg); border: 1px solid var(--border-soft); color: var(--text-muted); padding: 18px 25px; border-radius: 35px; cursor: pointer; width: 100%; text-align: left; font-weight: 500; }
+
+        body.dark-mode .form-control, body.dark-mode .form-select { background-color: #0f172a; border-color: rgba(255,255,255,0.1); }
+    
+
+        /* --- NOTIFICATION STYLE --- */
+
+        
+        :root {
+            --nexus-teal: #1a535c;
+            --nexus-sage: #4ecdc4;
+            --nexus-taupe: #f7fff7;
+            --nexus-moss: #2f4f4f;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .notification-card {
+            transition: all 0.2s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .notification-unread {
+            background-color: #f0fdfa !important; /* Very light sage */
+            border-left: 4px solid var(--nexus-sage) !important;
+        }
+
+        .notification-card:hover {
+            background-color: #f1f3f5;
+            transform: translateX(5px);
+        }
+
+        .avatar-img {
+            width: 45px;
+            height: 45px;
+            object-fit: cover;
+            border: 2px solid var(--nexus-sage);
+        }
+
+        .empty-state {
+            padding: 50px 20px;
+            text-align: center;
+            color: #6c757d;
+        }
+
+        
