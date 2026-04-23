@@ -1,0 +1,185 @@
+/* --- CUSTOM FONT FALLBACKS --- */
+@font-face { font-family: 'Symphony'; src: url('../fonts/Symphony.ttf'); }
+@font-face { font-family: 'Stoic'; src: url('../fonts/Stoic.otf'); }
+
+:root {
+  --nexus-dark-teal: #1a535c; 
+  --nexus-cyan: #4ecdc4;
+  --nexus-gradient-start: #d1f2eb;
+  --nexus-gradient-end: #a9cce3;
+  --white: #ffffff;
+  --text-main: #2c3e50;
+}
+
+html { scrollbar-gutter: stable; }
+
+body {
+  background-color: var(--white);
+  color: var(--text-main);
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+  font-family: 'Old Standard TT', serif;
+}
+
+/* TYPOGRAPHY - NEXUS IS BOLD, WRITES IS THIN */
+.nexus-font { 
+    font-family: 'Montserrat', sans-serif !important; 
+    font-weight: 800 !important; 
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.writes-font { 
+    font-family: 'Montserrat', sans-serif !important; 
+    font-weight: 300 !important; 
+    letter-spacing: 0.5px;
+}
+
+.tagline-font { 
+    font-family: 'Old Standard TT', serif !important; 
+    font-style: italic; 
+}
+
+/* NAVBAR */
+.navbar {
+  background: linear-gradient(135deg, var(--nexus-dark-teal), #2471a3);
+  padding: 0.6rem 0;
+  min-height: 75px;
+  border-bottom: 2px solid var(--nexus-cyan);
+}
+
+.navbar-brand img {
+  height: 50px; 
+  width: auto;
+  margin-right: 12px;
+  filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.2));
+}
+
+.nav-text-only { 
+  font-family: 'Montserrat', sans-serif; 
+  font-weight: 800;
+  color: var(--nexus-cyan) !important;
+  font-size: 0.95rem;
+  padding: 0.5rem 1rem;
+  display: block;
+}
+
+.nav-link { 
+  font-family: 'Montserrat', sans-serif; 
+  font-weight: 300;
+  color: rgba(255,255,255,0.9) !important;
+  transition: color 0.3s ease;
+}
+.nav-link:hover { color: var(--nexus-cyan) !important; }
+
+/* HERO */
+.hero-section {
+  background: linear-gradient(rgba(209, 242, 235, 0.6), rgba(169, 204, 227, 0.4)), 
+              url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=1600');
+  background-size: cover;
+  background-position: center;
+  padding: 7rem 0 5rem;
+  text-align: center;
+}
+
+.hero-card {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
+  padding: 2.5rem;
+  border-radius: 30px;
+  display: inline-block;
+  width: 100%;
+  max-width: 850px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+  border: 1px solid rgba(78, 205, 196, 0.2);
+}
+
+.hero-title { font-size: 3.5rem; margin-bottom: 0.5rem; }
+.hero-title .nexus-font { color: var(--nexus-dark-teal); }
+.hero-title .writes-font { color: #2471a3; }
+
+/* SECTIONS */
+section { padding: 3rem 0; }
+
+.section-title {
+    font-family: 'Montserrat', sans-serif;
+    color: var(--nexus-dark-teal);
+    margin-bottom: 2rem;
+    position: relative;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* OVERVIEW SPECIFIC */
+#overview { 
+    background-color: var(--nexus-gradient-start); 
+    padding: 3rem 0 !important; 
+}
+
+.section-title.text-start::after {
+    left: 0;
+    transform: none;
+}
+.section-title::after {
+    content: '';
+    width: 60px; height: 4px;
+    background: var(--nexus-cyan);
+    position: absolute;
+    bottom: -8px; left: 50%;
+    transform: translateX(-50%);
+}
+
+.overview-text, .hero-description, .feature-card p, footer p { 
+    font-family: 'Old Standard TT', serif; 
+    font-size: 1.1rem; 
+    line-height: 1.7; 
+}
+
+/* FEATURES */
+.feature-card {
+  border: none;
+  border-radius: 15px;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  background: var(--white);
+}
+.feature-card:hover { transform: translateY(-10px); box-shadow: 0 12px 25px rgba(0,0,0,0.1); }
+.feature-img {
+  height: 180px;
+  background-size: cover;
+  background-position: center;
+}
+
+/* BUTTONS - UNIFIED SIZE AND STYLE */
+.btn-nexus {
+  font-family: 'Montserrat', sans-serif !important;
+  font-weight: 800;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  background: linear-gradient(90deg, var(--nexus-dark-teal), #2471a3);
+  color: white !important;
+  border: none;
+  padding: 12px 35px !important; /* Unified padding */
+  border-radius: 50px;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.btn-nexus:hover { 
+  transform: translateY(-2px); 
+  opacity: 0.9; 
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+/* FOOTER */
+.footer { 
+  background-color: var(--nexus-dark-teal); 
+  color: white; 
+  padding: 3rem 0; 
+  border-top: 4px solid var(--nexus-cyan);
+}
