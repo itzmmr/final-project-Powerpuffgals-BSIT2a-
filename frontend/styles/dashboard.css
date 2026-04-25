@@ -1,0 +1,308 @@
+
+        :root {
+            --nexus-teal: #1a535c; 
+            --nexus-cyan: #4ecdc4;
+            --nexus-light-bg: #f4f7f6;
+            --nexus-card-white: #ffffff;
+            --text-dark: #2c3e50;
+            --text-muted: #64748b;
+            --border-soft: rgba(78, 205, 196, 0.2);
+            --header-footer-bg: #1a535c;
+        }
+
+        /* --- VISIBILITY & DARK MODE OVERRIDES --- */
+        body.dark-mode {
+            --nexus-light-bg: #0f172a;
+            --nexus-card-white: #1e293b;
+            --text-dark: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-soft: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Dropdown & Notification Visibility Fixes */
+        .dropdown-menu {
+            background-color: var(--nexus-card-white) !important;
+            border: 1px solid var(--border-soft) !important;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .dropdown-item, .dropdown-menu h6, .dropdown-menu p {
+            color: #2c3e50 !important;
+        }
+
+        body.dark-mode .dropdown-menu {
+            background-color: #1e293b !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        }
+
+        body.dark-mode .dropdown-item, 
+        body.dark-mode .dropdown-menu h6, 
+        body.dark-mode .dropdown-menu p,
+        body.dark-mode .dropdown-menu span {
+            color: #ffffff !important;
+        }
+
+        body.dark-mode .dropdown-item:hover {
+            background-color: rgba(78, 205, 196, 0.2) !important;
+        }
+
+        /* Global Text Visibility */
+        body.dark-mode #feedUsername, 
+        body.dark-mode .post-body-text, 
+        body.dark-mode .stat-text,
+        body.dark-mode .comment-box,
+        body.dark-mode .modal-title,
+        body.dark-mode label,
+        body.dark-mode .action-btn,
+        body.dark-mode .welcome-text-small,
+        body.dark-mode .form-control,
+        body.dark-mode .form-select,
+        body.dark-mode h4, body.dark-mode h5, body.dark-mode h6,
+        body.dark-mode .fb-icon-item span,
+        body.dark-mode .small {
+            color: #ffffff !important;
+        }
+
+        /* Fix visibility of modal text in dark mode */
+        body.dark-mode .modal-content .form-control,
+        body.dark-mode .modal-content .form-select {
+            color: #ffffff !important;
+            background-color: #111827 !important; /* Darker bg inside inputs */
+            border-color: rgba(255,255,255,0.1) !important;
+        }
+        body.dark-mode .modal-content .form-control::placeholder {
+            color: #9ca3af !important;
+        }
+        /* Ensure specific modal elements have correct color */
+        body.dark-mode .modal-content h5.modal-title,
+        body.dark-mode .modal-content label {
+            color: #ffffff !important;
+        }
+
+        /* Specific visibility for "Share thoughts..." comment input */
+        .comment-input-field {
+            color: var(--text-dark) !important;
+            background-color: var(--nexus-card-white) !important;
+        }
+        .comment-input-field::placeholder {
+            color: var(--text-muted) !important;
+            opacity: 0.8;
+        }
+        body.dark-mode .comment-input-field {
+            color: #ffffff !important;
+            background-color: #0f172a !important;
+            border: 1px solid var(--border-soft) !important;
+        }
+        body.dark-mode .comment-input-field::placeholder {
+            color: #cbd5e1 !important;
+        }
+
+        body.dark-mode i:not(.fa-heart.text-danger) {
+            color: var(--nexus-cyan) !important;
+        }
+
+        .post-title-display { color: var(--nexus-teal); font-weight: 800; }
+        body.dark-mode .post-title-display { color: var(--nexus-cyan) !important; }
+/* --- NEXUSWRITES THEME INTERCHANGE: MASTER CODE --- */
+
+/* LIGHT MODE: Deep Blue Cards on Light Page BG */
+.comment-thread-container {
+    background-color: #f8fafc; 
+    padding: 20px;
+    border-radius: 12px;
+}
+
+.comment-box {
+    background-color: #1e293b !important; /* Deep Blue Box */
+    color: #ffffff !important;
+    border-left: 5px solid #2dd4bf !important; /* Teal accent */
+}
+
+.comment-author-name {
+    color: #22d3ee !important; /* Bright Cyan text */
+}
+
+.comment-text-body {
+    color: #ffffff !important;
+}
+
+/* Action buttons below the blue box (on light background) */
+.action-btn {
+    color: #1e293b !important; /* Visible Dark Blue */
+    font-weight: 700 !important;
+    text-decoration: none !important;
+    display: inline-flex;
+    align-items: center;
+}
+
+/* --- DARK MODE BUTTON VISIBILITY FIX --- */
+
+/* Force the Like and Reply buttons to be visible Cyan/Teal by default */
+body.dark-mode .action-btn {
+    color: #22d3ee !important; /* Bright Cyan - matches your Ivy Angel name color */
+    opacity: 1 !important;     /* Removes any transparency */
+    font-weight: 700 !important;
+}
+
+/* Force the icons (thumbs up/reply) to match the text color */
+body.dark-mode .action-btn i {
+    color: #22d3ee !important;
+}
+
+/* Keep Edit/Delete in their specific colors but ensure they are bright */
+body.dark-mode .action-btn.text-success { 
+    color: #4ade80 !important; /* Bright Green */
+}
+
+body.dark-mode .action-btn.text-danger { 
+    color: #f87171 !important; /* Bright Red */
+}
+
+/* Hover effect so they turn White when you point at them */
+body.dark-mode .action-btn:hover,
+body.dark-mode .action-btn:hover i {
+    color: #ffffff !important;
+    text-decoration: underline;
+}
+/* THE INPUT BOX: Always White (Light & Dark) */
+.comment-input-field, 
+#commentInput,
+.input-group .form-control {
+    background-color: #ffffff !important;
+    color: #0f172a !important; 
+    border: 2px solid #2dd4bf !important;
+}
+
+.comment-input-field::placeholder,
+#commentInput::placeholder {
+    color: #64748b !important;
+    opacity: 1 !important;
+}
+
+/* Specific Dark Mode Input Override to keep it white */
+body.dark-mode .comment-input-field,
+body.dark-mode #commentInput,
+body.dark-mode .input-group .form-control {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+    border: 2px solid #22d3ee !important;
+}
+
+body.dark-mode .comment-input-field:focus {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+}
+
+/* Safety colors for Edit/Delete */
+.action-btn.text-success { color: #22c55e !important; }
+.action-btn.text-danger { color: #ef4444 !important; }
+
+/* Make 'Following' turn red or show 'Unfollow' on hover */
+.follow-link:hover {
+    filter: brightness(1.2);
+    text-decoration: underline;
+}
+
+body.dark-mode .follow-link:hover {
+    color: #f87171 !important; /* Turns soft red on hover in dark mode */
+}
+
+        /* --- GENERAL LAYOUT --- */
+        body { 
+            background-color: var(--nexus-light-bg) !important; 
+            color: var(--text-dark); 
+            font-family: 'Inter', sans-serif; 
+            transition: background 0.3s, color 0.3s; 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+        }
+
+        .navbar, footer { 
+            background-color: var(--header-footer-bg) !important; 
+            border-bottom: 4px solid var(--nexus-cyan) !important;
+            z-index: 1050;
+        }
+        .navbar { padding: 0.8rem 0; }
+        footer { border-top: 4px solid var(--nexus-cyan) !important; padding: 50px 0; margin-top: auto; }
+
+        .nexus-brand { font-family: 'Montserrat', sans-serif; font-weight: 800; color: #ffffff; font-size: 1.5rem; letter-spacing: 1px; }
+        .writes-brand { font-family: 'Dancing Script', cursive; color: var(--nexus-cyan); font-size: 1.6rem; }
+        .logo-box { background: white; border-radius: 50%; padding: 5px; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; }
+
+        /* Branding Typography */
+        .nexus-brand {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        color: #ffffff;
+        font-size: 1.25rem;
+        letter-spacing: 1px;
+        line-height: 1;
+}
+
+        .writes-brand {
+        font-family: 'Dancing Script', cursive;
+        color: #4ecdc4;
+        font-size: 1.4rem;
+        line-height: 1;
+        margin-left: 3px;
+}
+
+        /* The Fuller Circular Logo */
+        .logo-box {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        /* Use the PNG file name exactly as it is in your folder */
+        background-image: url('../images/NEXUSWritesLogo.png'); 
+        background-size: 115%; /* Makes it fuller by scaling the image slightly past the edges */
+        background-position: center;
+        background-repeat: no-repeat;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+
+        .comment-actions {
+        position: relative;
+        z-index: 50 !important; /* Force the buttons to stay on top */
+        pointer-events: auto !important; /* Ensure they are clickable */
+}
+
+    .nested-replies {
+    margin-top: 10px;
+    clear: both; /* Ensure it doesn't float over the actions */
+}
+}
+        /* --- SIDEBAR --- */
+        .sidebar-left { padding: 1.5rem 1rem; height: calc(100vh - 80px); position: sticky; top: 80px; }
+        .fb-icon-item { padding: 12px 20px !important; margin-bottom: 8px; font-weight: 600; border-radius: 12px; color: var(--text-dark) !important; display: flex; align-items: center; text-decoration: none; transition: 0.2s; }
+        .fb-icon-item:hover, .fb-icon-item.active-link { background: rgba(78, 205, 196, 0.15) !important; border-right: 4px solid var(--nexus-cyan); }
+        .fb-icon-item i { width: 30px; color: var(--nexus-teal); font-size: 1.2rem; }
+
+        /* --- FEED --- */
+        .feed-area { max-width: 850px; margin: 0 auto; }
+        .fb-card { border: none; border-radius: 15px; background: var(--nexus-card-white) !important; box-shadow: 0 4px 15px rgba(0,0,0,0.08); margin-bottom: 25px; border-top: 4px solid var(--nexus-cyan) !important; position: relative; }
+        .post-img { width: 100%; border-radius: 12px; margin: 15px 0; object-fit: cover; max-height: 550px; border: 1px solid var(--border-soft); }
+        .interaction-row { border-top: 1px solid var(--border-soft); border-bottom: 1px solid var(--border-soft); padding: 12px 0; margin: 15px 0; display: flex; gap: 30px; }
+        .interaction-btn { cursor: pointer; display: flex; align-items: center; gap: 8px; font-weight: 700; transition: 0.2s; }
+        
+        .category-badge { background: var(--nexus-cyan); color: var(--nexus-teal); font-size: 0.75rem; font-weight: 700; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; margin-bottom: 10px; display: inline-block; }
+
+        /* --- COMMENTS --- */
+        .comment-thread { margin-bottom: 15px; }
+        .comment-box { background: rgba(0,0,0,0.04); border-radius: 12px; padding: 12px 15px; font-size: 0.95rem; margin-bottom: 4px; border: 1px solid var(--border-soft); display: inline-block; min-width: 220px; }
+        .comment-actions { display: flex; align-items: center; gap: 15px; padding-left: 12px; margin-bottom: 8px; }
+        .action-btn { font-size: 0.78rem; font-weight: 700; cursor: pointer; color: var(--text-muted); text-decoration: none; display: flex; align-items: center; gap: 4px; }
+        .nested-replies { padding-left: 25px; border-left: 2px solid var(--nexus-cyan); margin-top: 5px; }
+        .reply-input-container { margin: 10px 0; display: none; }
+        .reply-input-container.active { display: block; }
+        
+        .btn-nexus { background: var(--nexus-teal); color: white; border-radius: 8px; font-weight: 700; border: none; padding: 10px 20px; transition: 0.3s; }
+        .btn-nexus:hover { background: #133d44; color: var(--nexus-cyan); }
+        .fake-input { background: var(--nexus-light-bg); border: 1px solid var(--border-soft); color: var(--text-muted); padding: 18px 25px; border-radius: 35px; cursor: pointer; width: 100%; text-align: left; font-weight: 500; }
+
+        body.dark-mode .form-control, body.dark-mode .form-select { background-color: #0f172a; border-color: rgba(255,255,255,0.1); }
+    
+        

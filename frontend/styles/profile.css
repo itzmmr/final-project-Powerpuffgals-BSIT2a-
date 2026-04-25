@@ -1,0 +1,243 @@
+
+        :root {
+            --nexus-teal: #1a535c; 
+            --nexus-cyan: #4ecdc4;
+            --nexus-light-bg: #f4f7f6;
+            --nexus-card-white: #ffffff;
+            --text-dark: #2c3e50;
+            --text-muted: #64748b;
+            --border-soft: rgba(78, 205, 196, 0.2);
+        }
+
+        body.dark-mode {
+            --nexus-light-bg: #0f172a; 
+            --nexus-card-white: #1e293b; 
+            --text-dark: #f8fafc; 
+            --text-muted: #cbd5e1; 
+            --border-soft: rgba(255, 255, 255, 0.1);
+        }
+
+        body { 
+            background-color: var(--nexus-light-bg); 
+            font-family: 'Inter', sans-serif; 
+            color: var(--text-dark);
+            transition: 0.3s;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .profile-header { 
+            background: var(--nexus-teal); 
+            border-bottom: 5px solid var(--nexus-cyan);
+            padding: 50px 0 25px 0;
+            position: relative;
+        }
+        
+        .nexus-brand { font-family: 'Montserrat', sans-serif; font-weight: 800; color: #ffffff; font-size: 1.2rem; letter-spacing: 1px; }
+        .writes-brand { font-family: 'Dancing Script', cursive; color: var(--nexus-cyan); font-size: 1.3rem; }
+
+        .profile-avatar { 
+            width: 150px; height: 150px; 
+            border: 6px solid var(--nexus-cyan); 
+            object-fit: cover; 
+            background: #fff;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .back-btn { 
+            position: absolute; top: 20px; left: 20px; z-index: 10;
+            background: var(--nexus-card-white);
+            color: var(--nexus-teal) !important;
+            border-radius: 50px;
+            padding: 8px 20px;
+            font-weight: 700;
+            text-decoration: none;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        /* FIXED PADDING: Added margin-top to separate stats from header */
+        .stats-container {
+            margin-top: 70px !important;
+        }
+
+        .stats-card { 
+            background: var(--nexus-card-white); 
+            border-radius: 16px; 
+            border-top: 4px solid var(--nexus-cyan);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            padding: 30px 20px !important; /* Fixed internal padding */
+        }
+
+        .stats-number { 
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.5rem; 
+            font-weight: 800; 
+            color: var(--nexus-teal); 
+        }
+
+        /* TEXT VISIBILITY IN DARK MODE */
+        body.dark-mode .stats-number { color: var(--nexus-cyan); }
+        body.dark-mode .text-muted { color: #94a3b8 !important; }
+        body.dark-mode .post-card h5 { color: var(--nexus-cyan) !important; }
+        body.dark-mode .post-card p { color: #cbd5e1 !important; }
+
+        .btn-nexus { 
+            background: var(--nexus-cyan); 
+            color: var(--nexus-teal); 
+            border: none; 
+            border-radius: 30px; 
+            padding: 10px 25px; 
+            font-weight: 700; 
+            transition: 0.3s; 
+        }
+
+        .nav-pills-nexus {
+            background: var(--nexus-card-white);
+            padding: 5px;
+            border-radius: 50px;
+            display: inline-flex;
+            gap: 5px;
+            border: 1px solid var(--border-soft);
+        }
+        .nav-pills-nexus .nav-link {
+            color: var(--text-muted);
+            font-weight: 700;
+            border-radius: 25px;
+            padding: 10px 25px;
+            transition: 0.3s;
+            border: none;
+        }
+        .nav-pills-nexus .nav-link.active {
+            background-color: var(--nexus-teal);
+            color: var(--nexus-cyan) !important;
+        }
+
+        .post-card {
+            background: var(--nexus-card-white);
+            border-radius: 15px;
+            border: 1px solid var(--border-soft);
+            margin-bottom: 20px;
+            padding: 25px;
+            transition: 0.3s;
+        }
+
+        /* MODAL DARK MODE FIXES */
+        body.dark-mode .modal-content { background-color: #1e293b; color: white; }
+        body.dark-mode .form-control, body.dark-mode .form-select { 
+            background-color: #0f172a; 
+            border-color: #334155; 
+            color: white; 
+        }
+        body.dark-mode .form-control::placeholder { color: #64748b; }
+
+        #avatarWrapper {
+            width: 100px; height: 100px;
+            border-radius: 50%;
+            border: 3px dashed var(--nexus-cyan);
+            margin: 0 auto;
+            position: relative;
+            cursor: pointer;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .avatar-placeholder { font-size: 1.5rem; color: var(--nexus-cyan); }
+        #editAvatarPreview {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+
+        .interest-box { 
+            background: rgba(0,0,0,0.03); 
+            border-radius: 12px; 
+            padding: 15px; 
+            border: 1px solid var(--border-soft); 
+        }
+        body.dark-mode .interest-box { background: rgba(255,255,255,0.05); }
+
+        .modal-content { border-radius: 20px; border: 4px solid var(--nexus-cyan); }
+        .modal-header { background: var(--nexus-teal); color: white; border-radius: 15px 15px 0 0; }
+
+        /* FOLLOW BUTTON */
+        .btn-light.text-success:hover {
+        background-color: #fee2e2 !important; 
+        color: #ef4444 !important; 
+        border-color: #fca5a5 !important;
+        transition: all 0.3s ease;
+    }
+
+    .btn-light.text-success:hover i::before {
+        content: "\f00d"; 
+        font-family: "Font Awesome 5 Free";
+        font-weight: 900;
+    }
+
+    /* Master utility to ensure things stay hidden when we say so */
+.hidden-element {
+    display: none !important;
+}
+     
+
+
+
+
+/* Center all technical headers */
+.technical-header-align {
+    text-align: center !important;
+    padding-left: 0 !important;
+    margin-bottom: 2rem !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+/* Center the content containers and restrict maximum width for better readability */
+#github-portfolio-display, 
+#profileContentContainer {
+    max-width: 900px; /* Keep this consistent */
+    margin: 0 auto !important;
+    padding: 0 15px !important;
+    display: block;
+}
+
+/* Add this to ensure the card itself doesn't have internal padding that shrinks the image */
+.post-card {
+    padding: 2rem !important; /* Adjust as needed */
+    width: 100%;
+}
+
+/* Center body text for better visibility on wide images */
+.text-secondary-centered {
+    color: #a7a7a7; /* Match your existing description color */
+    font-size: 0.9rem;
+    line-height: 1.6;
+    text-align: center; /* This centers the body text */
+}
+
+/* Ensure post titles and other elements remain aligned to the start */
+.post-header-align {
+    text-align: start !important;
+}
+
+
+
+        /* FOOTER STYLES */
+        .nexus-footer-simple {
+            background-color: var(--nexus-teal) !important;
+            border-top: 4px solid var(--nexus-cyan) !important;
+            padding: 40px 0;
+            margin-top: auto;
+            width: 100%;
+        }
+        .nexus-footer-simple .nexus-brand { font-size: 1.5rem; }
+        .nexus-footer-simple .writes-brand { font-size: 1.6rem; }
+        .footer-copyright-simple {
+            margin-top: 10px;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+        }

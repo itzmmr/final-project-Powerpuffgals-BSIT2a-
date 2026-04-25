@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search - NEXUSWrites</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="styles/homesearch.css">
+</head>
+<body>
+
+    <div class="search-nav">
+        <a href="dashboard.html" class="back-icon"><i class="fas fa-arrow-left"></i></a>
+        
+        <div class="search-input-container">
+            <i class="fas fa-search search-mute"></i>
+            <input type="text" id="innerSearchInput" placeholder="Search tutorials..." 
+                   oninput="handleInstantSuggestions(this.value)" autofocus autocomplete="off">
+            <i class="fas fa-times-circle clear-x" id="clearBtn" onclick="clearInput()" style="display:none;"></i>
+        </div>
+        
+        <button class="search-confirm">Search</button>
+    </div>
+
+    <div class="tab-scroller">
+        <div class="search-tab active" onclick="switchTab(this, 'all')">Top</div>
+        <div class="search-tab" onclick="switchTab(this, 'General Tech')">General Tech</div>
+        <div class="search-tab" onclick="switchTab(this, 'Web Development')">Web Development</div>
+        <div class="search-tab" onclick="switchTab(this, 'Mobile Apps')">Mobile Apps</div>
+        <div class="search-tab" onclick="switchTab(this, 'AI & Machine Learning')">AI & Machine Learning</div>
+        <div class="search-tab" onclick="switchTab(this, 'Data Science')">Data Science</div>
+        <div class="search-tab" onclick="switchTab(this, 'UI/UX Design')">UI/UX Design</div>
+        <div class="search-tab" onclick="switchTab(this, 'Cybersecurity')">Cybersecurity</div>
+        <div class="search-tab" onclick="switchTab(this, 'Cloud Computing')">Cloud Computing</div>
+        <div class="search-tab" onclick="switchTab(this, 'Blockchain')">Blockchain</div>
+            <div class="search-tab" onclick="switchTab(this, 'Internet of Things')">Internet of Things</div>
+
+    </div>
+    <div id="suggestionBox" class="suggestion-floating-box shadow-sm"></div>
+    <div class="container-fluid px-2 mt-3">
+    <div class="row g-2" id="resultsGrid">
+        </div>
+</div>
+
+    <div class="container py-3">
+        <div id="searchResults" class="row g-3">
+            </div>
+    </div>
+
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+         <script src="js/homesearch.js"></script>
+</body>
+</html>

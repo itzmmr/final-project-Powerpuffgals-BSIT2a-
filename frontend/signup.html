@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - NEXUSWrites</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;800&family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/styles.css">
+</head>
+<body class="auth-body d-flex align-items-center">
+
+<a href="index.html" class="exit-arrow">
+    <i class="fas fa-arrow-left"></i>
+</a>
+<div class="container">
+    <div class="auth-card signup-card-container p-4 p-md-5">
+        <div class="text-center mb-4">
+            <div>
+                <span class="nexus-font" style="font-size: 2rem; color: var(--nexus-dark-teal);">NEXUS</span><span class="writes-font" style="font-size: 2rem; color: #2471a3;">Writes</span>
+            </div>
+            <p class="tagline-font text-muted">Join the Technical Hub</p>
+        </div>
+
+        <form id="registerForm" novalidate>
+            <div id="page1">
+                <span class="section-label">Account Identity</span>
+                
+                <div class="mb-3">
+                    <label class="form-label-nexus">Full Name</label>
+                    <input type="text" id="regName" class="form-control rounded-3" placeholder="Enter your full name" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label-nexus">Email Address</label>
+                    <input type="email" id="regEmail" class="form-control rounded-3" placeholder="name@example.com" required>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label-nexus">Date of Birth</label>
+                        <input type="date" id="regDob" class="form-control rounded-3" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label-nexus">Gender</label>
+                        <select id="regGender" class="form-select rounded-3" required>
+                            <option value="" disabled selected>Select...</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label-nexus">Password</label>
+                    <input type="password" id="regPassword" class="form-control rounded-3" placeholder="••••••••" required>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label-nexus">Confirm Password</label>
+                    <input type="password" id="regConfirmPassword" class="form-control rounded-3" placeholder="••••••••" required>
+                </div>
+
+                <button type="button" onclick="goToPage(2)" class="btn btn-nexus w-100">
+                    Next: Setup Profile <i class="fas fa-chevron-right ms-2"></i>
+                </button>
+            </div>
+
+            <div id="page2" style="display: none;">
+                <span class="section-label">Profile Setup</span>
+                
+                <div class="text-center mb-4">
+                    <div id="avatarWrapper" class="mx-auto" onclick="document.getElementById('regAvatarFile').click()" style="cursor: pointer; width: 100px; height: 100px; border: 2px dashed var(--nexus-dark-teal); border-radius: 50%; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #f8f9fa;">
+                        <div class="avatar-placeholder" id="avatarIcon"><i class="fas fa-camera fa-2x" style="color: var(--nexus-dark-teal);"></i></div>
+                        <img id="avatarPreview" src="#" alt="Preview" style="display:none; width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <input type="file" id="regAvatarFile" class="d-none" accept="image/*" onchange="previewImage(this)">
+                    <small class="text-muted tagline-font d-block mt-2">Click to Upload Profile Photo</small>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label-nexus"><i class="fab fa-github me-1"></i> GitHub Username</label>
+                    <input type="text" id="regGithub" class="form-control rounded-3" placeholder="e.g. octocat">
+                    <small class="text-muted" style="font-size: 0.75rem;">This connects your repositories to your profile.</small>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label-nexus">Professional Role</label>
+                    <select id="regWorkSelect" class="form-select rounded-3" onchange="toggleOther('regWorkSelect', 'workOther')">
+                        <option value="" selected disabled>Choose your role...</option>
+                        <option value="IT Student">IT Student</option>
+                        <option value="Full-Stack Developer">Full-Stack Developer</option>
+                        <option value="Front-End Engineer">Front-End Engineer</option>
+                        <option value="Back-End Specialist">Back-End Specialist</option>
+                        <option value="Cybersecurity Analyst">Cybersecurity Analyst</option>
+                        <option value="UI/UX Designer">UI/UX Designer</option>
+                        <option value="Data Scientist">Data Scientist</option>
+                        <option value="Cloud Architect">Cloud Architect</option>
+                        <option value="Mobile App Developer">Mobile App Developer</option>
+                        <option value="Technical Writer">Technical Writer</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <input type="text" id="workOther" class="form-control mt-2" placeholder="Specify your role..." style="display: none;">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label-nexus">Short Bio</label>
+                    <textarea id="regBio" class="form-control rounded-3" rows="3" placeholder="Tell us about your tech journey..."></textarea>
+                </div>
+
+                <span class="section-label">Interests</span>
+                <div class="interest-list mb-3">
+                    <div class="row g-2">
+                        <div class="col-6"><label class="small"><input type="checkbox" name="interest" value="Web Systems"> Web Systems</label></div>
+                        <div class="col-6"><label class="small"><input type="checkbox" name="interest" value="AI & ML"> AI & ML</label></div>
+                        <div class="col-6"><label class="small"><input type="checkbox" name="interest" value="Cybersecurity"> Cybersecurity</label></div>
+                        <div class="col-6"><label class="small"><input type="checkbox" name="interest" value="Cloud Computing"> Cloud Tech</label></div>
+                        <div class="col-6"><label class="small"><input type="checkbox" name="interest" value="Data Analytics"> Data Analytics</label></div>
+                        <div class="col-6"><label class="small"><input type="checkbox" name="interest" value="DevOps"> DevOps</label></div>
+                        <div class="col-6"><label class="small"><input type="checkbox" name="interest" value="IoT Systems"> IoT Systems</label></div>
+                        <div class="col-6"><label class="small"><input type="checkbox" name="interest" value="Blockchain"> Blockchain</label></div>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <input type="text" id="interestOther" class="form-control form-control-sm rounded-3" placeholder="Other interest?">
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="button" onclick="goToPage(1)" class="btn btn-outline-secondary w-50" style="border-radius: 50px; font-family: 'Montserrat'; font-weight: 800;">BACK</button>
+                    <button type="submit" class="btn btn-nexus w-50" id="signupBtn">
+                        <span class="btn-text">FINISH</span>
+                        <span class="spinner-border spinner-border-sm d-none"></span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/signup.js"></script>
+</body>
+</html>

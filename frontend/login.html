@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - NEXUSWrites</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;800&family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/styles.css">
+</head>
+<body class="auth-body d-flex align-items-center">
+    
+    <a href="index.html" class="exit-arrow">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-5 col-md-7">
+                <div class="card auth-card login-card-container p-4 p-lg-5">
+                    <div class="text-center mb-4">
+                        <div class="nexus-emblem">
+                            <span class="nexus-font" style="color: var(--nexus-dark-teal);">NEXUS</span><span class="writes-font" style="color: #2471a3;">Writes</span>
+                        </div>
+                        <p class="tagline-font text-muted">“Your Tech, Your Story.”</p>
+                    </div>
+                    
+                    <form id="loginForm">
+                        <div class="mb-4">
+                            <label class="form-label-nexus">Email Address</label>
+                            <div class="input-group border rounded-3 overflow-hidden">
+                                <span class="input-group-text input-group-nexus-text"><i class="fas fa-envelope"></i></span>
+                                <input type="email" class="form-control form-control-nexus border-0" id="loginEmail" placeholder="name@email.com" required>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label-nexus">Password</label>
+                            <div class="input-group border rounded-3 overflow-hidden">
+                                <span class="input-group-text input-group-nexus-text"><i class="fas fa-lock"></i></span>
+                                <input type="password" class="form-control form-control-nexus border-0" id="loginPassword" placeholder="••••••••" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-nexus w-100 mb-3" id="submitBtn">
+                            <span class="login-text">LOGIN</span>
+                            <span class="login-spinner d-none">
+                                <i class="fas fa-spinner fa-spin me-2"></i>WAIT...
+                            </span>
+                        </button>
+                    </form>
+                    
+                    <div class="text-center">
+                        <p class="mb-0 text-muted small">Don't have an account? <a href="signup.html" class="fw-bold" style="color: var(--nexus-cyan); text-decoration: none;">SIGN UP</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/login.js"></script>
+</body>
+</html>
