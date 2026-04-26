@@ -1,5 +1,4 @@
-
-   document.getElementById('loginForm').addEventListener('submit', async function(e) {
+document.getElementById('loginForm').addEventListener('submit', async function(e) {
     e.preventDefault();
     
     // 1. Get Values & UI Elements
@@ -27,12 +26,22 @@
         const data = await response.json();
 
         if (response.ok) {
-            // SUCCESS: Explicitly map the token and IDs to ensure they aren't undefined
+            // SUCCESS Logic
+            
+            // --- NEW: STRATEGIC STORAGE UPDATES ---
+            
+            // A. Store the token separately for the "Save Profile" feature to use
+            localStorage.setItem('token', data.token);
+
+            // B. Store the password for the "Change Password" validation feature
+            localStorage.setItem('userPassword', password);
+
+            // C. Map the user object for the Dashboard/Profile UI
             const userToStore = {
-                ...data,
-                token: data.token, // Explicitly capture token
-                _id: data._id || data.id,
-                id: data.id || data._id,
+                ...data.user, // Spread the user object from backend response
+                token: data.token, 
+                _id: data.user?._id || data.id,
+                id: data.user?.id || data._id,
                 loggedIn: true 
             };
 
@@ -58,4 +67,3 @@
         submitBtn.disabled = false;
     }
 });
-    
