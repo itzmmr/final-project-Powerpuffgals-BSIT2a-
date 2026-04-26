@@ -23,54 +23,105 @@ function toggleFollow(userId, buttonElement) {
         }
     })();
 
-    // --- 2. LOGOUT FUNCTION (Properly clears your session) ---
-    function logoutUser() {
-        localStorage.removeItem('nexusUser'); 
-        localStorage.removeItem('nexusPosts'); // Clears cache so next user doesn't see your data
-        window.location.href = "index.html";
-    }
+// --- 1. LOGOUT FUNCTION ---
+// Attached to window so HTML 'onclick' can always find it
+// --- 1. LOGOUT FUNCTION (Properly clears your session) ---
+// Explicitly attached to 'window' so your dashboard and settings buttons can find it
+window.logoutUser = function() {
+    console.log("Clearing NexusWrite session...");
+    localStorage.removeItem('nexusUser'); 
+    localStorage.removeItem('token'); // CRITICAL: Fixes 'undefined' token in server logs
+    localStorage.removeItem('nexusPosts'); 
+    window.location.href = "index.html";
+};
 
-    const translations = {
-        'English': { home: 'Home', following: 'Following', settings: 'Settings', logout: 'Logout', notifications: 'Notifications', viewprofile: 'View Profile', sharePrompt: 'What tutorial would you like to share today?', post: 'Post a tutorial...', createNew: 'Create New Tutorial', tutTitle: 'Tutorial Title', tutContent: 'Content', tutTags: 'Tags', publish: 'Publish', welcome: 'Welcome back', footerText: '© 2024 NEXUSWrites. Your Tech. Your Story.' },
-        'Filipino': { home: 'Home', following: 'Sinusundan', settings: 'Mga Setting', logout: 'Mag-log Out', notifications: 'Mga Notification', viewprofile: 'Tingnan ang Profile', sharePrompt: 'Anong tutorial ang gusto mong ibahagi?', post: 'Mag-post ng tutorial...', createNew: 'Gumawa ng Bagong Tutorial', tutTitle: 'Pamagat ng Tutorial', tutContent: 'Nilalaman', tutTags: 'Mga Tag', publish: 'I-publish', welcome: 'Maligayang pagbabalik', footerText: '© 2024 NEXUSWrites. Ang Iyong Tech. Ang Iyong Kwento.' }
+// --- 2. TRANSLATIONS (Safety fix for SyntaxError) ---
+// Uses window.translations to ensure accessibility across all pages (Settings & Dashboard)
+if (typeof window.translations === 'undefined') {
+    window.translations = {
+        'English': { 
+            home: 'Home', following: 'Following', settings: 'Settings', logout: 'Logout', 
+            notifications: 'Notifications', viewprofile: 'View Profile', 
+            sharePrompt: 'What tutorial would you like to share today?', 
+            post: 'Post a tutorial...', createNew: 'Create New Tutorial', 
+            tutTitle: 'Tutorial Title', tutContent: 'Content', tutTags: 'Tags', 
+            publish: 'Publish', welcome: 'Welcome back', 
+            footerText: '© 2024 NEXUSWrites. Your Tech. Your Story.' 
+        },
+        'Filipino': { 
+            home: 'Home', following: 'Sinusundan', settings: 'Mga Setting', logout: 'Mag-log Out', 
+            notifications: 'Mga Notification', viewprofile: 'Tingnan ang Profile', 
+            sharePrompt: 'Anong tutorial ang gusto mong ibahagi?', 
+            post: 'Mag-post ng tutorial...', createNew: 'Gumawa ng Bagong Tutorial', 
+            tutTitle: 'Pamagat ng Tutorial', tutContent: 'Nilalaman', tutTags: 'Mga Tag', 
+            publish: 'I-publish', welcome: 'Maligayang pagbabalik', 
+            footerText: '© 2024 NEXUSWrites. Ang Iyong Tech. Ang Iyong Kwento.' 
+        }
     };
+}
 
-    let posts = JSON.parse(localStorage.getItem('nexusPosts')) || [];
-    let selectedFileBase64 = null;
+// --- 3. PERSISTENT DATA (Preserved working logic) ---
+let posts = JSON.parse(localStorage.getItem('nexusPosts')) || [];
+let selectedFileBase64 = null;
 
-    // --- 3. UPDATED APPLY LANGUAGE (Uses 'currentUser' to prevent session hijacking) ---
-    function applyLanguage() {
-        const lang = localStorage.getItem('nexusLang') || 'English';
-        const dict = translations[lang];
-        
-        // Update all translation keys
-        document.querySelectorAll('[data-key]').forEach(el => { 
-            if(dict[el.dataset.key]) el.innerText = dict[el.dataset.key]; 
-        });
-
-        // We use 'currentUser' instead of 'user' to ensure we don't overwrite 
-        // global variables used by your comment/post functions.
-        const currentUser = JSON.parse(localStorage.getItem('nexusUser')) || { name: 'User' };
-        
-        const feedUserEl = document.getElementById('feedUsername');
-        if (feedUserEl) {
-            feedUserEl.textContent = `${dict.welcome}, ${currentUser.name || currentUser.username}!`;
-        }
-
-        const navUserEl = document.getElementById('navUsername');
-        if (navUserEl) {
-            navUserEl.textContent = currentUser.name || 'User';
-        }
+// --- 4. MERGED APPLY LANGUAGE & UI UPDATES ---
+function applyLanguage() {
+    const lang = localStorage.getItem('nexusLang') || 'English';
+    
+    // FIX: Look at window.translations specifically and use a fallback
+    const dict = window.translations ? window.translations[lang] : null;
+    
+    // Safety check: If dictionary isn't ready, stop here to prevent "Cannot read properties of undefined"
+    if (!dict) {
+        console.warn("Translation data not ready or dictionary missing.");
+        return;
     }
-        function applyLanguage() {
-            const lang = localStorage.getItem('nexusLang') || 'English';
-            const dict = translations[lang];
-            document.querySelectorAll('[data-key]').forEach(el => { if(dict[el.dataset.key]) el.innerText = dict[el.dataset.key]; });
-            const user = JSON.parse(localStorage.getItem('nexusUser')) || { name: 'User' };
-            document.getElementById('feedUsername').textContent = `${dict.welcome}, ${user.name || user.username}!`;
+
+    // Update all elements using [data-key] for general dashboard labels
+    document.querySelectorAll('[data-key]').forEach(el => { 
+        if(dict[el.dataset.key]) el.innerText = dict[el.dataset.key]; 
+    });
+    
+    // Update all elements using [data-translate] for settings/profile labels
+    document.querySelectorAll('[data-translate]').forEach(el => {
+        const key = el.getAttribute('data-translate');
+        if (dict[key]) {
+            if (el.tagName === 'INPUT' && el.placeholder) {
+                el.placeholder = dict[key];
+            } else {
+                el.innerText = dict[key];
+            }
         }
-// If you are inside a fetch or a function that just loaded posts:
+    });
+
+    // Use 'currentUser' to prevent overwriting global 'user' variables
+    const currentUser = JSON.parse(localStorage.getItem('nexusUser')) || { name: 'User' };
+    
+    // Update Feed Username (e.g., "Welcome back, Ivy!")
+    const feedUserEl = document.getElementById('feedUsername');
+    if (feedUserEl && dict.welcome) {
+        feedUserEl.textContent = `${dict.welcome}, ${currentUser.name || currentUser.username || 'User'}!`;
+    }
+
+    // Update Nav Username (The top-right corner name)
+    const navUserEl = document.getElementById('navUsername');
+    if (navUserEl) {
+        navUserEl.textContent = currentUser.name || 'User';
+    }
+}
+
+// --- 5. LANGUAGE CHANGE FUNCTION (For the toggle button) ---
+window.changeLanguage = function(lang) {
+    localStorage.setItem('nexusLang', lang);
+    applyLanguage(); // Re-apply immediately
+};
+
+// Ensure everything runs as soon as the DOM is ready
+document.addEventListener('DOMContentLoaded', applyLanguage);
+
+// Final safety for posts
 localStorage.setItem('nexusPosts', JSON.stringify(posts));
+
     /* --- COMMENTING ENGINE (FIXED) --- */
 function renderComments(commentList, postId) {
     if (!commentList || commentList.length === 0) return '';
@@ -896,3 +947,4 @@ document.addEventListener('DOMContentLoaded', loadNotifications);
     }
     localStorage.setItem('nexusFollowedUsers', JSON.stringify(followedUsers));
 }
+
