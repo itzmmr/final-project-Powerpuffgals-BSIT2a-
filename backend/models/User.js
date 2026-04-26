@@ -6,46 +6,42 @@ const userSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     dob: { type: Date, required: true },
-    role: { type: String, default: 'student' },
+    age: { type: Number },
+    role: { type: String, default: 'it student' },
+    // INSERTED: Field to store the GitHub handle for the API integration
+    githubUsername: { type: String, default: "" }, 
     bio: { type: String, default: "" },
     avatar: { type: String, default: null },
-    
-    // --- INTERESTS DROPDOWN ---
+    followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     interests: { 
         type: [String], 
-        enum: ['web development', 'ui/ux design', 'database management', 'mobile dev', 'cybersecurity', 'systems ecology', 'data science'],
+        enum: [
+            'web systems', 'ai & ml', 'cybersecurity', 'cloud computing', 
+            'data analytics', 'devops', 'iot systems', 'blockchain',
+            'web development', 'ui/ux design', 'database management', 
+            'mobile dev', 'technical writing'
+        ],
         default: [] 
     },
-
-    // --- ERD FIELDS ---
-    githubUsername: { type: String, default: "" },
-    age: { type: Number },
-    gender: { type: String, enum: ['male', 'female', 'other', 'prefer not to say'], default: 'other' },
-
-    // --- SETTINGS DROPDOWNS ---
+    gender: { type: String, enum: ['male', 'female', 'other'], default: 'other' },
     settings: {
-        theme: { type: String, enum: ['light', 'dark'], default: 'light' },
+        theme: { type: String, enum: ['light', 'dark', 'forest', 'stone'], default: 'light' },
         fontSize: { type: String, enum: ['small', 'medium', 'large'], default: 'medium' },
-        language: { 
-            type: String, 
-            enum: ['english', 'tagalog', 'bicolano', 'spanish'], 
-            default: 'english' 
-        },
+        language: { type: String, default: 'english' },
         timezone: { type: String, default: 'UTC+8' }
-    },
-    
-    following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-    followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
+    }
 }, { timestamps: true });
 
-// --- PASSWORD HASHING (Fixed) ---
+// FIXED ASYNC PRE-SAVE
 userSchema.pre('save', async function () {
     if (!this.isModified('password')) return;
+
     try {
         const salt = await bcrypt.genSalt(10);
         this.password = await bcrypt.hash(this.password, salt);
     } catch (err) {
-        throw err;
+        throw err; 
     }
 });
 
