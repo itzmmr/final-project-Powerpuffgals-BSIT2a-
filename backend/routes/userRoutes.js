@@ -5,25 +5,49 @@ const upload = require('../config/cloudinary');
 const { protect } = require('../middleware/authMiddleware');
 const User = require('../models/User'); 
 
-// 1. AUTH
+// --- 1. AUTHENTICATION & REGISTRATION ---
+
+// Standard registration and login routes
+router.post('/', upload.single('avatar'), userController.register); 
 router.post('/register', upload.single('avatar'), userController.register);
 router.post('/login', userController.login);
 
-// 2. SEARCH & STATS
-router.get('/search', userController.searchUsers);
-router.get('/stats', protect, userController.getUserStats); 
-router.get('/friends', protect, userController.getFriends);
-router.get('/me', protect, (req, res) => res.json(req.user));
 
-// 3. PROFILE UPDATES (Use this URL: /api/users/update)
+// --- 2. USER PROFILE & PRIVATE DATA ---
+
+// Get current logged-in user data
+router.get('/me', protect, (req, res) => {
+    if (!req.user) return res.status(404).json({ message: "User not found" });
+    res.json(req.user);
+});
+
+/**
+ * FIXED: Update profile settings
+ * This route now handles EVERYTHING: Avatar, Bio, Theme, Role, and GitHub.
+ * It uses the controller we updated to handle age gating and sanitization.
+ */
 router.put('/update', protect, upload.single('avatar'), userController.updateUserProfile);
-router.put('/follow/:id', protect, userController.toggleFollow);
 
-// 4. DYNAMIC PROFILE
+// Get profile statistics (Post count, Followers, Following)
+router.get('/stats/:id', protect, userController.getUserStats);
+
+// Public profile view 
 router.get('/profile/:id', userController.getUserProfile);
 
-// 5. SYSTEM LIST (Get all users)
-router.get('/', async (req, res) => {
+
+// --- 3. SOCIAL & DISCOVERY ---
+
+// Search for other IT students/professionals
+router.get('/search', userController.searchUsers);
+
+// Follow/Unfollow toggle
+router.post('/follow/:id', protect, userController.toggleFollow);
+
+
+// --- 4. DEVELOPMENT & DEBUGGING ---
+
+// List all users (remove before final deployment)
+router.get('/list', async (req, res) => {
     try {
         const users = await User.find().select('-password');
         res.json(users);
