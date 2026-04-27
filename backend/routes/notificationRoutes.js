@@ -6,4 +6,4 @@ const { protect } = require('../middleware/authMiddleware');
 router.get('/', protect, getNotifications);
 router.put('/read', protect, markAsRead);
 
-module.exports = router;
+module.exports = routerui;

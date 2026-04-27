@@ -1,12 +1,22 @@
 const Notification = require('../models/Notification');
 
+// backend/controllers/notificationController.js
+
 exports.getNotifications = async (req, res) => {
     try {
         const notifications = await Notification.find({ recipient: req.user._id })
             .populate('sender', 'name avatar')
             .populate('post', 'title')
             .sort({ createdAt: -1 });
-        res.json(notifications);
+
+        // Calculate unread count for the badge
+        const unreadCount = notifications.filter(n => !n.isRead).length;
+
+        // CRITICAL: Send as an object, not just the array
+        res.json({
+            notifications: notifications,
+            unreadCount: unreadCount
+        });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

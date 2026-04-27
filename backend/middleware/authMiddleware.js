@@ -3,32 +3,42 @@ const User = require('../models/User');
 
 const protect = async (req, res, next) => {
     let token;
-
-    // Check for the Authorization Header
+    
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
         try {
+            // 1. Extract the token
             token = req.headers.authorization.split(' ')[1];
+            
+            // --- AUTH DEBUG ---
+            console.log("--- AUTH DEBUG ---");
+            console.log("Token received:", token);
 
-            // Verify token
+            // 2. CRITICAL CHECK: Stop if token is missing or the string "undefined"
+            if (!token || token === 'undefined') {
+                console.error("DEBUG: Token is missing or string 'undefined'");
+                return res.status(401).json({ message: 'Not authorized, token malformed' });
+            }
+
+            // 3. Verify the token
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-            // Attach user to request
+            
+            // 4. Attach user to request (excluding password)
             req.user = await User.findById(decoded.id).select('-password');
-
+            
             if (!req.user) {
                 return res.status(401).json({ message: 'User no longer exists' });
             }
 
-            console.log(`🛡️ Auth Middleware: ${req.user.name} is verified.`);
-            return next(); // This MUST be here to reach the controller
+            return next();
         } catch (error) {
-            console.error("❌ Auth Error:", error.message);
-            return res.status(401).json({ message: 'Not authorized, token failed' });
+            console.error("JWT Error Type:", error.name); 
+            console.error("JWT Error Message:", error.message);
+            return res.status(401).json({ message: 'Not authorized' });
         }
     }
 
+    // 5. Final check if no header was present at all
     if (!token) {
-        console.log("⚠️ Auth Warning: No token provided in request.");
         return res.status(401).json({ message: 'Not authorized, no token' });
     }
 };

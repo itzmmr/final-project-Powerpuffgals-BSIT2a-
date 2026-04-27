@@ -23,21 +23,43 @@
     }
 
     function goToPage(page) {
-        if (page === 2) {
-            const fields = ['regName', 'regEmail', 'regDob', 'regGender', 'regPassword'];
-            const allFilled = fields.every(id => document.getElementById(id).value);
-            const pass = document.getElementById('regPassword').value;
-            const confirm = document.getElementById('regConfirmPassword').value;
+    if (page === 2) {
+        const fields = ['regName', 'regEmail', 'regDob', 'regGender', 'regPassword'];
+        const allFilled = fields.every(id => document.getElementById(id).value);
+        const pass = document.getElementById('regPassword').value;
+        const confirm = document.getElementById('regConfirmPassword').value;
 
-            if(!allFilled) {
-                alert("Please fill in all identity fields."); 
-                return;
-            }
-            if(pass !== confirm) { alert("Passwords do not match."); return; }
+        if(!allFilled) {
+            alert("Please fill in all identity fields."); 
+            return;
         }
-        document.getElementById('page1').style.display = (page === 1) ? 'block' : 'none';
-        document.getElementById('page2').style.display = (page === 2) ? 'block' : 'none';
+
+        // --- 18+ AGE GATE CHECK ---
+        const dobValue = document.getElementById('regDob').value;
+        const birthDate = new Date(dobValue);
+        const today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const m = today.getMonth() - birthDate.getMonth();
+        
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+
+        if (age < 18) {
+            alert("Sorry! You must be at least 18 years old to join NEXUSWrites.");
+            return; 
+        }
+        // --------------------------
+
+        if(pass !== confirm) { 
+            alert("Passwords do not match."); 
+            return; 
+        }
     }
+    
+    document.getElementById('page1').style.display = (page === 1) ? 'block' : 'none';
+    document.getElementById('page2').style.display = (page === 2) ? 'block' : 'none';
+}
 
     document.getElementById('registerForm').addEventListener('submit', async function(e) {
         e.preventDefault();

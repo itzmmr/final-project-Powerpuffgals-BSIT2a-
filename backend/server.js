@@ -5,26 +5,34 @@ const dns = require('dns');
 const connectDB = require('./config/db');
 const { errorHandler } = require('./middleware/errorMiddleware');
 
-// Fix for network/DNS environments in Bicol (Preserved)
 dns.setServers(['8.8.8.8', '8.8.4.4']);
 
 const app = express();
 
-// Connect to Database
+// 1. Connect to Database
 connectDB();
 
-// Global Middleware (Updated with limits to fix "Entity Too Large")
-app.use(cors());
+// 2. Global Middleware
+// UPDATED: Added specific options to ensure browser requests are never blocked
+app.use(cors({
+    origin: '*', // Allows all origins for development
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 app.use(express.json({ limit: '10mb' })); 
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
-// Logging Middleware (Preserved)
+// 3. Logging Middleware
 app.use((req, res, next) => {
-    console.log(`📡 ${req.method} request to: ${req.url}`);
+    console.log(`📡 ${req.method} request to: ${req.originalUrl}`);
     next();
 });
 
-// Routes (Preserved)
+// Serve uploaded files (avatars, post images) publicly
+app.use('/uploads', express.static('uploads'));
+
+// 4. Routes
 app.use('/api/users', require('./routes/userRoutes'));
 app.use('/api/posts', require('./routes/postRoutes'));
 app.use('/api/github', require('./routes/githubRoutes'));
@@ -36,11 +44,14 @@ app.get('/', (req, res) => {
     res.send('🚀 NexusWrites API is running smoothly...');
 });
 
-// Error Handling (Preserved)
-app.use((req, res) => {
-    res.status(404).json({ message: "Route not found. Check your URL!" });
+// 5. 404 Handler
+app.use((req, res, next) => {
+    const error = new Error(`Not Found - ${req.originalUrl}`);
+    res.status(404);
+    next(error);
 });
 
+// 6. Global Error Handler
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
