@@ -57,22 +57,54 @@
         }
 
         async function syncThisAccount(username) {
-            const user = JSON.parse(localStorage.getItem('nexusUser') || '{}');
-            const token = user.token;
-            try {
-                const response = await fetch(`http://localhost:5000/api/users/update`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                    body: JSON.stringify({ githubUsername: username })
-                });
-                if (response.ok) {
-                    const updatedUser = { ...user, githubUsername: username };
-                    localStorage.setItem('nexusUser', JSON.stringify(updatedUser));
-                    alert(`Successfully synced @${username} to your profile! ✨`);
-                    window.location.href = 'profile.html'; 
-                } else { alert("Failed to sync account."); }
-            } catch (err) { alert("Connection error. Is your backend running?"); }
+    // 1. Correctly retrieve the token and user data
+    const user = JSON.parse(localStorage.getItem('nexusUser') || '{}');
+    
+    // CHANGE: We now pull the token from its specific key where we saved it in login.js
+    const token = localStorage.getItem('token'); 
+
+    // Safety check: Ensure the user is actually logged in before trying to sync
+    if (!token) {
+        alert("You must be logged in to sync your GitHub account.");
+        return;
+    }
+
+    try {
+        // 2. HIT THE UPDATED BACKEND ROUTE
+        const response = await fetch(`http://localhost:5000/api/users/update`, {
+            method: 'PUT',
+            headers: { 
+                'Content-Type': 'application/json', 
+                'Authorization': `Bearer ${token}` 
+            },
+            body: JSON.stringify({ githubUsername: username })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            // 3. SUCCESS: Update the nexusUser in storage with the data from the server
+            // This ensures all profile fields stay synced
+            const updatedUser = { 
+                ...user, 
+                githubUsername: data.user.githubUsername || username 
+            };
+            
+            localStorage.setItem('nexusUser', JSON.stringify(updatedUser));
+            
+            alert(`Successfully synced @${username} to your profile! ✨`);
+            
+            // Redirect to profile to see the changes
+            window.location.href = 'profile.html'; 
+        } else { 
+            // Better error reporting
+            alert(data.message || "Failed to sync account. Your token might be expired."); 
         }
+    } catch (err) { 
+        console.error("Sync Error:", err);
+        alert("Connection error. Is your backend running on port 5000?"); 
+    }
+}
 
         async function loadUserData() {
             const rawData = localStorage.getItem('nexusUser');

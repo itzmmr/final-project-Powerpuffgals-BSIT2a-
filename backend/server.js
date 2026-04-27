@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const dns = require('dns'); 
+const path = require('path'); // Moved to the top for clean organization
 const connectDB = require('./config/db');
 const { errorHandler } = require('./middleware/errorMiddleware');
 
@@ -13,9 +14,8 @@ const app = express();
 connectDB();
 
 // 2. Global Middleware
-// UPDATED: Added specific options to ensure browser requests are never blocked
 app.use(cors({
-    origin: '*', // Allows all origins for development
+    origin: '*', 
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
@@ -32,6 +32,10 @@ app.use((req, res, next) => {
 // Serve uploaded files (avatars, post images) publicly
 app.use('/uploads', express.static('uploads'));
 
+// --- FRONTEND STATIC SERVING ---
+// This tells Express to look into the frontend folder for CSS, JS, and Images
+app.use(express.static(path.join(__dirname, '../frontend')));
+
 // 4. Routes
 app.use('/api/users', require('./routes/userRoutes'));
 app.use('/api/posts', require('./routes/postRoutes'));
@@ -39,9 +43,9 @@ app.use('/api/github', require('./routes/githubRoutes'));
 app.use('/api/comments', require('./routes/commentRoutes'));
 app.use('/api/notifications', require('./routes/notificationRoutes'));
 
-// Root Route
+// Updated Root Route: This now sends your actual index.html file
 app.get('/', (req, res) => {
-    res.send('🚀 NexusWrites API is running smoothly...');
+    res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
 
 // 5. 404 Handler

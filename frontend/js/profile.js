@@ -42,8 +42,7 @@ async function loadGitHubPortfolio(username) {
     const githubContainer = document.getElementById('github-portfolio-container');
     if (!githubContainer) return;
 
-    // 1. CHECK IF USERNAME EXISTS
-    // If the person being visited has no githubUsername in the DB, show the link prompt
+    // 1. CHECK IF USERNAME IS VALID
     if (!username || username === 'undefined' || username === 'null' || username === '') {
         githubContainer.innerHTML = `
             <div class="text-center p-3 border rounded bg-light">
@@ -55,7 +54,7 @@ async function loadGitHubPortfolio(username) {
         return;
     }
 
-    // Show loading state
+    // Show loading spinner
     githubContainer.innerHTML = `
         <div class="text-center p-3">
             <div class="spinner-border text-success" role="status"></div>
@@ -63,11 +62,17 @@ async function loadGitHubPortfolio(username) {
         </div>`;
 
     try {
-        const currentSession = JSON.parse(localStorage.getItem('nexusUser') || '{}');
-        const activeToken = currentSession.token;
+        // --- 2. AUTHENTICATION FIX ---
+        // We pull directly from localStorage to solve the "Auth token missing" error
+        const activeToken = localStorage.getItem('token'); 
 
-        // 2. FETCH DATA FOR THE SPECIFIC USERNAME PROVIDED
-        // This ensures if you visit "Nica," it fetches /api/github/nica
+        if (!activeToken) {
+            console.error("GitHub Sync Failed: No token found in localStorage.");
+            githubContainer.innerHTML = `<p class="text-center text-muted small">Please log in to view your portfolio.</p>`;
+            return;
+        }
+
+        // --- 3. FETCH REPOSITORY DATA ---
         const response = await fetch(`http://localhost:5000/api/github/${username}`, {
             headers: { 
                 'Authorization': `Bearer ${activeToken}`,
@@ -78,22 +83,29 @@ async function loadGitHubPortfolio(username) {
         const repoData = await response.json();
 
         if (response.ok && repoData) {
+            // Handle if backend returns an array of repos or a single object
+            const repo = Array.isArray(repoData) ? repoData[0] : repoData;
+
+            if (!repo || !repo.html_url) {
+                throw new Error("Invalid repository data received");
+            }
+
             githubContainer.innerHTML = `
-                <div class="card p-3 shadow-sm border-0 bg-light">
+                <div class="card p-3 shadow-sm border-0 bg-light" style="border-left: 5px solid #1a535c !important;">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h6 class="fw-bold mb-0">${repoData.name?.toUpperCase() || 'REPOSITORY'}</h6>
+                            <h6 class="fw-bold mb-0">${repo.name?.toUpperCase() || 'REPOSITORY'}</h6>
                             <small class="text-muted">Verified Technical Portfolio</small>
                             <div class="mt-1">
-                                <a href="${repoData.html_url}" target="_blank" class="text-decoration-none small fw-bold" style="color: #2dd4bf;">
+                                <a href="${repo.html_url}" target="_blank" class="text-decoration-none small fw-bold" style="color: #1a535c;">
                                     <i class="fas fa-code me-1"></i> Source Code
                                 </a>
                             </div>
                         </div>
                         <div class="text-end">
-                            <span class="badge bg-dark"><i class="fas fa-star text-warning me-1"></i>${repoData.stargazers_count || 0}</span>
+                            <span class="badge bg-dark"><i class="fas fa-star text-warning me-1"></i>${repo.stargazers_count || 0}</span>
                             <div class="mt-2">
-                                <a href="${repoData.html_url}" target="_blank" class="btn btn-sm btn-outline-primary" style="font-size: 0.7rem;">
+                                <a href="${repo.html_url}" target="_blank" class="btn btn-sm btn-outline-success" style="font-size: 0.7rem; border-color: #1a535c; color: #1a535c;">
                                     View Repo <i class="fas fa-external-link-alt ms-1"></i>
                                 </a>
                             </div>
@@ -101,7 +113,6 @@ async function loadGitHubPortfolio(username) {
                     </div>
                 </div>`;
         } else {
-            // Handle cases where the GitHub API can't find that specific username
             githubContainer.innerHTML = `
                 <div class="text-center p-3">
                     <p class="text-muted small">Could not verify GitHub user: <strong>${username}</strong></p>
@@ -113,10 +124,17 @@ async function loadGitHubPortfolio(username) {
         githubContainer.innerHTML = `<p class="text-center text-muted small">Portfolio connection temporarily unavailable.</p>`;
     }
 }
+
 // --- USER POSTS AUTO-FETCH ---
 async function loadUserPosts(targetProfileId) {
     const postContainer = document.getElementById('userPostsContainer');
     if (!postContainer) return;
+
+    // 1. SAFETY CHECK: Ensure targetProfileId is valid before fetching
+    if (!targetProfileId || targetProfileId === 'undefined' || targetProfileId === 'null') {
+        postContainer.innerHTML = `<p class="text-center text-muted p-5">User profile data not fully loaded yet.</p>`;
+        return;
+    }
 
     // Spinner for the posts section
     postContainer.innerHTML = `
@@ -126,8 +144,15 @@ async function loadUserPosts(targetProfileId) {
         </div>`;
 
     try {
-        const currentSession = JSON.parse(localStorage.getItem('nexusUser') || '{}');
-        const activeToken = currentSession.token;
+        // --- 2. FIXED AUTHENTICATION SOURCE ---
+        // Pulling directly from the standalone 'token' key as seen in Local Storage
+        const activeToken = localStorage.getItem('token'); 
+
+        // Exit early if no token exists to avoid 401 errors
+        if (!activeToken) {
+            postContainer.innerHTML = `<p class="text-center text-muted p-5">Please log in to view posts.</p>`;
+            return;
+        }
 
         const response = await fetch(`http://localhost:5000/api/posts/user/${targetProfileId}`, {
             headers: { 
@@ -152,14 +177,13 @@ async function loadUserPosts(targetProfileId) {
                     : `<p class="text-center text-muted">No technical posts yet.</p>`;
             }
         } else if (response.status === 401) {
-            postContainer.innerHTML = `<p class="text-center text-danger">Please log in again to view posts.</p>`;
+            postContainer.innerHTML = `<p class="text-center text-danger">Session expired. Please log in again.</p>`;
         }
     } catch (err) {
         console.error("Post Auto-Fetch error:", err);
         postContainer.innerHTML = `<p class="text-center text-danger">Connection error. Could not load posts.</p>`;
     }
 }
-
        async function loadProfile() {
     // --- 1. SETUP & IDENTITY CHECK ---
     const userSnapshot = localStorage.getItem('nexusUser');
@@ -173,21 +197,19 @@ async function loadUserPosts(targetProfileId) {
 
     const loggedInUser = JSON.parse(userSnapshot) || {};
     
-    // ALWAYS use the token from the logged-in session for the Authorization header
-    const token = loggedInUser.token;
+    // --- FIXED: AUTHENTICATION SOURCE ---
+    // Pull the token from its own key where login.js saves it
+    const token = localStorage.getItem('token'); 
 
-    // CRITICAL FIX: If token is missing or 'undefined' as a string, don't run the fetch
+    // CRITICAL FIX: Ensure token exists and isn't the string 'undefined'
     if (!token || token === 'undefined') {
         console.error("Auth token is missing. Please log in again.");
-        // Redirect if token is corrupted to force a fresh login
-        // window.location.href = 'login.html'; 
         return;
     }
 
     const urlParams = new URLSearchParams(window.location.search);
     const profileIdFromUrl = urlParams.get('id');
     
-    // Strict Identity logic: myId is the logged-in person, targetProfileId is who we are viewing
     const myId = String(loggedInUser._id || loggedInUser.id || "");
     const targetProfileId = profileIdFromUrl || myId;
     const isMyProfile = !profileIdFromUrl || String(profileIdFromUrl) === myId;
@@ -198,12 +220,10 @@ async function loadUserPosts(targetProfileId) {
         feedTitle.textContent = isMyProfile ? "My Technical Posts" : "Technical Feed";
     }
 
-    // Set temporary loading states
     const usernameEl = document.getElementById('profileUsername');
     const roleEl = document.getElementById('profileRoleDisplay');
     const bioEl = document.getElementById('profileBioDisplay');
     
-    // Use loggedInUser data ONLY if it is the owner's profile; otherwise show loading
     if (usernameEl) usernameEl.textContent = isMyProfile ? (loggedInUser.name || "User") : "Loading...";
     if (roleEl) roleEl.textContent = isMyProfile ? (loggedInUser.role || "IT Student") : "Technical Contributor";
     if (bioEl) bioEl.textContent = isMyProfile ? (loggedInUser.bio || "Technical Contributor") : "Loading bio...";
@@ -217,9 +237,8 @@ async function loadUserPosts(targetProfileId) {
 
     // --- 3. FETCH & POPULATE DATA (AUTO-FETCH ENABLED) ---
     try {
-        // We re-verify the token here to ensure the auto-fetch doesn't send 'undefined'
-        const currentSession = JSON.parse(localStorage.getItem('nexusUser') || '{}');
-        const activeToken = currentSession.token;
+        // Use the standalone token for the request
+        const activeToken = localStorage.getItem('token');
 
         if (!activeToken || activeToken === 'undefined') {
             console.error("Auto-fetch blocked: Invalid Token.");
@@ -236,7 +255,6 @@ async function loadUserPosts(targetProfileId) {
         const profileData = await response.json();
 
         if (response.ok) {
-            // Update UI with real data from the requested profile
             if (usernameEl) usernameEl.textContent = profileData.name || "User";
             if (roleEl) roleEl.textContent = profileData.role || "IT Student";
             if (bioEl) bioEl.textContent = profileData.bio || "No bio available.";
@@ -258,12 +276,10 @@ async function loadUserPosts(targetProfileId) {
             if (postsCountEl) postsCountEl.textContent = profileData.posts || 0;
 
             // --- 🚀 NEW AUTO-FETCH INSERTIONS ---
-            // These calls ensure GitHub and Posts load automatically on refresh
             if (profileData.githubUsername) {
                 loadGitHubPortfolio(profileData.githubUsername);
             }
             loadUserPosts(targetProfileId);
-            // -------------------------------------
 
             // --- 4. BUTTON TOGGLE LOGIC ---
             const editBtn = document.getElementById('editProfileBtn');
@@ -298,7 +314,6 @@ async function loadUserPosts(targetProfileId) {
 
             applyButtonLogic();
 
-            // Safety Net: Prevents UI flickering on guest profiles
             if (!isMyProfile && editBtn) {
                 const observer = new MutationObserver(() => {
                     if (!editBtn.classList.contains('hidden-element')) {
@@ -313,7 +328,7 @@ async function loadUserPosts(targetProfileId) {
 
         } else if (response.status === 401) {
             console.error("Authentication failed. Session expired.");
-            localStorage.removeItem('nexusUser');
+            localStorage.removeItem('token');
             window.location.href = 'login.html';
         } else {
             console.error("Profile fetch failed:", profileData.message);
@@ -322,24 +337,30 @@ async function loadUserPosts(targetProfileId) {
         console.error("Connection error while loading stats:", err);
     }
 }
-    document.addEventListener('DOMContentLoaded', function() {
-    // 1. Get the logged-in user data from localStorage
+
+// --- DOMContentLoaded Listener ---
+document.addEventListener('DOMContentLoaded', function() {
     const userData = JSON.parse(localStorage.getItem('nexusUser'));
 
+    // Check if user is logged in AND has a linked GitHub account
     if (userData && userData.githubUsername) {
-        // 2. If a GitHub username exists, fetch the repos automatically
         loadGitHubPortfolio(userData.githubUsername);
     } else {
-        // 3. Show a button that triggers the linking prompt (Centered)
-        document.getElementById('github-portfolio-display').innerHTML = `
-            <div class="text-center">
-                <p class="text-muted mb-0">No GitHub account linked to this profile.</p>
-                <button onclick="linkGitHubAccount()" class="btn btn-sm btn-outline-secondary mt-2">
-                    <i class="fab fa-github me-1"></i> Link GitHub Account
-                </button>
-            </div>
-        `;
+        const githubContainer = document.getElementById('github-portfolio-display');
+        if (githubContainer) {
+            githubContainer.innerHTML = `
+                <div class="text-center">
+                    <p class="text-muted mb-0">No GitHub account linked to this profile.</p>
+                    <button onclick="linkGitHubAccount()" class="btn btn-sm btn-outline-secondary mt-2">
+                        <i class="fab fa-github me-1"></i> Link GitHub Account
+                    </button>
+                </div>
+            `;
+        }
     }
+    
+    // Trigger the profile load
+    loadProfile();
 });
 
 // Function to link account directly from profile
@@ -538,6 +559,10 @@ async function loadGitHubPortfolio(username) {
 
     if (!container) return; 
 
+    // --- FIXED: AUTHENTICATION SOURCE ---
+    // Retrieve the standalone token we saved in login.js
+    const token = localStorage.getItem('token'); 
+
     // Determine whose posts to fetch
     const urlParams = new URLSearchParams(window.location.search);
     const targetUserId = urlParams.get('id') || (user._id || user.id);
@@ -547,17 +572,21 @@ async function loadGitHubPortfolio(username) {
 
     try {
         const response = await fetch(`http://localhost:5000/api/posts/user/${targetUserId}`, {
-            headers: { 'Authorization': `Bearer ${user.token}` }
+            headers: { 
+                // FIXED: Using the direct token instead of user.token
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
         });
         
         const posts = await response.json();
 
-        // ADD THIS CHECK HERE
+        // ADDED/UPDATED CHECK: Handle unauthorized or error messages from backend
         if (posts.message) {
             console.error("Auth Error:", posts.message);
             container.innerHTML = `<div class="text-center py-5"><h5>Please log in again to view posts.</h5></div>`;
             return;
-}
+        }
 
         if (!Array.isArray(posts)) {
             console.error("Expected array but got:", posts);
@@ -571,9 +600,10 @@ async function loadGitHubPortfolio(username) {
             return;
         }
 
+        // PRESERVED: Your exact HTML mapping and styling
         container.innerHTML = posts.map(post => `
             <div class="row">
-    <div class="col-12">
+                <div class="col-12">
                     <div class="post-card mb-5 shadow-sm p-4" style="background: #fff; border-radius: 20px; border-left: 8px solid #1a535c;">
                         <div class="d-flex justify-content-between mb-3">
                             <h5 class="fw-bold" style="color: #1a535c;">${post.title}</h5>
@@ -604,16 +634,20 @@ async function loadGitHubPortfolio(username) {
     }
 }
 
-        function updateTabUI(idx) {
-            document.querySelectorAll('#profileTabs .nav-link').forEach((btn, i) => {
-                btn.classList.toggle('active', i === idx);
-            });
-        }
+// PRESERVED: UI Utility functions exactly as provided
+function updateTabUI(idx) {
+    document.querySelectorAll('#profileTabs .nav-link').forEach((btn, i) => {
+        btn.classList.toggle('active', i === idx);
+    });
+}
 
-        function toggleEditOther() {
-            const val = document.getElementById('editRoleSelect').value;
-            document.getElementById('editRoleOther').style.display = (val === 'Other') ? 'block' : 'none';
-        }
+function toggleEditOther() {
+    const selectEl = document.getElementById('editRoleSelect');
+    const otherInput = document.getElementById('editRoleOther');
+    if (selectEl && otherInput) {
+        otherInput.style.display = (selectEl.value === 'Other') ? 'block' : 'none';
+    }
+}
 
        async function saveProfile() {
     // 1. Get current session info
@@ -683,4 +717,4 @@ const updatedData = {
         alert("Server error. Please ensure your backend is running.");
     }
 }
-    
+

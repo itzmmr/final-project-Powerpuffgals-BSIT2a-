@@ -1,5 +1,5 @@
-// --- TRANSLATION DATA ---
-const translations = {
+// 1. CONSOLIDATED TRANSLATION DATA
+window.translations = {
     "English": {
         "home": "Home", "following": "Following", "github": "GitHub", "settings": "Settings",
         "accSettings": "Account Settings", "manageProfile": "Manage your profile and platform experience.",
@@ -67,17 +67,52 @@ const translations = {
         "welcome": "ยินดีต้อนรับกลับ", "post": "โพสต์บทเรียน...", "search": "ค้นหา..."
     }
 };
+// 2. INITIALIZATION & GLOBAL VARIABLES
+let profileModal;
 
-// --- NEW LANGUAGE FUNCTION ---
+document.addEventListener('DOMContentLoaded', function() {
+    loadSettings();
+    const modalElem = document.getElementById('editProfileModal');
+    if (modalElem) {
+        profileModal = new bootstrap.Modal(modalElem);
+    }
+});
+
+// 3. CORE FUNCTIONS
+// --- 1. SAFE TRANSLATION DECLARATION ---
+// This prevents the red SyntaxError that stops the whole script
+if (typeof translations === 'undefined') {
+    window.translations = {
+        'English': { 
+            home: 'Home', 
+            settings: 'Settings', 
+            logout: 'Logout',
+            welcome: 'Welcome back',
+            // ... add all your other keys here
+        },
+        'Filipino': { 
+            home: 'Home', 
+            settings: 'Mga Setting', 
+            logout: 'Mag-log Out',
+            welcome: 'Maligayang pagbabalik',
+            // ... add all your other keys here
+        }
+    };
+}
+
+// --- 2. YOUR CHANGE LANGUAGE FUNCTION (Updated to use window.translations) ---
 function changeLanguage(lang) {
-    const data = translations[lang];
-    if (!data) return;
+    // FIX: Look at window.translations specifically
+    const data = window.translations ? window.translations[lang] : null; 
+    
+    if (!data) {
+        console.warn("Translation data not ready yet.");
+        return;
+    }
 
-    // This looks for elements with data-translate attributes in your HTML
     document.querySelectorAll('[data-translate]').forEach(el => {
         const key = el.getAttribute('data-translate');
         if (data[key]) {
-            // Check if it's an input/search box
             if (el.tagName === 'INPUT' && el.placeholder) {
                 el.placeholder = data[key];
             } else {
@@ -89,23 +124,11 @@ function changeLanguage(lang) {
     localStorage.setItem('nexusLang', lang);
 }
 
-// --- YOUR ORIGINAL FUNCTIONS (UNTOUCHED) ---
-
-function openProfileModal() {
-  const modal = document.getElementById('editProfileModal');
-  if (modal) {
-    modal.style.display = 'flex';
-  } else {
-    console.error("Modal element not found! Make sure your modal has id='editProfileModal'");
-  }
-}
-
 function loadSettings() {
     const savedTheme = localStorage.getItem('nexusTheme') || 'light';
     document.body.classList.toggle('dark-mode', savedTheme === 'dark');
     if(document.getElementById('themeSelect')) document.getElementById('themeSelect').value = savedTheme;
 
-    // Added: Load saved language
     const savedLang = localStorage.getItem('nexusLang') || 'English';
     changeLanguage(savedLang);
     if(document.getElementById('langSelect')) document.getElementById('langSelect').value = savedLang;
@@ -118,216 +141,142 @@ function loadSettings() {
 
 function showSection(sectionId) {
     document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
-    document.getElementById(sectionId).classList.add('active');
+    const target = document.getElementById(sectionId);
+    if (target) target.classList.add('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+function openProfileModal() {
+    if (profileModal) {
+        profileModal.show();
+    } else {
+        const modalElem = document.getElementById('editProfileModal');
+        profileModal = new bootstrap.Modal(modalElem);
+        profileModal.show();
+    }
+}
+
+async function saveProfile() {
+    // 1. Get the token directly from localStorage (Your current fix is correct!)
+    const token = localStorage.getItem('token');
+    if (!token) {
+        alert("Session expired. Please log in again.");
+        window.location.href = "index.html"; // Send them home if token is gone
+        return;
+    }
+
+    // 2. Safely grab values using optional chaining (already good)
+    const modalName = document.getElementById('editName')?.value;
+    const modalBio = document.getElementById('editBio')?.value;
+    const modalGithub = document.getElementById('editGithub')?.value;
+    const modalRoleSelect = document.getElementById('editRoleSelect')?.value;
+    const modalRoleOther = document.getElementById('editRoleOther')?.value;
+    
+    // Logic for "Other" role
+    const finalRole = (modalRoleSelect === 'Other') ? modalRoleOther : modalRoleSelect;
+
+    // 3. Collect interests (Ensures it's an array even if none are checked)
+    const selectedInterests = Array.from(document.querySelectorAll('.interests-checkbox:checked'))
+        .map(cb => cb.value);
+
+    const updateData = {
+        name: modalName,
+        bio: modalBio,
+        role: finalRole,
+        githubUsername: modalGithub,
+        interests: selectedInterests
+    };
+
+    // UI Feedback: Change button text so user knows it's working
+    const saveBtn = document.querySelector('button[onclick="saveProfile()"]');
+    if (saveBtn) saveBtn.innerText = "Saving...";
+
+    try {
+        const response = await fetch('http://localhost:5000/api/users/update', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}` // This fixes the 401 Unauthorized
+            },
+            body: JSON.stringify(updateData)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            // Update local user data so the name changes instantly in the UI
+            localStorage.setItem('nexusUser', JSON.stringify(result.user));
+            
+            alert("Profile updated successfully! ✨");
+
+            // Safety check for Bootstrap modal
+            if (typeof profileModal !== 'undefined' && profileModal) {
+                profileModal.hide();
+            }
+            
+            location.reload(); 
+        } else {
+            alert(result.message || "Update failed");
+        }
+    } catch (error) {
+        console.error("Error saving profile:", error);
+        alert("Server error. Please check if your backend is running.");
+    } finally {
+        if (saveBtn) saveBtn.innerText = "Save Changes";
+    }
+}
+// 4. UI EVENT HANDLERS
 function changeTheme(theme) {
     document.body.classList.toggle('dark-mode', theme === 'dark');
     localStorage.setItem('nexusTheme', theme);
 }
 
-function changeFontSize(size) {
-    document.documentElement.style.fontSize = size + 'px';
-    document.getElementById('fontSizeValue').innerText = size + 'px';
-}
-
-function logout() {
-    localStorage.removeItem('nexusUser');
-    window.location.href = 'login.html';
-}
-
-document.addEventListener('DOMContentLoaded', loadSettings);
-
-function handlePasswordChange() {
-    const current = document.getElementById('currentPassInput').value;
-    const newPass = document.getElementById('newPassInput').value;
-    const confirm = document.getElementById('confirmPassInput').value;
-
-    // Fetch the password the user used to LOGIN
-    let savedPassword = localStorage.getItem('userPassword');
-
-    // Safety check: if no password found (user skipped login), default to a placeholder or force login
-    if (!savedPassword) {
-        triggerErrorModal("Session Error", "No active session found. Please log in again.");
-        return;
-    }
-
-    // 1. Match against the Login Password
-    if (current !== savedPassword) {
-        triggerErrorModal("Incorrect Password", "The current password does not match the one used at login.");
-        return;
-    }
-
-    // 2. Validation
-    if (newPass === "" || newPass !== confirm) {
-        triggerErrorModal("Entry Error", "New passwords must match and cannot be empty.");
-        return;
-    }
-
-    // 3. SUCCESS Logic
-    // Update the 'database' so the NEXT time they change it, they use the new one
-    localStorage.setItem('userPassword', newPass);
-    
-    // Custom Success Alert (Matching your theme)
-    alert("Password successfully updated!");
-    
-    // Clean up
-    document.getElementById('currentPassInput').value = "";
-    document.getElementById('newPassInput').value = "";
-    document.getElementById('confirmPassInput').value = "";
-    
-    // Return to main settings
-    showSection('mainSettingsView');
-}
-
-function triggerErrorModal(title, message) {
-    document.getElementById('errorTitle').innerText = title;
-    document.getElementById('errorText').innerText = message;
-    
-    if (typeof bootstrap !== 'undefined') {
-        const modalEl = document.getElementById('passwordErrorModal');
-        const myModal = new bootstrap.Modal(modalEl);
-        myModal.show();
-    } else {
-        alert(title + ": " + message);
-    }
-}
-
-
-    // 1. Create a variable to store the modal instance
-    let myEditModal;
-
-    // 2. Initialize the modal when the page loads
-    document.addEventListener('DOMContentLoaded', function() {
-        const modalElement = document.getElementById('editProfileModal');
-        myEditModal = new bootstrap.Modal(modalElement);
-    });
-
-    // 3. This is the function your "Settings Card" is looking for
-    function openProfileModal() {
-        if (myEditModal) {
-            myEditModal.show();
-        } else {
-            // Fallback in case it wasn't initialized yet
-            const modalElement = document.getElementById('editProfileModal');
-            myEditModal = new bootstrap.Modal(modalElement);
-            myEditModal.show();
-        }
-    }
-
-    // Optional: Add logic for the "Other" role toggle you have in your HTML
-    function toggleEditOther() {
-        const select = document.getElementById('editRoleSelect');
-        const otherInput = document.getElementById('editRoleOther');
-        otherInput.style.display = (select.value === 'Other') ? 'block' : 'none';
-    }
-    // Toggle the 'Other' input field
-function toggleEditOther() {
-    const select = document.getElementById('editRoleSelect');
-    const otherInput = document.getElementById('editRoleOther');
-    otherInput.style.display = (select.value === 'Other') ? 'block' : 'none';
-}
-
-// Show the selected image immediately
 function previewEditImage(input) {
     if (input.files && input.files[0]) {
         const reader = new FileReader();
         reader.onload = function(e) {
             const preview = document.getElementById('editAvatarPreview');
             const icon = document.getElementById('editAvatarIcon');
-            
-            preview.src = e.target.result;
-            preview.style.display = 'block';
-            icon.style.display = 'none';
+            if (preview && icon) {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+                icon.style.display = 'none';
+            }
         }
         reader.readAsDataURL(input.files[0]);
     }
 }
-// Initialize Modal safely
-let profileModal;
-document.addEventListener('DOMContentLoaded', function() {
-    const modalElem = document.getElementById('editProfileModal');
-    if (modalElem) {
-        profileModal = new bootstrap.Modal(modalElem);
-    }
-});
 
-function openProfileModal() {
-    if (profileModal) {
-        profileModal.show();
-    } else {
-        // Fallback if not initialized
-        profileModal = new bootstrap.Modal(document.getElementById('editProfileModal'));
-        profileModal.show();
+function toggleEditOther() {
+    const select = document.getElementById('editRoleSelect');
+    const otherInput = document.getElementById('editRoleOther');
+    if (select && otherInput) {
+        otherInput.style.display = (select.value === 'Other') ? 'block' : 'none';
     }
 }
 
-function saveProfile() {
-    // 1. Get values
-    const name = document.getElementById('editName').value;
-    const bio = document.getElementById('editBio').value;
-    const role = document.getElementById('editRoleSelect').value;
-    const avatar = document.getElementById('editAvatarPreview').src;
-
-    // 2. Update Display
-    document.getElementById('displayProfileName').innerText = name;
-    document.getElementById('displayProfileBio').innerText = bio;
-    document.getElementById('displayProfileRole').innerText = role;
-    
-    if (avatar && avatar !== "#" && !avatar.includes(window.location.host)) {
-        document.getElementById('mainProfileAvatar').src = avatar;
+function applyLanguage() {
+    // Safety check: if translations isn't defined yet, don't crash the script
+    if (typeof translations === 'undefined' && !window.translations) {
+        console.warn("NEXUSWrites: Translation data not ready yet.");
+        return;
     }
 
-    // 3. Show the display card (if it was hidden)
-    document.getElementById('mainProfileDisplay').style.display = 'block';
+    const lang = localStorage.getItem('nexusLang') || 'English';
+    const dict = (window.translations || translations)[lang];
 
-    // 4. Close Modal
-    profileModal.hide();
+    if (!dict) return;
+
+    document.querySelectorAll('[data-key], [data-translate]').forEach(el => {
+        const key = el.dataset.key || el.getAttribute('data-translate');
+        if (dict[key]) {
+            el.innerText = dict[key];
+        }
+    });
 }
-function saveProfile() {
-    console.log("Save button detected!");
 
-    // 1. Get values from MODAL IDs
-    const modalName = document.getElementById('editName')?.value;
-    const modalBio = document.getElementById('editBio')?.value;
-    const modalRoleSelect = document.getElementById('editRoleSelect')?.value;
-    const modalRoleOther = document.getElementById('editRoleOther')?.value;
-    const modalAvatarSrc = document.getElementById('editAvatarPreview')?.src;
-
-    // Determine role logic
-    const finalRole = (modalRoleSelect === 'Other') ? modalRoleOther : modalRoleSelect;
-
-    // 2. Target the DISPLAY IDs
-    const targetName = document.getElementById('displayProfileName');
-    const targetBio = document.getElementById('displayProfileBio');
-    const targetRole = document.getElementById('displayProfileRole');
-    const targetAvatar = document.getElementById('displayProfileAvatar');
-
-    // 3. Update only if the elements exist
-    if (targetName && modalName) {
-        targetName.innerText = modalName;
-        console.log("Updated Name to:", modalName);
-    }
-    
-    if (targetBio && modalBio) {
-        targetBio.innerText = modalBio;
-    }
-    
-    if (targetRole && finalRole) {
-        targetRole.innerText = finalRole;
-    }
-
-    // 4. Update Avatar only if a real photo was picked
-    if (targetAvatar && modalAvatarSrc && modalAvatarSrc.includes('data:image')) {
-        targetAvatar.src = modalAvatarSrc;
-        console.log("Updated Avatar successfully.");
-    }
-
-    // 5. Force Modal to Close
-    const modalElement = document.getElementById('editProfileModal');
-    if (modalElement) {
-        const modalInstance = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
-        modalInstance.hide();
-    }
+function logout() {
+    localStorage.removeItem('nexusUser');
+    localStorage.removeItem('token');
+    window.location.href = 'login.html';
 }
