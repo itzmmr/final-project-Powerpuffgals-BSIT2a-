@@ -29,20 +29,40 @@ exports.createPost = async (req, res) => {
     } catch (err) { res.status(500).json({ error: err.message }); }
 };
 
-// 2. GET ALL POSTS (Global Feed)
+// 2. GET ALL POSTS (Global Feed) WITH PAGINATION
 exports.getAllPosts = async (req, res) => {
     try {
+        // Pagination parameters (default page=1, limit=10)
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const skip = (page - 1) * limit;
+
+        // Get total count for metadata
+        const totalPosts = await Post.countDocuments();
+        const totalPages = Math.ceil(totalPosts / limit);
+
+        // Fetch only the needed posts
         const posts = await Post.find()
             .populate('author', 'name avatar bio githubUsername')
             .populate({
                 path: 'comments',
                 populate: [
-            { path: 'user', select: 'name avatar' },
-            { path: 'replies.user', select: 'name avatar' }
-        ]
-})
-            .sort({ createdAt: -1 });
-        res.json(posts || []);
+                    { path: 'user', select: 'name avatar' },
+                    { path: 'replies.user', select: 'name avatar' }
+                ]
+            })
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit);
+
+        // Return paginated response
+        res.json({
+            posts,
+            currentPage: page,
+            totalPages,
+            totalPosts,
+            limit
+        });
     } catch (err) { res.status(500).json({ error: err.message }); }
 };
 

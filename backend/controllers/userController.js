@@ -291,3 +291,30 @@ exports.getUserStats = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
+
+// 9. Update Password with Verification
+exports.updatePassword = async (req, res) => {
+    try {
+        const { currentPassword, newPassword } = req.body;
+        
+        // req.user._id comes from your 'protect' middleware
+        const user = await User.findById(req.user._id);
+
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        // 1. Verify current password
+        const isMatch = await user.matchPassword(currentPassword);
+        if (!isMatch) {
+            return res.status(401).json({ message: "Ang kasalukuyang password ay mali." });
+        }
+
+        // 2. Set new password (the User model pre-save hook will hash this automatically)
+        user.password = newPassword;
+        await user.save();
+
+        res.status(200).json({ message: "Password updated successfully! ✨" });
+    } catch (err) {
+        console.error("Password Update Error:", err);
+        res.status(500).json({ error: "Server error during password update." });
+    }
+};

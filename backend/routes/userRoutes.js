@@ -28,6 +28,8 @@ router.get('/me', protect, (req, res) => {
  */
 router.put('/update', protect, upload.single('avatar'), userController.updateUserProfile);
 
+router.put('/update-password', protect, userController.updatePassword);
+
 // Get profile statistics (Post count, Followers, Following)
 router.get('/stats/:id', protect, userController.getUserStats);
 
@@ -55,5 +57,6 @@ router.get('/list', async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
+
 
 module.exports = router;
