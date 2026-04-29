@@ -139,3 +139,49 @@ document.addEventListener('DOMContentLoaded', () => {
     loadUserData();
     renderFollowedPosts();
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    // This function runs as soon as the page loads
+    displayFollowingPosts();
+});
+
+function displayFollowingPosts() {
+    const container = document.getElementById('following-list-container');
+    
+    // The data you want to show
+    const posts = [
+        {
+            name: "Nexus Dev",
+            time: "10m ago",
+            text: "Welcome to the following feed! This is where you'll see updates from people you track."
+        },
+        {
+            name: "Tech Enthusiast",
+            time: "1h ago",
+            text: "The UI layout on this dashboard is looking really sharp."
+        }
+    ];
+
+    if (posts.length > 0) {
+        // 1. Clear the "No data" dashed box
+        container.innerHTML = ''; 
+
+        // 2. Add the posts one by one
+        posts.forEach(post => {
+            const postMarkup = `
+                <div class="card border rounded-4 mb-3 text-start shadow-sm mt-3" style="border: 1px solid #e9ecef !important;">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="fw-bold text-dark">${post.name}</span>
+                            <span class="text-muted small">${post.time}</span>
+                        </div>
+                        <p class="mb-0 text-secondary" style="font-size: 0.95rem;">
+                            ${post.text}
+                        </p>
+                    </div>
+                </div>
+            `;
+            container.innerHTML += postMarkup;
+        });
+    }
+}

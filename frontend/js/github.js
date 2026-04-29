@@ -1,4 +1,3 @@
-
         // Theme handling
         if (localStorage.getItem('nexusTheme') === 'dark') {
             document.body.classList.add('dark-mode');

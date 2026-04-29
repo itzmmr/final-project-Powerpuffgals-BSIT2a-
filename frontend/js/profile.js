@@ -1,4 +1,3 @@
-
  // --- 1. SECURITY CHECK (Kicks unauthorized users out immediately) ---
     (function() {
         const session = localStorage.getItem('nexusUser');
@@ -199,14 +198,15 @@ async function loadUserPosts(targetProfileId) {
     
     // --- FIXED: AUTHENTICATION SOURCE ---
     // Pull the token from its own key where login.js saves it
-    const token = localStorage.getItem('token'); 
+    const token = localStorage.getItem('token');
 
-    // CRITICAL FIX: Ensure token exists and isn't the string 'undefined'
-    if (!token || token === 'undefined') {
-        console.error("Auth token is missing. Please log in again.");
-        return;
-    }
-
+// Check if it's actually missing or just the word "null" as a string
+if (!token || token === "null" || token === "undefined") {
+    console.error("TOKEN IS MISSING - Redirecting to login.");
+    window.location.href = 'login.html'; 
+} else {
+    console.log("TOKEN FOUND:", token);
+}
     const urlParams = new URLSearchParams(window.location.search);
     const profileIdFromUrl = urlParams.get('id');
     
@@ -717,4 +717,3 @@ const updatedData = {
         alert("Server error. Please ensure your backend is running.");
     }
 }
-

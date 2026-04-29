@@ -1,159 +1,180 @@
-const keywords = ["AI Tutorials", "AI for Web", "WebSys Basics", "WebSys Architecture", "JavaScript Tips", "UI Design"];
-
-function handleInstantSuggestions(val) {
-    const box = document.getElementById('suggestionBox');
-    const clearBtn = document.getElementById('clearBtn');
-    
-    if (val.length > 0) {
-        clearBtn.style.display = 'block';
-        
-        // Filter list based on any character match
-        const matches = keywords.filter(k => k.toLowerCase().includes(val.toLowerCase()));
-        
-        if (matches.length > 0) {
-            box.innerHTML = matches.map(m => `
-                <div class="suggest-row" onclick="applySearch('${m}')">
-                    <span><i class="fas fa-search me-2 text-muted"></i> ${m}</span>
-                    <i class="fas fa-arrow-up" style="transform: rotate(-45deg); color: #ddd;"></i>
-                </div>
-            `).join('');
-            box.style.display = 'block';
-        } else {
-            box.style.display = 'none';
-        }
-    } else {
-        box.style.display = 'none';
-        clearBtn.style.display = 'none';
-    }
-}
-
-function applySearch(val) {
-    document.getElementById('innerSearchInput').value = val;
-    document.getElementById('suggestionBox').style.display = 'none';
-    // Add your filtering code here to show relevant NEXUSWrites posts
-}
-
-function switchTab(el, cat) {
-    document.querySelectorAll('.search-tab').forEach(t => t.classList.remove('active'));
-    el.classList.add('active');
-    // Filter posts by category logic...
-}
-
-function clearInput() {
-    document.getElementById('innerSearchInput').value = '';
-    handleInstantSuggestions('');
-}
-
-let allPosts = []; // Start empty
+let allPosts = []; 
 
 async function fetchPostsFromBackend() {
+    const resultsGrid = document.getElementById('resultsGrid');
+    
+    // 1. CACHE CHECK: Look for posts we saved last time
+    const cachedData = localStorage.getItem('nexus_search_cache');
+    
+    if(resultsGrid) {
+    resultsGrid.innerHTML = `
+        <div class="text-center p-5">
+            <div class="spinner-border text-success mb-3" role="status"></div>
+            <p class="text-muted">Connecting to NEXUSWrites Cloud...<br>
+            <small>(This might take a moment.)</small></p>
+        </div>`;
+}
+
     try {
-        // Replace this URL with your actual backend endpoint
-        const response = await fetch('YOUR_BACKEND_API_URL_HERE/posts'); 
-        allPosts = await response.json();
+        // 2. FETCH FRESH DATA: Still talk to the server in the background
+        const response = await fetch('http://localhost:5000/api/posts'); 
         
-        // Once data is loaded, display 'Top' (all) by default
-        displayPosts('all'); 
+        if (!response.ok) throw new Error('Server asleep');
+        
+        const freshPosts = await response.json();
+        
+        // 3. UPDATE CACHE: Save the newest posts for the next visit
+        localStorage.setItem('nexus_search_cache', JSON.stringify(freshPosts));
+        
+        // Only update the UI if the data is actually different (saves processing)
+        if (JSON.stringify(allPosts) !== JSON.stringify(freshPosts)) {
+            allPosts = freshPosts;
+            console.log("🔄 Search results updated with fresh data!");
+            displayPosts('all'); 
+        }
     } catch (error) {
-        console.error("Error loading posts:", error);
+        console.error("Fetch error:", error);
+        // If it fails and we don't even have a cache, show an error
+        if(!cachedData && resultsGrid) {
+            resultsGrid.innerHTML = '<div class="alert alert-danger m-3 text-center">Connection is weak. Please check your signal!</div>';
+        }
     }
 }
 
-// Update your display function to use the fetched data
-function displayPosts(categoryFilter = 'all') {
+// 2. Logic for Search and Tabs
+function displayPosts(categoryFilter = 'all', searchTerm = '') {
     const resultsGrid = document.getElementById('resultsGrid');
     if(!resultsGrid) return; 
 
     resultsGrid.innerHTML = '';
 
-    // Filter logic
-    const filtered = categoryFilter === 'all' 
-        ? allPosts 
-        : allPosts.filter(post => post.category.trim() === categoryFilter.trim());
+    const cleanCategoryFilter = categoryFilter.trim().toLowerCase();
+    const cleanSearchTerm = searchTerm.trim().toLowerCase();
+
+    const filtered = allPosts.filter(post => {
+        // Fix: Standardize category checking
+        const postCat = (post.category || "").trim().toLowerCase();
+        const postTitle = (post.title || "").toLowerCase();
+        const postContent = (post.content || "").toLowerCase();
+        
+        // Match logic: 'top' and 'all' show everything. 
+        // Fuzzy matching helps "General" match "General Tech".
+        const isAllTab = cleanCategoryFilter === 'all' || cleanCategoryFilter === 'top';
+        const matchesCategory = isAllTab || postCat.includes(cleanCategoryFilter) || cleanCategoryFilter.includes(postCat);
+        
+        const matchesSearch = cleanSearchTerm === '' || 
+                             postTitle.includes(cleanSearchTerm) || 
+                             postContent.includes(cleanSearchTerm);
+
+        return matchesCategory && matchesSearch;
+    });
 
     if (filtered.length === 0) {
-        resultsGrid.innerHTML = `<div class="col-12 text-center p-5">No posts in ${categoryFilter} yet.</div>`;
+        resultsGrid.innerHTML = `<div class="col-12 text-center p-5 text-muted">No posts found for this selection.</div>`;
         return;
     }
 
     filtered.forEach(post => {
+        // FIX: Handle the populated author object safely
+        const authorName = post.author && post.author.name ? post.author.name : "Anonymous";
+        const firstLetter = authorName.charAt(0).toUpperCase();
+
         resultsGrid.innerHTML += `
-            <div class="col-6 col-md-4">
-                <div class="card h-100 shadow-sm border-0">
+            <div class="col-12 col-md-6 col-lg-4 mb-3">
+                <div class="card h-100 shadow-sm border-0" style="border-radius: 12px; border-top: 4px solid #1a535c;">
                     <div class="card-body">
-                        <span class="badge bg-soft-primary mb-2">${post.category}</span>
-                        <h6 class="card-title">${post.title}</h6>
-                        <p class="small text-muted">Posted on Dashboard</p>
+                        <span class="badge bg-success mb-2">${post.category || 'General'}</span>
+                        <h5 class="card-title" style="font-weight: 600;">${post.title}</h5>
+                        <p class="card-text text-muted small">${post.content ? post.content.substring(0, 100) + '...' : ''}</p>
+                        <div class="d-flex align-items-center mt-3">
+                            <div class="user-icon bg-secondary text-white rounded-circle me-2" 
+                                 style="width:30px; height:30px; display:flex; align-items:center; justify-content:center; font-size:12px;">
+                                ${firstLetter}
+                            </div>
+                            <small class="text-muted">${authorName}</small>
+                        </div>
                     </div>
                 </div>
             </div>`;
     });
 }
 
-// Call fetch when page loads
-document.addEventListener('DOMContentLoaded', fetchPostsFromBackend);
-
-// 1. Function to fetch data from your real backend
-async function loadTaggedPosts(category = 'all') {
-    const resultsGrid = document.getElementById('resultsGrid');
-    resultsGrid.innerHTML = '<div class="text-center p-5">Loading posts...</div>';
-
-    try {
-        // Change this URL to your actual backend endpoint (e.g., http://localhost:3000/api/posts)
-        const response = await fetch('YOUR_BACKEND_API_URL_HERE'); 
-        const posts = await response.json();
-
-        // 2. Filter logic: 
-        // We compare the post's category from your database to the tab clicked
-        const filteredPosts = category === 'all' 
-            ? posts 
-            : posts.filter(p => p.category === category);
-
-        // 3. Clear and Display
-        resultsGrid.innerHTML = ''; 
-
-        if (filteredPosts.length === 0) {
-            resultsGrid.innerHTML = `<div class="text-center p-5 text-muted">No posts found in ${category} yet.</div>`;
-            return;
-        }
-
-        filteredPosts.forEach(post => {
-            // This creates the card for your "fsgd" post
-            resultsGrid.innerHTML += `
-                <div class="col-12 col-md-6 col-lg-4 mb-3">
-                    <div class="card h-100 shadow-sm border-0">
-                        <div class="card-body">
-                            <span class="badge bg-success mb-2">${post.category}</span>
-                            <h5 class="card-title">${post.title}</h5>
-                            <p class="card-text text-muted">${post.content || ''}</p>
-                            <div class="d-flex align-items-center mt-3">
-                                <div class="user-icon bg-secondary text-white rounded-circle me-2" style="width:30px; height:30px; display:flex; align-items:center; justify-content:center;">
-                                    ${post.author ? post.author[0] : 'U'}
-                                </div>
-                                <small>${post.author || 'Anonymous'}</small>
-                            </div>
-                        </div>
-                    </div>
+// 3. UI Handlers (Suggestions, Tabs, and Clearing)
+function handleInstantSuggestions(val) {
+    const box = document.getElementById('suggestionBox');
+    const clearBtn = document.getElementById('clearBtn');
+    
+    if (val.length > 0) {
+        if(clearBtn) clearBtn.style.display = 'block';
+        const matches = allPosts.filter(p => p.title.toLowerCase().includes(val.toLowerCase()));
+        if (matches.length > 0 && box) {
+            box.innerHTML = matches.map(p => `
+                <div class="suggest-row" onclick="applySearch('${p.title.replace(/'/g, "\\'")}')">
+                    <span><i class="fas fa-search me-2 text-muted"></i> ${p.title}</span>
                 </div>
-            `;
-        });
-    } catch (error) {
-        console.error("Error fetching posts:", error);
-        resultsGrid.innerHTML = '<div class="alert alert-danger">Could not load posts. Make sure backend is running.</div>';
+            `).join('');
+            box.style.display = 'block';
+        } else if (box) { box.style.display = 'none'; }
+    } else { 
+        if(box) box.style.display = 'none'; 
+        if(clearBtn) clearBtn.style.display = 'none';
     }
 }
 
-// 4. Update the switchTab function you already have
-function switchTab(element, categoryName) {
-    // UI: Set active tab
-    document.querySelectorAll('.search-tab').forEach(tab => tab.classList.remove('active'));
-    element.classList.add('active');
-
-    // Logic: Fetch and filter
-    loadTaggedPosts(categoryName);
+function applySearch(val) {
+    const input = document.getElementById('innerSearchInput');
+    if(input) input.value = val;
+    const box = document.getElementById('suggestionBox');
+    if(box) box.style.display = 'none';
+    displayPosts('all', val); 
 }
 
-// 5. Initial Load (runs when you open homesearch.html)
+function switchTab(el, cat) {
+    document.querySelectorAll('.search-tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    const input = document.getElementById('innerSearchInput');
+    if(input) input.value = '';
+    displayPosts(cat); 
+}
+
+function clearInput() {
+    const input = document.getElementById('innerSearchInput');
+    if(input) input.value = '';
+    handleInstantSuggestions('');
+    displayPosts('all'); 
+}
+
+// EXECUTE ON LOAD
+// --- UPDATED EXECUTE ON LOAD ---
 document.addEventListener('DOMContentLoaded', () => {
-    loadTaggedPosts('all'); // Show everything by default
+    // 1. Initial fetch when page opens
+    fetchPostsFromBackend();
+
+    // 2. THE AUTOFETCH: Check for new posts every 30 seconds 
+    // This keeps the feed "fresh" without you clicking refresh!
+    setInterval(() => {
+        console.log("🔄 Autofetching new updates...");
+        fetchPostsFromBackend();
+    }, 30000); 
+
+    // 3. Search Button Logic
+    const searchBtn = document.querySelector('.search-confirm');
+    const searchInput = document.getElementById('innerSearchInput');
+
+    if (searchBtn) {
+        searchBtn.onclick = (e) => {
+            e.preventDefault();
+            const val = searchInput ? searchInput.value : '';
+            displayPosts('all', val);
+        };
+    }
+    
+    // 4. Enter Key Logic
+    if (searchInput) {
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                displayPosts('all', searchInput.value);
+            }
+        });
+    }
 });
