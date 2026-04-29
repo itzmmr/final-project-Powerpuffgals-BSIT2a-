@@ -1,4 +1,16 @@
-/* SETTINGS STYLES */
+/* This makes everything scale based on the size we set in JS */
+html {
+    transition: font-size 0.2s ease;
+}
+
+body {
+    font-size: 1rem; /* This means it follows the root (html) size */
+}
+
+/* Ensure headings scale too */
+h1, h2, h3, h4, h5, h6, p, span, a {
+    font-size: inherit; 
+}
 
 :root {
     --nexus-teal: #1a535c; 
@@ -92,23 +104,39 @@ body.dark-mode .fb-icon-item i { color: var(--nexus-cyan) !important; }
 body.dark-mode .search-wrapper { background: #1e293b; }
 
 /* --- CONTENT CARD --- */
-/* Layout for each individual card */
 .settings-card {
   display: flex;
   align-items: center;
-  background: #f8fafc;
+  
+  /* Use 'width: 100%' and 'box-sizing' to ensure they all hit the same edges */
+  width: 100%; 
+  box-sizing: border-box; 
+  
+  background: var(--nexus-card-white);
   padding: 16px 20px;
   border-radius: 12px;
   margin-bottom: 12px;
   cursor: pointer;
-  transition: background 0.2s ease;
-  border: 1px solid #f1f5f9; /* Subtle border for definition */
+  
+  /* Smooth transition for both background and border */
+  transition: all 0.3s ease; 
+  border: 1px solid var(--border-soft);
 }
 
+/* --- HOVER STATE --- */
+/* This adds the cyan border and keeps the card dark in Dark Mode */
 .settings-card:hover {
-  background: #f8fafc;
+  border-color: var(--nexus-cyan); /* That nice teal/cyan glow */
+  background: var(--nexus-card-white); /* Keep it dark */
+  
+  /* Optional: Add a very subtle lift or shadow */
+  box-shadow: 0 4px 12px rgba(78, 205, 196, 0.1); 
 }
 
+/* Specific Dark Mode Hover Tweaks */
+body.dark-mode .settings-card:hover {
+  background-color: #243347; /* Slightly lighter navy so you know it's hovered */
+}
 /* Icon Container */
 .icon-box {
   width: 40px;
