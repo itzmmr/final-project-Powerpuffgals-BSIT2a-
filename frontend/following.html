@@ -65,22 +65,26 @@
             </div>
 
             <div class="col-lg-9 py-5">
-                <div class="content-card text-center">
-                    <div id="pageIcon" class="placeholder-icon"></div>
-                    <h2 class="fw-bold mb-3" id="pageTitle"></h2> 
-                    <p class="text-muted fs-5">Welcome to the <strong class="section-name text-primary"></strong> section.</p>
-                    
-                    <div class="py-5 bg-light rounded-4 border border-dashed mt-4">
-                        <p class="mb-0 text-secondary fw-medium">No data to display in <strong class="section-name"></strong> yet.</p>
-                    </div>
-                    
-                    <button class="btn btn-nexus mt-5" onclick="window.location.href='dashboard.html'">
-                        <i class="fas fa-home me-2"></i> Return to Feed
-                    </button>
-                </div>
+    <div class="content-header text-center mb-4">
+        <div id="pageIcon" class="placeholder-icon mb-3"></div>
+        <h2 class="fw-bold mb-1" id="pageTitle"></h2> 
+        <p class="text-muted fs-5">Stay updated with posts from the community members you follow.</p>
+    </div>
+
+    <div id="postsContainer">
+        <div class="text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading feed...</span>
             </div>
         </div>
     </div>
+
+    <div class="text-center mt-5">
+        <button class="btn btn-nexus" onclick="window.location.href='dashboard.html'">
+            <i class="fas fa-home me-2"></i> Return to Feed
+        </button>
+    </div>
+</div>
 
     <footer class="text-center text-white">
         <div class="container">
