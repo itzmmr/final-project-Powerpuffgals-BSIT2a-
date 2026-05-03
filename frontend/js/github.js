@@ -1,3 +1,5 @@
+GitHub.js
+
         // Theme handling
         if (localStorage.getItem('nexusTheme') === 'dark') {
             document.body.classList.add('dark-mode');
@@ -89,15 +91,31 @@
                 githubUsername: data.user.githubUsername || username 
             };
             
+          // 1. Update local storage
             localStorage.setItem('nexusUser', JSON.stringify(updatedUser));
             
-            alert(`Successfully synced @${username} to your profile! ✨`);
-            
-            // Redirect to profile to see the changes
-            window.location.href = 'profile.html'; 
+            // 2. Prepare the modal content
+            const modalMsg = document.getElementById('syncModalMessage');
+            if (modalMsg) {
+                modalMsg.innerText = `Successfully synced @${username} to your profile! ✨`;
+                
+                // 3. Show the themed modal (Requires Bootstrap JS linked in HTML)
+                const syncModal = new bootstrap.Modal(document.getElementById('syncSuccessModal'));
+                syncModal.show();
+                
+                // 4. Wait 2 seconds before redirecting so they see the success!
+                setTimeout(() => {
+                    window.location.href = 'profile.html';
+                }, 2000);
+            } else {
+                // Fallback if modal HTML isn't found
+                window.location.href = 'profile.html';
+            }
+
         } else { 
-            // Better error reporting
-            alert(data.message || "Failed to sync account. Your token might be expired."); 
+            // Handle error without an ugly alert
+            console.error("Sync Failed:", data.message);
+            alert(data.message || "Failed to sync account."); 
         }
     } catch (err) { 
         console.error("Sync Error:", err);
@@ -119,3 +137,41 @@
         }
 
         document.addEventListener('DOMContentLoaded', loadUserData);
+
+        function syncNotifications() {
+    // 1. Get the badge element (this ID must match on all pages)
+    const badge = document.getElementById('nav-notification-badge');
+    if (!badge) return;
+
+    // 2. Get the saved notification count from localStorage
+    const savedCount = localStorage.getItem('nexusNotificationCount') || '0';
+
+    // 3. Update the UI
+    if (parseInt(savedCount) > 0) {
+        badge.innerText = savedCount;
+        badge.style.display = 'block';
+    } else {
+        badge.style.display = 'none';
+    }
+}
+
+// Run this immediately when the script loads or on DOMContentLoaded
+document.addEventListener('DOMContentLoaded', syncNotifications);
+
+function syncNotifications() {
+    const badge = document.getElementById('nav-notification-badge');
+    if (!badge) return;
+
+    // Pull the count from storage (make sure this matches the key in dashboard.js)
+    const count = localStorage.getItem('nexusNotificationCount') || '0';
+
+    if (parseInt(count) > 0) {
+        badge.innerText = count;
+        badge.style.display = 'block'; // Overrides the display:none in HTML
+    } else {
+        badge.style.display = 'none';
+    }
+}
+
+// Run as soon as the Settings page loads
+document.addEventListener('DOMContentLoaded', syncNotifications);

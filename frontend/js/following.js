@@ -16,7 +16,6 @@ const current = pageConfigs[filename] || { title: 'NEXUSWrites', icon: 'fa-folde
 // UI Setup
 if (document.getElementById('pageTitle')) document.getElementById('pageTitle').innerText = current.title;
 if (document.getElementById('pageIcon')) document.getElementById('pageIcon').innerHTML = `<i class="fas ${current.icon}"></i>`;
-document.querySelectorAll('.section-name').forEach(el => el.innerText = current.title);
 document.title = current.title + " | NEXUSWrites";
 
 // Load Notifications and User Data
@@ -64,8 +63,10 @@ async function loadUserData() {
     }
 }
 
-// Follow/Unfollow Logic
-let followedUsers = JSON.parse(localStorage.getItem('nexusFollowedUsers')) || [];
+// FIX: Check if followedUsers is already declared by dashboard.js to prevent SyntaxError
+if (typeof followedUsers === 'undefined') {
+    window.followedUsers = JSON.parse(localStorage.getItem('nexusFollowedUsers')) || [];
+}
 
 function toggleFollow(userId, buttonElement) {
     const index = followedUsers.indexOf(userId);
@@ -82,106 +83,79 @@ function toggleFollow(userId, buttonElement) {
 
     localStorage.setItem('nexusFollowedUsers', JSON.stringify(followedUsers));
     
-    // Refresh the feed immediately if we are on the following page
-    if (window.location.pathname.includes('following.html')) {
-        renderFollowedPosts();
-    }
+    // Refresh the feed immediately
+    fetchAndRenderFollowedPosts();
 }
 
-// Render the Followed Feed
-function renderFollowedPosts() {
+// Check if logout is already declared
+if (typeof logout === 'undefined') {
+    window.logout = function() {
+        localStorage.removeItem('nexusUser');
+        window.location.href = 'login.html';
+    };
+}
+
+// --- INITIAL LOAD ---
+document.addEventListener('DOMContentLoaded', () => {
+    loadUserData();
+    fetchAndRenderFollowedPosts();
+});
+
+async function fetchAndRenderFollowedPosts() {
     const container = document.getElementById('postsContainer');
     if (!container) return;
 
+    const user = JSON.parse(localStorage.getItem('nexusUser'));
     const followedList = JSON.parse(localStorage.getItem('nexusFollowedUsers')) || [];
-    const allPosts = JSON.parse(localStorage.getItem('nexusPosts')) || [];
 
-    // Filter posts from people you follow
-    const myFeed = allPosts.filter(post => followedList.includes(post.userId));
-
-    if (myFeed.length === 0) {
+    if (followedList.length === 0) {
         container.innerHTML = `
-            <div class="py-5 bg-light rounded-4 border border-dashed text-center mt-4">
-                <p class="mb-0 text-secondary fw-medium">No posts from people you follow yet.</p>
+            <div class="card fb-card p-5 text-center mt-4">
+                <div class="placeholder-icon mb-3">
+                    <i class="fas fa-user-plus opacity-50"></i>
+                </div>
+                <h4 class="fw-bold">No followed creators yet</h4>
+                <p class="text-muted">Follow other writers to see their tutorials here.</p>
+                <div class="mt-4">
+                    <a href="dashboard.html" class="btn btn-nexus">Discover Writers</a>
+                </div>
             </div>`;
         return;
     }
 
-    // Render using Dashboard Design
-    container.innerHTML = myFeed.map(post => `
-        <div class="card fb-card p-4 mb-3 shadow-sm border-0 text-start mt-3">
-            <div class="d-flex align-items-center mb-3">
-                <i class="fas fa-user-circle fa-3x text-muted me-3"></i>
-                <div>
-                    <h5 class="mb-0 fw-bold">${post.username}</h5>
-                    <small class="text-muted">${post.category || 'Tutorial'}</small>
-                </div>
-            </div>
-            <h4 class="fw-bold">${post.title}</h4>
-            <p class="text-muted">${post.content}</p>
-            ${post.image ? `<img src="${post.image}" class="img-fluid rounded-3 mb-3" style="width:100%; max-height:400px; object-fit:cover;">` : ''}
-            <div class="pt-3 border-top">
-                <button class="btn btn-sm active-follow" onclick="toggleFollow('${post.userId}', this)">
-                    <i class="fas fa-user-check me-1"></i> Following
-                </button>
-            </div>
-        </div>
-    `).join('');
-}
-
-function logout() {
-    localStorage.removeItem('nexusUser');
-    window.location.href = 'login.html';
-}
-
-// Initial Load
-document.addEventListener('DOMContentLoaded', () => {
-    loadUserData();
-    renderFollowedPosts();
-});
-
-document.addEventListener('DOMContentLoaded', () => {
-    // This function runs as soon as the page loads
-    displayFollowingPosts();
-});
-
-function displayFollowingPosts() {
-    const container = document.getElementById('following-list-container');
-    
-    // The data you want to show
-    const posts = [
-        {
-            name: "Nexus Dev",
-            time: "10m ago",
-            text: "Welcome to the following feed! This is where you'll see updates from people you track."
-        },
-        {
-            name: "Tech Enthusiast",
-            time: "1h ago",
-            text: "The UI layout on this dashboard is looking really sharp."
-        }
-    ];
-
-    if (posts.length > 0) {
-        // 1. Clear the "No data" dashed box
-        container.innerHTML = ''; 
-
-        // 2. Add the posts one by one
-        posts.forEach(post => {
-            const postMarkup = `
-                <div class="card border rounded-4 mb-3 text-start shadow-sm mt-3" style="border: 1px solid #e9ecef !important;">
-                    <div class="card-body p-4">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <span class="fw-bold text-dark">${post.name}</span>
-                            <span class="text-muted small">${post.time}</span>
-                        </div>
-                        <p class="mb-0 text-secondary" style="font-size: 0.95rem;">
-                            ${post.text}
-                        </p>
-                    </div>
-                </div>
-            `;
-            container.innerHTML += postMarkup;
+    try {
+        const response = await fetch('http://localhost:5000/api/posts', {
+            headers: { 'Authorization': `Bearer ${user?.token}` }
         });
+        
+        if (!response.ok) throw new Error('Network response was not ok');
+        
+        const data = await response.json();
+        const allPosts = Array.isArray(data) ? data : (data.posts || []);
+
+        const myFeed = allPosts.filter(post => {
+            const authorId = (post.author?._id || post.author || post.userId || "").toString();
+            return followedList.includes(authorId);
+        });
+
+        if (myFeed.length === 0) {
+            container.innerHTML = `
+                <div class="card fb-card p-5 text-center mt-4">
+                    <p class="mb-0 text-muted fw-medium">The people you follow haven't posted anything yet.</p>
+                </div>`;
+            return;
+        }
+
+        // Uses renderSinglePost from dashboard.js to keep teal borders and dark blue comments
+        container.innerHTML = myFeed.reverse()
+            .map(post => renderSinglePost(post, user))
+            .join('');
+
+    } catch (err) {
+        console.error("Error loading following feed:", err);
+        container.innerHTML = `
+            <div class="card fb-card p-4 text-center mt-4 border-danger">
+                <p class="text-danger fw-bold">Unable to reach the server. Please check your connection.</p>
+            </div>`;
     }
 }
