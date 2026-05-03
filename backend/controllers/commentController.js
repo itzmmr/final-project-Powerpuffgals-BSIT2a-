@@ -1,8 +1,7 @@
-const Comment = require('../models/Comment');
 const Post = require('../models/Post');
 const Notification = require('../models/Notification');
 
-// 1. CREATE A COMMENT OR REPLY
+// 1. CREATE A COMMENT OR REPLY (Embedded in Post)
 exports.createComment = async (req, res) => {
     try {
         const { postId, text, parentCommentId } = req.body;
@@ -11,51 +10,39 @@ exports.createComment = async (req, res) => {
             return res.status(401).json({ error: "Unauthorized: No user data in token" });
         }
 
-        // Find the post to know who the author is for the notification
         const post = await Post.findById(postId);
         if (!post) return res.status(404).json({ message: "Post not found" });
 
         const authorName = req.user.name || req.user.username;
 
-        if (!authorName) {
-            console.error("❌ Auth Error: req.user exists but 'name' and 'username' are missing.");
-            return res.status(400).json({ error: "User profile is missing a name/username field." });
-        }
-
-        const newComment = new Comment({
-            postId,
-            author: authorName, 
-            authorId: req.user._id, 
+        // Create the new comment object for the array
+        const newCommentData = {
+            user: req.user._id,
             text,
-            parentCommentId: parentCommentId || null
-        });
+            replies: []
+        };
 
-        const savedComment = await newComment.save();
-
-        // --- NOTIFICATION LOGIC START ---
-        
         if (parentCommentId) {
             // SCENARIO A: This is a REPLY
-            const parentComment = await Comment.findById(parentCommentId);
-            
-            await Comment.findByIdAndUpdate(parentCommentId, {
-                $push: { replies: savedComment._id }
-            });
+            const parentComment = post.comments.id(parentCommentId);
+            if (!parentComment) return res.status(404).json({ message: "Parent comment not found" });
 
-            // Notify the author of the original comment (if it's not the same person)
-            if (parentComment && parentComment.authorId.toString() !== req.user._id.toString()) {
+            parentComment.replies.push(newCommentData);
+
+            // Notify original comment author
+            if (parentComment.user.toString() !== req.user._id.toString()) {
                 await Notification.create({
-                    recipient: parentComment.authorId,
+                    recipient: parentComment.user,
                     sender: req.user._id,
-                    type: 'comment', // You can add 'reply' to your enum in Notification.js if you want more detail
+                    type: 'comment',
                     post: postId
                 });
             }
-            console.log(`↩️  ${authorName} replied to comment ${parentCommentId}`);
-
         } else {
-            // SCENARIO B: This is a NEW COMMENT on a post
-            // Notify the post author (if it's not the same person)
+            // SCENARIO B: This is a NEW TOP-LEVEL COMMENT
+            post.comments.push(newCommentData);
+
+            // Notify post author
             if (post.author.toString() !== req.user._id.toString()) {
                 await Notification.create({
                     recipient: post.author,
@@ -64,37 +51,59 @@ exports.createComment = async (req, res) => {
                     post: postId
                 });
             }
-            console.log(`💬 ${authorName} commented on post: ${postId}`);
         }
 
-        // --- NOTIFICATION LOGIC END ---
-
-        res.status(201).json(savedComment);
+        await post.save();
+        res.status(201).json(post.comments[post.comments.length - 1]);
     } catch (err) {
-        console.error("❌ Comment Error Details:", err);
-        res.status(500).json({ 
-            error: "Comment validation failed.", 
-            details: err.message 
-        });
+        res.status(500).json({ error: "Comment failed.", details: err.message });
     }
 };
 
-// 2. GET COMMENTS BY POST (Threaded View)
+// 2. GET COMMENTS BY POST
 exports.getCommentsByPost = async (req, res) => {
     try {
-        const comments = await Comment.find({ 
-            postId: req.params.postId, 
-            parentCommentId: null 
-        })
-        .populate({
-            path: 'replies',
-            populate: { path: 'replies' } 
-        })
-        .sort({ createdAt: -1 }); 
-
-        res.status(200).json(comments);
+        const post = await Post.findById(req.params.postId).populate('comments.user', 'name username');
+        if (!post) return res.status(404).json({ error: "Post not found." });
+        res.status(200).json(post.comments);
     } catch (err) {
-        console.error("❌ Fetch Error:", err.message);
         res.status(500).json({ error: "Could not retrieve comments." });
+    }
+};
+
+// 3. UPDATE A COMMENT
+exports.updateComment = async (req, res) => {
+    try {
+        const { postId, commentId } = req.params;
+        const post = await Post.findById(postId);
+        if (!post) return res.status(404).json({ message: "Post not found" });
+
+        const comment = post.comments.id(commentId);
+        if (!comment) return res.status(404).json({ message: "Comment not found" });
+
+        if (comment.user.toString() !== req.user._id.toString()) {
+            return res.status(401).json({ message: "Unauthorized" });
+        }
+
+        comment.text = req.body.text;
+        await post.save();
+        res.json(comment);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+// 4. DELETE A COMMENT
+exports.deleteComment = async (req, res) => {
+    try {
+        const { postId, commentId } = req.params;
+        const post = await Post.findById(postId);
+        if (!post) return res.status(404).json({ message: "Post not found" });
+
+        post.comments.pull(commentId); 
+        await post.save();
+        res.json({ message: "Comment deleted successfully" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
     }
 };

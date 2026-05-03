@@ -14,13 +14,13 @@ function toggleFollow(userId, buttonElement) {
     }
     localStorage.setItem('nexusFollowedUsers', JSON.stringify(followedUsers));
 }
-    // --- 1. SECURITY CHECK (Kicks unauthorized users out immediately) ---
-    (function() {
-        const session = localStorage.getItem('nexusUser');
-        if (!session || session === "null" || session === "undefined") {
-            window.location.href = "index.html"; 
-        }
-    })();
+// --- 1. SECURITY CHECK (Kicks unauthorized users out immediately) ---
+(function() {
+    const session = localStorage.getItem('nexusUser');
+    if (!session || session === "null" || session === "undefined") {
+        window.location.href = "index.html"; 
+    }
+})();
 
 // --- 1. LOGOUT FUNCTION ---
 window.logoutUser = function() {
@@ -65,6 +65,34 @@ const POSTS_PER_PAGE = 10;
 let allPostsRaw = [];      // all posts fetched from server
 let isLoading = false;
 
+// ========== FIX 1: ROBUST USER NAME RETRIEVAL ==========
+function getCurrentUserName() {
+    const userData = JSON.parse(localStorage.getItem('nexusUser'));
+    console.log("Current nexusUser data:", userData); // <--- Add this line!
+    
+    if (!userData) return 'User';
+    
+    return userData.name || 
+           userData.username || 
+           userData.displayName || 
+           userData.fullName || 
+           (userData.email ? userData.email.split('@')[0] : 'User');
+}
+
+
+function updateUserGreeting() {
+    const userName = getCurrentUserName();
+    const feedUserEl = document.getElementById('feedUsername');
+    if (!feedUserEl) return;
+    const lang = localStorage.getItem('nexusLang') || 'English';
+    const dict = window.translations ? window.translations[lang] : null;
+    if (dict && dict.welcome) {
+        feedUserEl.textContent = `${dict.welcome}, ${userName}!`;
+    } else {
+        feedUserEl.textContent = `Welcome back, ${userName}!`;
+    }
+}
+
 // --- 5. LANGUAGE APPLY ---
 function applyLanguage() {
     const lang = localStorage.getItem('nexusLang') || 'English';
@@ -86,15 +114,7 @@ function applyLanguage() {
             }
         }
     });
-    const currentUser = JSON.parse(localStorage.getItem('nexusUser')) || { name: 'User' };
-    const feedUserEl = document.getElementById('feedUsername');
-    if (feedUserEl && dict.welcome) {
-        feedUserEl.textContent = `${dict.welcome}, ${currentUser.name || currentUser.username || 'User'}!`;
-    }
-    const navUserEl = document.getElementById('navUsername');
-    if (navUserEl) {
-        navUserEl.textContent = currentUser.name || 'User';
-    }
+    updateUserGreeting();
 }
 
 window.changeLanguage = function(lang) {
@@ -105,45 +125,98 @@ window.changeLanguage = function(lang) {
 document.addEventListener('DOMContentLoaded', applyLanguage);
 localStorage.setItem('nexusPosts', JSON.stringify(posts));
 
-/* --- COMMENTING ENGINE (unchanged) --- */
+/* --- COMMENTING ENGINE (fixed ownership detection for both comments and replies) --- */
+
+// Helper to extract author ID from a comment object (robust)
+function getCommentAuthorId(comment) {
+    if (!comment) return null;
+    if (comment.user && comment.user._id) return comment.user._id;
+    if (comment.user && typeof comment.user === 'string') return comment.user;
+    if (comment.userId) return comment.userId;
+    if (comment.author && comment.author._id) return comment.author._id;
+    if (comment.author && typeof comment.author === 'string') return comment.author;
+    if (comment.user && comment.user.id) return comment.user.id;
+    if (comment.author && comment.author.id) return comment.author.id;
+    return null;
+}
+
+// 2. Helper to normalize tags for display
+function normalizeTags(tags) {
+    if (!tags) return [];
+    if (Array.isArray(tags)) return tags.filter(t => t && t.trim());
+    if (typeof tags === 'string') {
+        return tags.split(',').map(t => t.trim()).filter(t => t);
+    }
+    return [];
+}
+
 function renderComments(commentList, postId) {
     if (!commentList || commentList.length === 0) return '';
 
     const userObj = JSON.parse(localStorage.getItem('nexusUser')) || {};
-    const myId = userObj._id || userObj.id;
+    const myIdStr = (userObj._id || userObj.id || "").toString();
 
     return commentList.map((comment) => {
-        const cId = comment._id ? comment._id.toString() : ''; 
-        const pId = postId ? postId.toString() : '';
-        const commentAuthorId = comment.user?._id || comment.user || comment.author?._id || comment.author;
-        const isCommentOwner = myId && commentAuthorId === myId;
+        const cId = (comment._id || "").toString(); 
+        const pId = (postId || "").toString();
+        
+        // --- START OF FIX: IMPROVED OWNERSHIP & NAME DETECTION ---
+        // Robust detection for the author's ID across nested levels
+        const commentAuthorIdStr = (comment.user?._id || comment.user || "").toString();
+        const isCommentOwner = myIdStr && commentAuthorIdStr && myIdStr === commentAuthorIdStr;
+
+        // --- UPDATED LOGIC: SHOW ACTUAL NAMES ONLY ---
+// Inside your renderComments function
+let displayName = 'Nexus Writer'; 
+
+// Check for name in 'user' object (populated from DB)
+if (comment.user && comment.user.name) {
+    displayName = comment.user.name; 
+} 
+// Check for name in 'author' object
+else if (comment.author && comment.author.name) {
+    displayName = comment.author.name;
+}
+// Fallback if population failed but we have local info
+else if (isCommentOwner && userObj.name) {
+    displayName = userObj.name;
+}
+        // --- END OF FIX ---
+
+        // Tag Processing
+        const tags = comment.tags || [];
+        const tagsHtml = tags.map(tag => 
+            `<span class="badge rounded-pill bg-success me-1" style="font-size: 0.6rem;">#${escapeHtml(tag)}</span>`
+        ).join('');
+
+        // Recursive call
+        let repliesHtml = (comment.replies && comment.replies.length > 0) 
+            ? renderComments(comment.replies, postId) 
+            : '';
 
         return `
         <div class="comment-thread mb-4">
             <div class="comment-box p-3">
                 <div class="d-flex justify-content-between align-items-center mb-1">
                     <strong class="comment-author-name">
-                        <i class="fas fa-user-circle me-1"></i>
-                        ${comment.user?.name || comment.author?.name || 'Nexus Writer'}
+                        <i class="fas fa-user-circle me-1"></i>${escapeHtml(displayName)}
                     </strong>
-                    <small class="opacity-75" style="font-size: 0.7rem; color: inherit;">
-                        ${comment.createdAt ? new Date(comment.createdAt).toLocaleDateString() : 'Just now'}
-                    </small>
+                    <div class="d-flex align-items-center gap-2">
+                        ${tagsHtml}
+                        <small class="opacity-75" style="font-size: 0.7rem;">
+                            ${comment.createdAt ? new Date(comment.createdAt).toLocaleDateString() : 'Just now'}
+                        </small>
+                    </div>
                 </div>
-                <p class="mb-0 comment-text-body" id="text-${cId}">
-                    ${escapeHtml(comment.text || comment.content || '')}
-                </p>
+                <p class="mb-0 comment-text-body" id="text-${cId}">${escapeHtml(comment.text || '')}</p>
             </div>
-            
             <div class="comment-actions ms-2 d-flex gap-3 mt-2">
                 <a href="javascript:void(0)" class="action-btn" onclick="toggleCommentLike('${pId}', '${cId}')">
-                    <i class="fas fa-thumbs-up me-1"></i> ${comment.likes?.length || 0} Likes
+                    <i class="fas fa-thumbs-up me-1 ${comment.likes?.includes(myIdStr) ? 'text-primary' : ''}"></i> ${comment.likes?.length || 0}
                 </a>
-                
                 <a href="javascript:void(0)" class="action-btn" onclick="toggleReplyInput('${pId}', '${cId}')">
                     <i class="fas fa-reply me-1"></i> Reply
                 </a>
-
                 ${isCommentOwner ? `
                     <a href="javascript:void(0)" class="action-btn text-success" onclick="editComment('${pId}', '${cId}')">
                         <i class="fas fa-edit me-1"></i>Edit
@@ -153,7 +226,6 @@ function renderComments(commentList, postId) {
                     </a>
                 ` : ''}
             </div>
-
             <div id="reply-input-${pId}-${cId}" class="mt-2 ms-3 d-none">
                 <div class="input-group input-group-sm">
                     <input type="text" class="form-control comment-input-field" id="field-${pId}-${cId}" placeholder="Write a reply...">
@@ -162,36 +234,28 @@ function renderComments(commentList, postId) {
                     </button>
                 </div>
             </div>
-
             <div class="nested-replies ms-4 mt-2 ps-3" style="border-left: 2px solid rgba(45, 212, 191, 0.2);">
-                ${comment.replies && comment.replies.length > 0 ? renderComments(comment.replies, postId) : ''}
+                ${repliesHtml}
             </div>
         </div>`;
     }).join('');
 }
 
-// Helper to prevent XSS
-function escapeHtml(str) {
-    if (!str) return '';
-    return str.replace(/[&<>]/g, function(m) {
-        if (m === '&') return '&amp;';
-        if (m === '<') return '&lt;';
-        if (m === '>') return '&gt;';
-        return m;
-    });
+// Add this helper if it's missing!
+function escapeHtml(text) {
+    if (!text) return "";
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
 }
 
+// --- 3. TOGGLE COMMENT LIKE ---
 async function toggleCommentLike(postId, commentId) {
     const user = JSON.parse(localStorage.getItem('nexusUser'));
-    if (!user || !user.token) {
-        alert("Please log in to like comments!");
-        return;
-    }
-    if (!postId || !commentId) {
-        console.error("Missing IDs:", { postId, commentId });
-        return;
-    }
+    if (!user || !user.token) return;
+
     try {
+        // Change 'comments' to 'posts' if your backend groups everything under posts
         const response = await fetch(`http://localhost:5000/api/posts/${postId}/comment/${commentId}/like`, {
             method: 'PUT',
             headers: { 
@@ -203,11 +267,17 @@ async function toggleCommentLike(postId, commentId) {
             fetchAllPostsAndRefresh();
         } else {
             const errorData = await response.json();
-            alert(`Error: ${errorData.message}`);
+            console.error("Like failed:", errorData.message);
         }
     } catch (err) {
-        console.error("Network/Fetch Error:", err);
+        console.error("Network Error:", err);
     }
+}
+function normalizeTags(tags) {
+    if (!tags) return [];
+    if (Array.isArray(tags)) return tags.filter(t => t && t.trim());
+    if (typeof tags === 'string') return tags.split(',').map(t => t.trim()).filter(t => t);
+    return [];
 }
 
 async function submitMainComment(postId) {
@@ -243,38 +313,80 @@ async function submitMainComment(postId) {
     }
 }
 
-async function deleteComment(postId, commentId) {
-    if (!confirm("Delete this comment?")) return;
-    const user = JSON.parse(localStorage.getItem('nexusUser'));
-    try {
-        const response = await fetch(`http://localhost:5000/api/posts/${postId}/comment/${commentId}`, {
-            method: 'DELETE',
-            headers: { 'Authorization': `Bearer ${user.token}` }
-        });
-        if (response.ok) fetchAllPostsAndRefresh(); 
-        else alert("You can only delete your own comments!");
-    } catch (err) {
-        console.error("Delete failed", err);
-    }
-}
-
+// --- 1. EDIT COMMENT ---
 async function editComment(postId, commentId) {
-    const oldText = document.getElementById(`text-${commentId}`).innerText;
-    const newText = prompt("Update your comment:", oldText);
-    if (!newText || newText === oldText) return;
+    const textElement = document.getElementById(`text-${commentId}`);
+    const oldText = textElement ? textElement.innerText : "";
+    
+    const newText = prompt("Update your message:", oldText);
+    
+    // Check if newText is null (cancel) or empty or same as old
+    if (newText === null || newText.trim() === "" || newText === oldText) return;
+
     const user = JSON.parse(localStorage.getItem('nexusUser'));
+    if (!user || !user.token) return alert("Please log in again.");
+
     try {
+        // FIXED: Using /comment/ (singular) to match the Delete route and controller logic
         const response = await fetch(`http://localhost:5000/api/posts/${postId}/comment/${commentId}`, {
             method: 'PUT',
             headers: { 
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${user.token}` 
             },
-            body: JSON.stringify({ text: newText })
+            body: JSON.stringify({ text: newText.trim() })
         });
-        if (response.ok) fetchAllPostsAndRefresh();
+
+        if (response.ok) {
+            // Success notification using your refresh logic
+            if (typeof loadFeed === 'function') {
+                loadFeed();
+            } else if (typeof fetchAllPostsAndRefresh === 'function') {
+                fetchAllPostsAndRefresh();
+            }
+        } else {
+            const data = await response.json();
+            alert(data.message || "Edit failed. You might not be the owner.");
+        }
     } catch (err) {
         console.error("Edit failed:", err);
+        alert("Server error. Check if the backend is running.");
+    }
+}
+
+// --- 2. DELETE COMMENT ---
+async function deleteComment(postId, commentId) {
+    if (!confirm("Are you sure you want to delete this comment? All replies to this comment will also be removed.")) return;
+    
+    const user = JSON.parse(localStorage.getItem('nexusUser'));
+    if (!user || !user.token) {
+        alert("Please log in to perform this action.");
+        return;
+    }
+
+    try {
+        const response = await fetch(`http://localhost:5000/api/posts/${postId}/comment/${commentId}`, {
+            method: 'DELETE',
+            headers: { 
+                'Authorization': `Bearer ${user.token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.ok) {
+            // Unified refresh check[cite: 3]
+            if (typeof loadFeed === 'function') {
+                loadFeed(); 
+            } else if (typeof fetchAllPostsAndRefresh === 'function') {
+                fetchAllPostsAndRefresh();
+            }
+        } else {
+            const errorData = await response.json();
+            alert(`Delete failed: ${errorData.message || "Unauthorized"}`);
+        }
+    } catch (err) {
+        console.error("Delete failed", err);
+        alert("A server error occurred. Please try again.");
     }
 }
 
@@ -292,10 +404,14 @@ function toggleReplyInput(postId, targetId) {
 async function submitReply(postId, targetId) {
     const user = JSON.parse(localStorage.getItem('nexusUser'));
     if (!user || !user.token) return alert("Please log in to reply!");
+    
     const input = document.getElementById(`field-${postId}-${targetId}`);
     if (!input || !input.value.trim()) return;
+    
     const text = input.value.trim();
+    
     try {
+        // FIXED: Ensuring route matches the standard nested structure
         const response = await fetch(`http://localhost:5000/api/posts/${postId}/comment/${targetId}/reply`, {
             method: 'POST',
             headers: { 
@@ -304,17 +420,28 @@ async function submitReply(postId, targetId) {
             },
             body: JSON.stringify({ text })
         });
+
         if (response.ok) {
             input.value = ''; 
             toggleReplyInput(postId, targetId);
-            fetchAllPostsAndRefresh();
+            
+            // Supporting both potential refresh function names
+            if (typeof loadFeed === 'function') {
+                loadFeed();
+            } else if (typeof fetchAllPostsAndRefresh === 'function') {
+                fetchAllPostsAndRefresh();
+            }
+        } else {
+            const data = await response.json();
+            alert(data.message || "Failed to post reply.");
         }
     } catch (err) {
         console.error("Reply failed:", err);
+        alert("Server error while submitting reply.");
     }
 }
 
-/* --- POST LOGIC WITH CLIENT‑SIDE PAGINATION (FIXED) --- */
+/* --- POST LOGIC WITH CLIENT‑SIDE PAGINATION --- */
 
 // Fetches all posts once, stores them, then displays first page
 async function fetchAllPostsAndRefresh() {
@@ -395,7 +522,6 @@ function displayCurrentPage(filter = "") {
     const userSnapshot = localStorage.getItem('nexusUser');
     const user = userSnapshot ? JSON.parse(userSnapshot) : null;
 
-    // Apply search filter if any
     let postsToShow = allPostsRaw;
     if (filter && filter.trim() !== "") {
         const search = filter.toLowerCase();
@@ -410,8 +536,6 @@ function displayCurrentPage(filter = "") {
     const end = start + POSTS_PER_PAGE;
     const pagePosts = postsToShow.slice(start, end);
 
-    console.log(`Displaying page ${currentPage}, posts ${start+1}-${Math.min(end, totalPosts)} of ${totalPosts}`);
-
     if (pagePosts.length === 0 && totalPosts === 0) {
         container.innerHTML = `
             <div class="text-center p-5 bg-light rounded shadow-sm">
@@ -421,7 +545,6 @@ function displayCurrentPage(filter = "") {
         return;
     }
 
-    // Render each post safely (catch any per-post error)
     let postsHtml = '';
     for (let post of pagePosts) {
         try {
@@ -432,7 +555,6 @@ function displayCurrentPage(filter = "") {
         }
     }
 
-    // Add Load More button only if there are more posts AND no active search filter
     const hasMore = end < totalPosts;
     let loadMoreHtml = '';
     if (hasMore && (!filter || filter.trim() === "")) {
@@ -447,44 +569,57 @@ function displayCurrentPage(filter = "") {
     container.innerHTML = postsHtml + loadMoreHtml;
 }
 
-// Helper to render a single post (same logic as before but separated)
+// Helper: get post author ID (robust)
+function getPostAuthorId(post) {
+    if (!post.author) return null;
+    if (typeof post.author === 'string') return post.author;
+    if (post.author._id) return post.author._id;
+    if (post.author.id) return post.author.id;
+    return null;
+}
+
+// Helper to render a single post (fixed ownership detection, tag display)
 function renderSinglePost(post, user) {
-    const isOwner = user && (
-        (post.author?._id && post.author._id === user._id) || 
-        (post.author === user._id)
-    );
-    const isFollowingUser = post.author?.followers?.includes(user?._id);
+    // FIXED: Reliable string-based ID comparison
+    const postAuthorId = (post.author?._id || post.author?.id || post.author || "").toString();
+    const myId = (user?._id || user?.id || "").toString();
+    const isOwner = myId && postAuthorId && myId === postAuthorId;
+    
+    // --- START OF UPDATE ---
+    // 1. Get the local list of followed IDs
+    const localFollowed = JSON.parse(localStorage.getItem('nexusFollowedUsers')) || [];
+    
+    // 2. UPDATED: Check BOTH the server data AND the local storage list for persistence
+    const isFollowingUser = post.author?.followers?.includes(myId) || localFollowed.includes(postAuthorId);
+    
     const followLink = (!isOwner && post.author) ? `
         <span class="ms-2 small fw-bold follow-link" 
-              id="follow-link-${post.author?._id || post.author}" 
+              id="follow-link-${postAuthorId}" 
               style="cursor: pointer; color: #2dd4bf; font-size: 0.8rem;" 
-              onclick="handleFollowAction('${post.author?._id || post.author}')">
+              onclick="handleFollowAction('${postAuthorId}')">
             ${isFollowingUser ? '• Following' : '• Follow'}
         </span>` : '';
-    const tagsHTML = (post.tags && Array.isArray(post.tags)) 
-        ? post.tags.map(tag => `<span class="badge bg-light text-dark me-1">#${escapeHtml(tag)}</span>`).join('')
-        : (typeof post.tags === 'string' && post.tags.trim() !== '')
-            ? post.tags.split(',').map(tag => `<span class="badge bg-light text-dark me-1">#${escapeHtml(tag.trim())}</span>`).join('')
-            : ''; 
+    // --- END OF UPDATE ---
+
+    // FIXED: Normalize tags so they always show up correctly
+    const tagsArray = normalizeTags(post.tags);
+    const tagsHTML = tagsArray.map(tag => `<span class="badge bg-light text-dark me-1">#${escapeHtml(tag)}</span>`).join('');
 
     return `
     <div class="card fb-card p-4 mb-4 shadow-sm border-0">
-        ${isOwner ? `
-        <div class="dropdown" style="position: absolute; right: 20px; top: 20px; z-index: 10;">
+        ${isOwner ? `<div class="dropdown" style="position: absolute; right: 20px; top: 20px; z-index: 10;">
             <button class="btn btn-link text-muted" data-bs-toggle="dropdown"><i class="fas fa-ellipsis-v"></i></button>
             <ul class="dropdown-menu dropdown-menu-end shadow border-0">
-                <li><a class="dropdown-item" onclick="editPost('${post._id}')"><i class="fas fa-edit me-2 text-success"></i>Edit Post</a></li>
-                <li><a class="dropdown-item text-danger" onclick="deletePost('${post._id}')"><i class="fas fa-trash me-2"></i>Delete Post</a></li>
+                <li><a class="dropdown-item" href="javascript:void(0)" onclick="editPost('${post._id}')"><i class="fas fa-edit me-2 text-success"></i>Edit Post</a></li>
+                <li><a class="dropdown-item text-danger" href="javascript:void(0)" onclick="deletePost('${post._id}')"><i class="fas fa-trash me-2"></i>Delete Post</a></li>
             </ul>
         </div>` : ''}
 
         <div class="d-flex align-items-center mb-3">
-            <div class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center me-3" style="width: 45px; height: 45px;">
-                <i class="fas fa-user"></i>
-            </div>
+            <div class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center me-3" style="width: 45px; height: 45px;"><i class="fas fa-user"></i></div>
             <div>
                 <h6 class="mb-0 fw-bold">
-                    <a href="profile.html?id=${post.author?._id || post.author}" class="text-decoration-none" style="color: #1a535c;">
+                    <a href="profile.html?id=${postAuthorId}" class="text-decoration-none" style="color: #1a535c;">
                         ${escapeHtml(post.author?.name || 'Nexus Writer')}
                     </a>
                     ${followLink}
@@ -502,27 +637,20 @@ function renderSinglePost(post, user) {
 
         <div class="d-flex gap-4 mb-3 border-top pt-2">
             <div class="interaction-btn" onclick="togglePostLike('${post._id}')" style="cursor: pointer;">
-                <i class="fas fa-heart ${(user && post.likes?.includes(user._id)) ? 'text-danger' : 'text-muted'}"></i>
+                <i class="fas fa-heart ${(user && post.likes?.includes(myId)) ? 'text-danger' : ''}"></i>
                 <span class="ms-1 small fw-bold">${post.likes?.length || 0}</span>
             </div>
             <div class="interaction-btn" onclick="document.getElementById('main-comment-${post._id}').focus()" style="cursor: pointer;">
-                <i class="fas fa-comment text-muted"></i>
+                <i class="fas fa-comment"></i>
                 <span class="ms-1 small fw-bold">Comment</span>
             </div>
         </div>
 
         <div class="comment-area bg-light p-3 rounded">
-            <div id="comments-list-${post._id}">
-                ${typeof renderComments === 'function' ? renderComments(post.comments || [], post._id) : ''}
-            </div>
-            
+            <div id="comments-list-${post._id}">${renderComments(post.comments || [], post._id)}</div>
             <div class="input-group mt-2">
-                <input type="text" class="form-control border-0 px-3" id="main-comment-${post._id}" 
-                       placeholder="Join the discussion..." 
-                       onkeypress="if(event.key==='Enter') submitMainComment('${post._id}')">
-                <button class="btn btn-success" onclick="submitMainComment('${post._id}')">
-                    <i class="fas fa-paper-plane"></i>
-                </button>
+                <input type="text" class="form-control" id="main-comment-${post._id}" placeholder="Join the discussion..." onkeypress="if(event.key==='Enter') submitMainComment('${post._id}')">
+                <button class="btn btn-success" onclick="submitMainComment('${post._id}')"><i class="fas fa-paper-plane"></i></button>
             </div>
         </div>
     </div>`;
@@ -535,7 +663,6 @@ function loadMorePosts() {
     if (currentPage >= totalPages) return;
     currentPage++;
     displayCurrentPage();
-    // Smooth scroll to the button
     const loadMoreDiv = document.getElementById('loadMoreWrapper');
     if (loadMoreDiv) loadMoreDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
@@ -545,12 +672,11 @@ async function loadDashboard() {
     await fetchAllPostsAndRefresh();
 }
 
-// Refresh after any action (like, comment, delete)
+// Refresh after any action
 async function refreshAfterAction() {
     await fetchAllPostsAndRefresh();
 }
 
-// Keep compatibility with old function names
 const fetchPosts = refreshAfterAction;
 
 document.addEventListener('DOMContentLoaded', loadDashboard);
@@ -559,6 +685,7 @@ document.addEventListener('DOMContentLoaded', loadDashboard);
 async function handleFollowAction(targetId) {
     const user = JSON.parse(localStorage.getItem('nexusUser'));
     if (!user || !user.token) return;
+    
     try {
         const response = await fetch(`http://localhost:5000/api/users/follow/${targetId}`, {
             method: 'POST',
@@ -567,17 +694,39 @@ async function handleFollowAction(targetId) {
                 'Content-Type': 'application/json'
             }
         });
+        
         const data = await response.json();
+        
         if (response.ok) {
+            // --- ADDED: PERSISTENCE LOGIC ---
+            // Update the local list so the state "sticks" even after a refresh
+            let localFollowed = JSON.parse(localStorage.getItem('nexusFollowedUsers')) || [];
+            if (data.isFollowing) {
+                if (!localFollowed.includes(targetId)) localFollowed.push(targetId);
+            } else {
+                localFollowed = localFollowed.filter(id => id !== targetId);
+            }
+            localStorage.setItem('nexusFollowedUsers', JSON.stringify(localFollowed));
+            // --------------------------------
+
             const feedLinks = document.querySelectorAll(`[id^="follow-link-${targetId}"]`);
             feedLinks.forEach(link => {
                 link.innerText = data.isFollowing ? '• Following' : '• Follow';
             });
+            
             const profileBtn = document.getElementById('followBtn');
             if (profileBtn && typeof updateFollowButtonUI === 'function') {
                 updateFollowButtonUI(data.isFollowing);
-                if (typeof loadProfile === 'function') loadProfile();
             }
+
+            // --- ADDED: REFRESH STATS ---
+            // Refresh the profile data to update the Following/Followers count numbers
+            if (typeof loadProfile === 'function') {
+                loadProfile(); 
+            } else if (typeof fetchAllPostsAndRefresh === 'function') {
+                fetchAllPostsAndRefresh();
+            }
+            // ----------------------------
         }
     } catch (err) {
         console.error("Follow error:", err);
@@ -600,7 +749,7 @@ function checkCustomCategory(select) {
 async function handlePostSubmit() {
     const title = document.getElementById('postTitle').value;
     const content = document.getElementById('postContent').value;
-    const tags = document.getElementById('postTags').value;
+    const tagsInput = document.getElementById('postTags').value;
     const editId = document.getElementById('editPostId').value;
     
     const select = document.getElementById('postCategorySelect');
@@ -624,6 +773,13 @@ async function handlePostSubmit() {
         window.location.href = 'login.html';
         return;
     }
+
+    // --- ADDED: TAG PROCESSING ---
+    // Converts "Tag1, Tag2" into ["Tag1", "Tag2"] and removes empty spaces
+    const tagsArray = tagsInput.split(',')
+        .map(tag => tag.trim())
+        .filter(tag => tag !== "");
+
     try {
         let url = 'http://localhost:5000/api/posts';
         let method = 'POST';
@@ -631,19 +787,28 @@ async function handlePostSubmit() {
             url = `http://localhost:5000/api/posts/${editId}`;
             method = 'PUT';
         }
+        
         const formData = new FormData();
         formData.append('title', title);
         formData.append('content', content);
         formData.append('category', category);
-        formData.append('tags', tags);
+
+        // --- UPDATED: SENDING TAGS AS ARRAY ---
+        // We send each tag individually so the backend receives them as an array
+        tagsArray.forEach(tag => {
+            formData.append('tags[]', tag);
+        });
+
         const fileInput = document.getElementById('postPhotoFile');
         if (fileInput.files[0]) {
             formData.append('image', fileInput.files[0]);
         }
+
         const response = await fetch(url, {
             method: method,
             headers: { 
                 'Authorization': `Bearer ${user.token}` 
+                // Note: Don't set 'Content-Type' when sending FormData
             },
             body: formData
         });
@@ -691,8 +856,17 @@ function editPost(id) {
             customInput.value = p.category;
         }
     }
-    document.getElementById('postTags').value = p.tags || "";
-    if(p.image) { 
+    // Set tags - if p.tags is array, join with commas; if string, use as is
+    let tagsValue = '';
+    if (Array.isArray(p.tags)) {
+        tagsValue = p.tags.join(', ');
+    } else if (typeof p.tags === 'string') {
+        tagsValue = p.tags;
+    } else {
+        tagsValue = '';
+    }
+    document.getElementById('postTags').value = tagsValue;
+    if(p.image && p.image !== "null") { 
         document.getElementById('previewContainer').classList.remove('d-none');
         document.getElementById('filePreviewImg').src = p.image; 
     } else {
@@ -780,29 +954,14 @@ window.onload = () => {
         window.location.href = 'login.html';
         return;
     }
-    const user = JSON.parse(userString);
-    document.getElementById('navUsername').textContent = user.username || user.name || "User";
+    updateUserGreeting();
 };
 
-// Notifications (unchanged)
-document.addEventListener('DOMContentLoaded', () => {
-    const user = JSON.parse(localStorage.getItem('nexusUser'));
-    if (user && user.name) {
-        document.getElementById('navUsername').innerText = user.name.split(' ')[0];
-    }
-    if (typeof checkNotifications === 'function') {
-        checkNotifications();
-    }
-});
-
+// Notifications
 async function loadNotifications() {
     const rawData = localStorage.getItem('nexusUser');
     const userData = JSON.parse(rawData || '{}');
     const token = userData.token; 
-    const welcomeHeader = document.querySelector('.welcome-section h2');
-    if (welcomeHeader && userData && userData.name) {
-        welcomeHeader.innerText = `Welcome back, ${userData.name}!`;
-    }
     if (!token) {
         console.warn('No token found. User might not be logged in.');
         return;
@@ -858,6 +1017,23 @@ async function loadNotifications() {
         console.error('Error loading notifications:', error);
     }
 }
+
+// Add this to dashboard.js to resolve the ReferenceError
+window.updateNavbar = function() {
+    console.log("Updating navbar UI...");
+    
+    // 1. Update the Greeting (already in your code)
+    if (typeof updateUserGreeting === 'function') {
+        updateUserGreeting();
+    }
+    
+    // 2. Update Notifications (already in your code)
+    if (typeof loadNotifications === 'function') {
+        loadNotifications();
+    }
+
+    // 3. Optional: Add any other Navbar logic here (like profile pic updates)
+};
 
 document.addEventListener('DOMContentLoaded', loadNotifications);
 

@@ -16,8 +16,12 @@ router.get('/user/:id', protect, postController.getUserPosts);
 router.put('/like/:id', protect, postController.likePost);
 router.post('/:id/comment', protect, postController.addComment);
 router.post('/:id/comment/:commentId/reply', protect, postController.addReply);
+
+// This matches exports.editComment in postController.js[cite: 3]
+router.put('/:id/comment/:commentId', protect, postController.editComment); 
+
 router.delete('/:id/comment/:commentId', protect, postController.deleteComment);
-router.put('/:id/comment/:commentId/like', protect, postController.likeComment); 
+router.put('/:id/comment/:commentId/like', protect, postController.likeComment);
 
 // 4. General Parameter Routes (AT THE BOTTOM)
 router.get('/:id', postController.getPostById);

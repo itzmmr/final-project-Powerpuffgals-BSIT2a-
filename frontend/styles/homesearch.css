@@ -1,16 +1,56 @@
+/* homesearch.css - NESTED DASHBOARD SYNCED & FULLY UPDATED */
 :root {
-    --nexus-teal: #1a535c;
+    --nexus-teal: #1a535c; 
     --nexus-cyan: #4ecdc4;
+    --nexus-light-bg: #f4f7f6;
+    --nexus-card-white: #ffffff;
+    --text-dark: #2c3e50;
+    --text-muted: #64748b;
+    --border-soft: rgba(78, 205, 196, 0.2);
+    --header-footer-bg: #1a535c;
+    /* Forest and Stone Palette */
+    --forest-moss: #3e4f3f;
+    --stone-taupe: #d7ccc8;
 }
 
 body {
     font-family: 'Inter', sans-serif;
-    background-color: #fff;
+    background-color: var(--nexus-light-bg) !important;
     margin: 0;
+    transition: background 0.3s, color 0.3s;
 }
 
+/* --- DARK MODE OVERRIDES --- */
+body.dark-mode {
+    --nexus-light-bg: #0f172a;
+    --nexus-card-white: #1e293b;
+    --text-dark: #f8fafc;
+    --text-muted: #94a3b8;
+    --border-soft: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .search-post-card,
+body.dark-mode .modal-content {
+    background-color: #1e293b !important;
+    color: #ffffff !important;
+}
+
+body.dark-mode .post-title-display,
+body.dark-mode #modalPostTitle,
+body.dark-mode h3 {
+    color: var(--nexus-cyan) !important;
+}
+
+/* Visibility fixes for dark mode text */
+body.dark-mode .text-muted, 
+body.dark-mode .small,
+body.dark-mode .interaction-btn span {
+    color: #cbd5e1 !important;
+}
+
+/* --- SEARCH NAVIGATION --- */
 .search-nav {
-    background-color: var(--nexus-teal);
+    background-color: var(--header-footer-bg);
     padding: 12px 15px;
     display: flex;
     align-items: center;
@@ -18,6 +58,7 @@ body {
     position: sticky;
     top: 0;
     z-index: 1001;
+    border-bottom: 4px solid var(--nexus-cyan) !important;
 }
 
 .back-icon { color: white; font-size: 1.2rem; text-decoration: none; }
@@ -38,6 +79,7 @@ body {
     width: 100%;
     padding-left: 10px;
     font-size: 14px;
+    color: var(--text-dark);
 }
 
 .search-confirm {
@@ -48,16 +90,14 @@ body {
     font-family: 'Montserrat', sans-serif;
 }
 
-.search-mute { color: #666; }
-.clear-x { color: #ccc; cursor: pointer; }
-
-/* Tabs matching the brand */
+/* --- TABS --- */
 .tab-scroller {
     display: flex;
+    background: white;
     border-bottom: 1px solid #eee;
     overflow-x: auto;
+    scrollbar-width: none;
 }
-
 .search-tab {
     padding: 12px 20px;
     font-weight: 600;
@@ -66,31 +106,220 @@ body {
     white-space: nowrap;
     border-bottom: 3px solid transparent;
 }
-
 .search-tab.active {
     color: var(--nexus-teal);
     border-bottom: 3px solid var(--nexus-teal);
 }
 
-/* Suggestions Dropdown */
-.suggestion-floating-box {
-    display: none;
-    position: absolute;
-    top: 60px;
-    left: 15px;
-    right: 15px;
-    background: white;
-    border-radius: 12px;
-    z-index: 2000;
+/* --- POST CARD GRID --- */
+#resultsGrid {
+    display: flex !important; 
+    flex-direction: column !important;
+    align-items: center !important;
+    padding: 20px;
+    gap: 25px;
 }
 
-.suggest-row {
+.search-post-card {
+    width: 100%;
+    max-width: 850px; 
+    border: none;
+    border-radius: 15px;
+    background: var(--nexus-card-white) !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    border-top: 4px solid var(--nexus-cyan) !important;
+    transition: 0.2s;
+    cursor: pointer;
+}
+.search-post-card:hover { transform: translateY(-3px); }
+
+/* --- MODAL & COMMENT STYLING --- */
+.comment-thread-container {
+    background-color: #f8fafc; 
+    padding: 20px;
+    border-radius: 12px;
+}
+
+body.dark-mode .comment-thread-container {
+    background-color: #0f172a !important;
+}
+
+.comment-box {
+    background-color: #1e293b !important; 
+    color: #ffffff !important;
+    border-radius: 12px;
     padding: 12px 15px;
-    border-bottom: 1px solid #f9f9f9;
-    font-size: 14px;
+    margin-bottom: 4px;
+    border-left: 5px solid #2dd4bf !important; 
+    display: inline-block;
+    min-width: 220px;
+}
+
+.comment-author-name {
+    color: #22d3ee !important; 
+    font-weight: 700;
+}
+
+.comment-text-body {
+    color: #ffffff !important;
+}
+
+/* --- INTERACTION BUTTONS --- */
+.interaction-row {
+    border-top: 1px solid var(--border-soft);
+    border-bottom: 1px solid var(--border-soft);
+    padding: 12px 0;
+    margin: 15px 0;
     display: flex;
-    justify-content: space-between;
+    gap: 30px;
+}
+
+.interaction-btn {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.fa-heart.text-danger { color: #dc3545 !important; }
+.fa-comment.text-primary { color: #0d6efd !important; }
+
+/* Action Buttons (Reply, Edit, Delete) */
+.action-btn {
+    font-size: 0.78rem;
+    font-weight: 700 !important;
+    cursor: pointer;
+    color: #1e293b !important; 
+    text-decoration: none !important;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+body.dark-mode .action-btn {
+    color: #22d3ee !important;
+}
+
+.action-btn.text-success { color: #22c55e !important; }
+.action-btn.text-danger { color: #ef4444 !important; }
+
+/* --- NESTED DASHBOARD INPUT SYNC (GREEN BUTTON STYLE) --- */
+.input-group {
+    display: flex !important;
+    width: 100% !important;
+    align-items: stretch !important;
+    background: transparent !important;
+    border: none !important;
+    gap: 0 !important;
+    flex-wrap: nowrap !important; /* Prevents button from jumping to next line[cite: 17] */
+}
+
+.comment-input-field {
+    flex: 1 !important;
+    background-color: #ffffff !important;
+    color: #1e293b !important; /* Ensures text is dark and visible[cite: 17] */
+    border: 2px solid #2dd4bf !important;
+    border-right: none !important; 
+    padding: 10px 15px !important;
+    border-top-left-radius: 12px !important; 
+    border-bottom-left-radius: 12px !important;
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    outline: none !important;
+    min-width: 0; /* Prevents overflow hiding the button[cite: 17] */
+}
+
+body.dark-mode .comment-input-field {
+    background-color: #ffffff !important; 
+    color: #1e293b !important; /* Forces visible text even in dark mode[cite: 17] */
+}
+
+/* Fixed both the general send button and specific modal button to match image */
+.btn-send-comment, 
+#modal-comment-submit-btn {
+    background-color: #198754 !important; /* Success Green[cite: 17] */
+    color: white !important;
+    border: 2px solid #2dd4bf !important;
+    border-left: none !important; 
+    border-top-right-radius: 12px !important;
+    border-bottom-right-radius: 12px !important;
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+    padding: 0 25px !important; /* Ensures button is fuller and visible[cite: 17] */
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: background-color 0.2s;
+    cursor: pointer !important;
+    min-width: 60px !important; /* Prevents button disappearance[cite: 17] */
+}
+
+.btn-send-comment:hover, 
+#modal-comment-submit-btn:hover {
+    background-color: #146c43 !important;
+}
+
+/* Modal Header Fix */
+body.dark-mode .modal-header .btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+#modal-comment-submit-btn {
+    z-index: 10 !important;
+    display: flex !important; /* Forces it to stay visible */
+    align-items: center;
+    justify-content: center;
+}
+
+/* The main container */
+.comment-pill-container {
+    display: flex;
+    align-items: stretch; /* This makes the button full height */
+    border: 2px solid #2dd4bf !important;
+    border-radius: 12px !important; /* This creates the rounded-rectangle look instead of an oval */
+    background-color: white;
+    overflow: hidden; /* This clips the button corners to match the container */
+    height: 45px; 
+    width: 100%;
+}
+
+/* The Input field */
+.comment-pill-input {
+    flex: 1;
+    border: none !important;
+    outline: none !important;
+    background: transparent !important;
+    padding: 0 15px !important;
+    font-size: 0.95rem;
+}
+
+/* The Button - Made to match the top one exactly */
+.comment-pill-button {
+    background-color: #1a8a70 !important; /* Matching that darker forest green */
+    color: white !important;
+    border: none !important;
+    border-radius: 0 !important; /* Let the container's overflow:hidden handle the rounding */
+    width: 65px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
 }
 
-.suggest-row:hover { background: #f1f1f2; }
+/* Optional: Slight hover effect */
+.comment-pill-button:hover {
+    background-color: #15735d !important;
+}
+
+/* Force the grey backdrop to vanish when the modal is closed */
+body:not(.modal-open) .modal-backdrop {
+    display: none !important;
+}
+
+/* Ensure you can click your search bar again */
+body:not(.modal-open) {
+    overflow: auto !important;
+    pointer-events: auto !important;
+}

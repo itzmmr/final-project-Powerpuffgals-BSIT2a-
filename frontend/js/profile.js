@@ -183,7 +183,7 @@ async function loadUserPosts(targetProfileId) {
         postContainer.innerHTML = `<p class="text-center text-danger">Connection error. Could not load posts.</p>`;
     }
 }
-       async function loadProfile() {
+      async function loadProfile() {
     // --- 1. SETUP & IDENTITY CHECK ---
     const userSnapshot = localStorage.getItem('nexusUser');
     
@@ -197,16 +197,16 @@ async function loadUserPosts(targetProfileId) {
     const loggedInUser = JSON.parse(userSnapshot) || {};
     
     // --- FIXED: AUTHENTICATION SOURCE ---
-    // Pull the token from its own key where login.js saves it
     const token = localStorage.getItem('token');
 
-// Check if it's actually missing or just the word "null" as a string
-if (!token || token === "null" || token === "undefined") {
-    console.error("TOKEN IS MISSING - Redirecting to login.");
-    window.location.href = 'login.html'; 
-} else {
-    console.log("TOKEN FOUND:", token);
-}
+    if (!token || token === "null" || token === "undefined") {
+        console.error("TOKEN IS MISSING - Redirecting to login.");
+        window.location.href = 'login.html'; 
+        return;
+    } else {
+        console.log("TOKEN FOUND:", token);
+    }
+
     const urlParams = new URLSearchParams(window.location.search);
     const profileIdFromUrl = urlParams.get('id');
     
@@ -237,7 +237,6 @@ if (!token || token === "null" || token === "undefined") {
 
     // --- 3. FETCH & POPULATE DATA (AUTO-FETCH ENABLED) ---
     try {
-        // Use the standalone token for the request
         const activeToken = localStorage.getItem('token');
 
         if (!activeToken || activeToken === 'undefined') {
@@ -304,7 +303,11 @@ if (!token || token === "null" || token === "undefined") {
                         followBtn.classList.remove('hidden-element'); 
                         followBtn.style.setProperty('display', 'inline-block', 'important');
                         
-                        const isFollowing = profileData.followersList && profileData.followersList.includes(myId);
+                        // --- UPDATED PERSISTENCE CHECK ---
+                        // Check if in server list OR local memory for refresh stability
+                        const localFollowed = JSON.parse(localStorage.getItem('nexusFollowedUsers')) || [];
+                        const isFollowing = (profileData.followersList && profileData.followersList.includes(myId)) || localFollowed.includes(targetProfileId);
+                        
                         if (typeof updateFollowButtonUI === 'function') {
                             updateFollowButtonUI(isFollowing);
                         }

@@ -1,3 +1,4 @@
+<!-- homesearch_8.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,14 +14,11 @@
 
     <div class="search-nav">
         <a href="dashboard.html" class="back-icon"><i class="fas fa-arrow-left"></i></a>
-        
         <div class="search-input-container">
             <i class="fas fa-search search-mute"></i>
-            <input type="text" id="innerSearchInput" placeholder="Search tutorials..." 
-                   oninput="handleInstantSuggestions(this.value)" autofocus autocomplete="off">
+            <input type="text" id="innerSearchInput" placeholder="Search tutorials..." oninput="handleInstantSuggestions(this.value)" autofocus autocomplete="off">
             <i class="fas fa-times-circle clear-x" id="clearBtn" onclick="clearInput()" style="display:none;"></i>
         </div>
-        
         <button class="search-confirm">Search</button>
     </div>
 
@@ -35,22 +33,71 @@
         <div class="search-tab" onclick="switchTab(this, 'Cybersecurity')">Cybersecurity</div>
         <div class="search-tab" onclick="switchTab(this, 'Cloud Computing')">Cloud Computing</div>
         <div class="search-tab" onclick="switchTab(this, 'Blockchain')">Blockchain</div>
-            <div class="search-tab" onclick="switchTab(this, 'Internet of Things')">Internet of Things</div>
-
+        <div class="search-tab" onclick="switchTab(this, 'Internet of Things')">Internet of Things</div>
     </div>
+
     <div id="suggestionBox" class="suggestion-floating-box shadow-sm"></div>
+
     <div class="container-fluid px-2 mt-3">
-    <div class="row g-2" id="resultsGrid">
-        </div>
-</div>
-
-    <div class="container py-3">
-        <div id="searchResults" class="row g-3">
-            </div>
+        <div class="row g-2" id="resultsGrid"></div>
     </div>
-    
 
-   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-         <script src="js/homesearch.js"></script>
+    <!-- Modal Section -->
+    <div class="modal fade" id="postDetailModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content bg-white text-dark border-0 shadow-lg" style="border-radius: 20px; overflow: hidden;">
+                <div class="modal-header border-0 pb-0">
+                    <div id="modalPostHeader" class="w-100"></div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body pt-2">
+                    <div class="row g-0">
+                        <div id="modalContentColumn" class="col-12 d-flex flex-column p-3">
+                            <div class="post-text-content mb-3">
+                                <h4 id="modalPostTitle" class="fw-bold mb-2 post-title-display"></h4>
+                                <div id="modalPostTags" class="mb-3 d-flex flex-wrap gap-2 text-muted small" style="font-size: 0.8rem; display: none;"></div>
+                                <div id="modalPostContent" class="text-muted mb-3" style="white-space: pre-wrap; font-size: 0.95rem;"></div>
+                            </div>
+                            
+                            <div id="modalImageContainer" class="mb-3 text-center bg-light rounded" style="display: none; overflow: hidden;">
+                                <img id="modalPostImage" src="" alt="Post" class="img-fluid rounded shadow-sm" style="max-height: 450px; width: 100%; object-fit: contain;">
+                            </div>
+
+                            <div class="interaction-row d-flex gap-4 py-2 mb-2 border-top border-bottom">
+                                <div class="interaction-btn d-flex align-items-center gap-2" id="modal-like-btn" style="cursor: pointer;">
+                                    <i id="modal-heart-icon" class="fas fa-heart fs-5 text-danger"></i>
+                                    <span id="modal-like-count" class="fw-bold small text-dark">0</span>
+                                </div>
+                                <div class="interaction-btn d-flex align-items-center gap-2" onclick="document.getElementById('modal-comment-input-field').focus()" style="cursor: pointer;">
+                                    <i class="fas fa-comment fs-5 text-primary"></i>
+                                    <span class="fw-bold small text-dark">Comment</span>
+                                </div>
+                            </div>
+
+                            <div class="comment-thread-container p-3" style="background-color: #f8fafc; border-radius: 15px;">
+                                <div id="modalCommentsList" class="mb-3" style="max-height: 350px; overflow-y: auto;">
+                                </div>
+
+                              <div class="comment-input-wrapper mt-3">
+    <div class="comment-pill-container">
+        <input type="text" id="modal-comment-input-field" class="comment-pill-input" placeholder="Join the discussion...">
+        <button class="comment-pill-button" id="modal-comment-submit-btn">
+            <i class="fas fa-paper-plane" id="comment-submit-icon"></i>
+        </button>
+    </div>
+</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/homesearch.js"></script>
+    
 </body>
 </html>

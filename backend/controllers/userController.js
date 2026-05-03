@@ -115,6 +115,17 @@ exports.updateUserProfile = async (req, res) => {
         // --- CORE IDENTITY ---
         user.name = req.body.name || user.name;
         user.bio = req.body.bio || user.bio;
+
+        // --- INSERTED: EMAIL UPDATE LOGIC ---
+        if (req.body.email && req.body.email !== user.email) {
+            // Check if the new email is already taken by someone else
+            const emailExists = await User.findOne({ email: req.body.email });
+            if (emailExists) {
+                return res.status(400).json({ message: "Email is already in use by another account." });
+            }
+            user.email = req.body.email;
+        }
+        // --- END OF INSERTION ---
         
         // Handle Role (IT Student, Developer, etc.)
         if (req.body.role) user.role = req.body.role; 
@@ -144,7 +155,7 @@ exports.updateUserProfile = async (req, res) => {
 
         // --- SECURITY & MEDIA ---
         if (req.body.password) {
-            // The pre-save hook in your User model will handle the hashing
+            // The pre-save hook in your User model will handle the hashing[cite: 17]
             user.password = req.body.password;
         }
 
