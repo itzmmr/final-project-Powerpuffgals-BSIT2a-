@@ -31,68 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-   // --- 2. LOGIN PAGE LOGIC (Updated) ---
-if (path.includes('login.html')) {
-    const loginForm = document.getElementById('loginForm');
-    if (loginForm) {
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const emailInput = document.getElementById('email');
-            const passwordInput = document.getElementById('password');
-            const submitBtn = loginForm.querySelector('button[type="submit"]');
-
-            if(submitBtn) {
-                submitBtn.disabled = true;
-                submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Connecting...';
-            }
-
-            try {
-                const response = await fetch('http://localhost:5000/api/users/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email: emailInput.value, password: passwordInput.value })
-                });
-                
-                const data = await response.json();
-                
-                if (response.ok) {
-                    // --- AUTO-FETCH SECURITY CHECK ---
-                    // Verify the token exists in the server response before saving
-                    if (!data.token || data.token === 'undefined') {
-                        console.error("Login failed: Server did not return a valid token.");
-                        alert('Login successful, but session token is missing. Please contact support.');
-                        return;
-                    }
-
-                    // Normalize the ID: ensure we have both _id and id to prevent 
-                    // ownership check bugs in displayPosts
-                    const userToStore = {
-                        ...data,
-                        _id: data._id || data.id,
-                        id: data.id || data._id,
-                        loggedIn: true
-                    };
-
-                    // Save the validated user object to storage
-                    localStorage.setItem('nexusUser', JSON.stringify(userToStore));
-                    
-                    // Redirect to dashboard
-                    window.location.href = 'dashboard.html'; 
-                } else {
-                    alert(data.message || 'Invalid Login Credentials');
-                }
-            } catch (error) {
-                console.error("Login Error:", error);
-                alert('Cannot reach the server. Please ensure your backend is running!');
-            } finally {
-                if(submitBtn) {
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = 'Login';
-                }
-            }
-        });
-    }
-}
+   
     // --- 3. DASHBOARD PAGE LOGIC ---
     if (path.includes('dashboard.html')) {
         if (!user || !user.loggedIn) {
@@ -162,43 +101,6 @@ if (path.includes('login.html')) {
         }
     }
 
-    // --- 4. SIGNUP PAGE LOGIC ---
-    if (path.includes('signup.html')) {
-        const signupForm = document.getElementById('signupForm');
-        if (signupForm) {
-            signupForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const formData = new FormData(signupForm);
-                const submitBtn = signupForm.querySelector('button[type="submit"]'); // FIXED SELECTOR
-
-                if(submitBtn) {
-                    submitBtn.disabled = true;
-                    submitBtn.innerHTML = 'Initialising...';
-                }
-
-                try {
-                    const response = await fetch('http://localhost:5000/api/users', {
-                        method: 'POST',
-                        body: formData
-                    });
-                    const data = await response.json();
-                    if (response.ok) {
-                        alert('Nexus account created!');
-                        window.location.href = 'login.html';
-                    } else {
-                        alert(data.message || 'Signup failed');
-                    }
-                } catch (error) {
-                    alert('Server connection error.');
-                } finally {
-                    if(submitBtn) {
-                        submitBtn.disabled = false;
-                        submitBtn.innerHTML = 'Sign Up';
-                    }
-                }
-            });
-        }
-    }
 });
 
 // --- 5. PROFILE PAGE LOGIC ---
@@ -222,22 +124,23 @@ async function handlePostSubmit() {
     const user = JSON.parse(localStorage.getItem('nexusUser'));
     const title = document.getElementById('postTitle').value;
     const content = document.getElementById('postContent').value;
+    const tagsInput = document.getElementById('postTags').value; 
     const categorySelect = document.getElementById('postCategorySelect').value;
     const categoryCustom = document.getElementById('postCategoryCustom').value;
-    const tags = document.getElementById('postTags').value; 
     const imageFile = document.getElementById('postPhotoFile').files[0];
 
-    if (!title || !content) {
-        alert("Please fill in the title and content.");
-        return;
-    }
+    // Convert string to array for hashtag support
+    const tagsArray = tagsInput.split(',').map(tag => tag.trim()).filter(tag => tag !== "");
 
     const category = categorySelect === "OTHER" ? categoryCustom : categorySelect;
     const formData = new FormData();
     formData.append('title', title);
     formData.append('content', content);
     formData.append('category', category);
-    formData.append('tags', tags);
+    
+    // Append tags correctly for the backend
+    tagsArray.forEach(tag => formData.append('tags[]', tag));
+
     if (imageFile) formData.append('image', imageFile);
 
     try {
@@ -250,7 +153,7 @@ async function handlePostSubmit() {
             location.reload();
         } else {
             const err = await response.json();
-            alert(err.error || "Failed to publish tutorial");
+            alert(err.message || "Failed to publish tutorial");
         }
     } catch (err) {
         alert("Connection error while posting.");
@@ -444,94 +347,32 @@ function updateNavbar() {
 }
 document.addEventListener('DOMContentLoaded', updateNavbar);
 
-// Function to check for new notifications
 async function checkNotifications() {
-    const user = JSON.parse(localStorage.getItem('nexusUser') || '{}');
-    if (!user.token) return;
-
-    try {
-        const res = await fetch('http://localhost:5000/api/notifications', {
-            headers: { 'Authorization': `Bearer ${user.token}` }
-        });
-        const notifications = await res.json();
-        
-        // Filter for notifications where isRead is false
-        const unread = notifications.filter(n => !n.isRead).length;
-        
-        const badge = document.getElementById('nav-notification-badge');
-        if (badge) {
-            if (unread > 0) {
-                badge.innerText = unread;
-                badge.style.display = 'inline-block';
-            } else {
-                badge.style.display = 'none';
-            }
-        }
-    } catch (err) {
-        console.error("Badge error:", err);
-    }
-}
-
-// Run this every 30 seconds to keep it updated
-if (localStorage.getItem('nexusUser')) {
-    checkNotifications();
-    setInterval(checkNotifications, 30000); 
-}
-
-async function checkNotifications() {
-    try {
-        const response = await fetch('http://localhost:5000/api/notifications', {
-            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-        });
-        const data = await response.json();
-        
-        const badge = document.getElementById('nav-notification-badge');
-        const list = document.getElementById('dropdown-notification-list');
-        
-        if (data.unreadCount > 0) {
-            badge.style.display = 'block';
-            badge.innerText = data.unreadCount;
-            
-            // Generate the list items
-            list.innerHTML = data.notifications.map(n => `
-                <div class="p-2 border-bottom small">
-                    <strong>${n.sender.name}</strong> ${n.type === 'follow' ? 'followed you' : 'liked your post'}
-                </div>
-            `).join('');
-        }
-    } catch (err) {
-        console.error("Notif Error:", err);
-    }
-}
-
-// Function to fetch and display notifications
-async function loadNotifications() {
-    // FIX: Pull token from the nexusUser object, not a separate 'token' key
+    // 1. Get the nexusUser object and extract the token
     const userData = JSON.parse(localStorage.getItem('nexusUser') || '{}');
     const token = userData.token; 
 
-    const welcomeHeader = document.querySelector('.welcome-section h2');
-    if (welcomeHeader && userData.name) {
-        welcomeHeader.innerText = `Welcome back, ${userData.name}!`;
-    }
-
+    // 2. Security Check: If no token, don't try to fetch
     if (!token) return;
 
     try {
         const response = await fetch('http://localhost:5000/api/notifications', {
             method: 'GET',
             headers: { 
-                'Authorization': `Bearer ${token}`, 
+                'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
             }
         });
-        
+
+        if (!response.ok) throw new Error("Notification fetch failed");
+
         const data = await response.json();
+        
         const badge = document.getElementById('nav-notification-badge');
         const list = document.getElementById('dropdown-notification-list');
         
+        // 3. Update Badge (Only if the element exists)
         if (badge) {
-            // Now this matches the updated backend object
             if (data.unreadCount > 0) {
                 badge.style.display = 'block';
                 badge.innerText = data.unreadCount;
@@ -540,71 +381,23 @@ async function loadNotifications() {
             }
         }
 
+        // 4. Update Dropdown List (Only if the element exists)
         if (list) {
             if (data.notifications && data.notifications.length > 0) {
-                list.innerHTML = data.notifications.map(notif => `
-                    <div class="notification-item p-2 border-bottom small">
-                        <strong>${notif.sender?.name || 'Someone'}</strong> 
-                        ${notif.type === 'follow' ? 'started following you.' : 'interacted with your post.'}
+                list.innerHTML = data.notifications.map(n => `
+                    <div class="p-2 border-bottom small">
+                        <strong>${n.sender?.name || 'Someone'}</strong> 
+                        ${n.type === 'follow' ? 'followed you' : 'interacted with your post'}
                     </div>
                 `).join('');
             } else {
-                list.innerHTML = '<p class="small text-muted text-center p-3">No new notifications.</p>';
+                list.innerHTML = '<p class="small text-muted text-center p-2">No new notifications</p>';
             }
         }
-    } catch (error) {
-        console.error('Error loading notifications:', error);
+    } catch (err) {
+        console.error("Notification Error:", err);
     }
 }
-
-//NOTIFICATIONS PAGE SCRIPT
-
-
-    // --- 1. Load Notifications on Start ---
-    async function loadNotifications() {
-        const container = document.getElementById('notification-list');
-        
-        // Fix: Use your standard localStorage keys
-        const token = localStorage.getItem('token');
-        const user = JSON.parse(localStorage.getItem('nexusUser') || '{}');
-        
-        if (!token) {
-            window.location.href = 'login.html';
-            return;
-        }
-
-        try {
-            const response = await fetch('http://localhost:5000/api/notifications', {
-                headers: { 
-                    'Authorization': `Bearer ${token}`, // Correct Bearer format
-                    'Content-Type': 'application/json'
-                }
-            });
-
-            if (!response.ok) throw new Error("Failed to fetch");
-
-            const data = await response.json();
-            
-            // Handle both array response and object response { notifications: [] }
-            const notifications = Array.isArray(data) ? data : (data.notifications || []);
-
-            if (notifications.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state bg-white rounded-3 shadow-sm">
-                        <i class="fas fa-inbox fa-3x mb-3 text-muted"></i>
-                        <h5>All caught up!</h5>
-                        <p class="small">When people interact with your IT stories, they'll show up here.</p>
-                    </div>`;
-                return;
-            }
-
-            container.innerHTML = notifications.map(n => renderNotificationItem(n)).join('');
-
-        } catch (err) {
-            console.error("Load Error:", err);
-            container.innerHTML = `<div class="alert alert-danger m-3">Connection error. Please ensure your backend is running.</div>`;
-        }
-    }
 
     // --- 2. Notification Item Template ---
     function renderNotificationItem(n) {
@@ -658,28 +451,49 @@ async function loadNotifications() {
 
     // --- 3. Mark All as Read ---
     async function markAllAsRead() {
-        const token = localStorage.getItem('token');
-        
-        try {
-            const response = await fetch('http://localhost:5000/api/notifications/read', {
-                method: 'PUT',
-                headers: { 
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                }
-            });
+    // 1. Get token from the object, not a standalone key
+    const userData = JSON.parse(localStorage.getItem('nexusUser') || '{}');
+    const token = userData.token;
+    
+    if (!token) return;
 
-            if (response.ok) {
-                loadNotifications();
-                // If you have a global function to update the navbar badge, call it here:
-                if (typeof checkNotifications === 'function') checkNotifications();
+    try {
+        const response = await fetch('http://localhost:5000/api/notifications/read', {
+            method: 'PUT',
+            headers: { 
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
             }
-        } catch (err) {
-            console.error("Update Error:", err);
+        });
+
+        if (response.ok) {
+            // 2. Refresh the UI components
+            if (typeof loadNotifications === 'function') loadNotifications();
+            if (typeof checkNotifications === 'function') checkNotifications();
+            
+            // Optional: Hide the badge immediately for better UX
+            const badge = document.getElementById('nav-notification-badge');
+            if (badge) badge.style.display = 'none';
+        }
+    } catch (err) {
+        console.error("Mark Read Error:", err);
+    }
+}
+
+// Ensure the page loads notifications only when on the correct page
+document.addEventListener('DOMContentLoaded', () => {
+    const userData = JSON.parse(localStorage.getItem('nexusUser') || '{}');
+    
+    // Initial check for the badge (runs on all pages with a navbar)
+    if (userData.token) {
+        checkNotifications();
+        
+        // If we are on the specific notifications page, load the full list
+        if (document.getElementById('notification-list')) {
+            loadNotifications();
         }
     }
-
-    document.addEventListener('DOMContentLoaded', loadNotifications);
+});
 
         //SIGNUP PAGE SCRIPT
 
@@ -843,59 +657,72 @@ async function loadNotifications() {
         submitBtn.disabled = false;
     }
 });
-    
-//SIGNUP PAGE SCRIPT
-
-
 
     //NOTIFICATIONS PAGE SCRIPT
 
     // --- 1. Load Notifications on Start ---
     async function loadNotifications() {
-        const container = document.getElementById('notification-list');
-        
-        // Fix: Use your standard localStorage keys
-        const token = localStorage.getItem('token');
-        const user = JSON.parse(localStorage.getItem('nexusUser') || '{}');
-        
-        if (!token) {
+    const container = document.getElementById('notification-list');
+    
+    // 1. Safety check: Exit if the container doesn't exist on this specific page
+    if (!container) return; 
+
+    // 2. Correct Retrieval: Get the token FROM the nexusUser object
+    const userData = JSON.parse(localStorage.getItem('nexusUser') || '{}');
+    const token = userData.token;
+
+    // 3. Logic fix: If the token is missing inside nexusUser, THEN redirect
+    if (!token) {
+        console.warn("No active session found. Redirecting...");
+        window.location.href = 'login.html';
+        return;
+    }
+
+    try {
+        const response = await fetch('http://localhost:5000/api/notifications', {
+            method: 'GET',
+            headers: { 
+                'Authorization': `Bearer ${token}`, 
+                'Content-Type': 'application/json'
+            }
+        });
+
+        // Handle expired tokens or unauthorized access
+        if (response.status === 401) {
+            localStorage.removeItem('nexusUser');
             window.location.href = 'login.html';
             return;
         }
 
-        try {
-            const response = await fetch('http://localhost:5000/api/notifications', {
-                headers: { 
-                    'Authorization': `Bearer ${token}`, // Correct Bearer format
-                    'Content-Type': 'application/json'
-                }
-            });
+        if (!response.ok) throw new Error("Failed to fetch notifications");
 
-            if (!response.ok) throw new Error("Failed to fetch");
+        const data = await response.json();
+        
+        // Handle both array and object response formats
+        const notifications = Array.isArray(data) ? data : (data.notifications || []);
 
-            const data = await response.json();
-            
-            // Handle both array response and object response { notifications: [] }
-            const notifications = Array.isArray(data) ? data : (data.notifications || []);
-
-            if (notifications.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state bg-white rounded-3 shadow-sm">
-                        <i class="fas fa-inbox fa-3x mb-3 text-muted"></i>
-                        <h5>All caught up!</h5>
-                        <p class="small">When people interact with your IT stories, they'll show up here.</p>
-                    </div>`;
-                return;
-            }
-
-            container.innerHTML = notifications.map(n => renderNotificationItem(n)).join('');
-
-        } catch (err) {
-            console.error("Load Error:", err);
-            container.innerHTML = `<div class="alert alert-danger m-3">Connection error. Please ensure your backend is running.</div>`;
+        if (notifications.length === 0) {
+            container.innerHTML = `
+                <div class="empty-state bg-white rounded-3 shadow-sm p-5 text-center">
+                    <i class="fas fa-inbox fa-3x mb-3 text-muted"></i>
+                    <h5>All caught up!</h5>
+                    <p class="small text-muted">When people interact with your IT stories, they'll show up here.</p>
+                </div>`;
+            return;
         }
-    }
 
+        // 4. Render using your global helper
+        container.innerHTML = notifications.map(n => renderNotificationItem(n)).join('');
+
+    } catch (err) {
+        console.error("Load Error:", err);
+        container.innerHTML = `
+            <div class="alert alert-danger m-3 shadow-sm">
+                <i class="fas fa-exclamation-circle me-2"></i>
+                Connection error. Please ensure your backend is running.
+            </div>`;
+    }
+}
     // --- 2. Notification Item Template ---
     function renderNotificationItem(n) {
         const unreadClass = n.isRead ? '' : 'notification-unread';
@@ -948,29 +775,54 @@ async function loadNotifications() {
 
     // --- 3. Mark All as Read ---
     async function markAllAsRead() {
-        const token = localStorage.getItem('token');
-        
-        try {
-            const response = await fetch('http://localhost:5000/api/notifications/read', {
-                method: 'PUT',
-                headers: { 
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                }
-            });
+    // 1. Correct Retrieval: Get the token from inside the nexusUser package
+    const userData = JSON.parse(localStorage.getItem('nexusUser') || '{}');
+    const token = userData.token;
+    
+    if (!token) return;
 
-            if (response.ok) {
-                loadNotifications();
-                // If you have a global function to update the navbar badge, call it here:
-                if (typeof checkNotifications === 'function') checkNotifications();
+    try {
+        const response = await fetch('http://localhost:5000/api/notifications/read', {
+            method: 'PUT', // Ensure your backend route supports PUT
+            headers: { 
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
             }
-        } catch (err) {
-            console.error("Update Error:", err);
+        });
+
+        if (response.ok) {
+            // 2. Refresh UI: Clear the badge and reload the list
+            const badge = document.getElementById('nav-notification-badge');
+            if (badge) badge.style.display = 'none';
+            
+            // Re-run your loading functions to show the updated state
+            if (typeof loadNotifications === 'function') loadNotifications();
+            if (typeof checkNotifications === 'function') checkNotifications();
+        }
+    } catch (err) {
+        console.error("Update Error:", err);
+    }
+}
+
+function logout() {
+    localStorage.removeItem('nexusUser');
+    window.location.href = '../index.html';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const userData = JSON.parse(localStorage.getItem('nexusUser') || '{}');
+    
+    // 1. Run Navbar update
+    updateNavbar();
+
+    // 2. Only run these if the user is logged in
+    if (userData.token) {
+        checkNotifications(); // Updates the badge and dropdown
+        
+        // 3. Only run this if we are on the actual Notifications page
+        if (document.getElementById('notification-list')) {
+            loadNotifications();
         }
     }
-
-    document.addEventListener('DOMContentLoaded', loadNotifications);
-
-    
-
+});
    

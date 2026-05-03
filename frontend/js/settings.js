@@ -441,3 +441,13 @@ function logout() {
     localStorage.removeItem('token');
     window.location.href = 'login.html';
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Apply the saved theme immediately on page load
+    const savedTheme = localStorage.getItem('nexusTheme');
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+    } else {
+        document.body.classList.remove('dark-mode');
+    }
+});
