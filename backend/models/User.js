@@ -7,21 +7,16 @@ const userSchema = new mongoose.Schema({
     password: { type: String, required: true },
     dob: { type: Date, required: true },
     age: { type: Number },
+    // REMOVED ENUM: Now allows any custom role typed by the user
     role: { type: String, default: 'it student' },
-    // INSERTED: Field to store the GitHub handle for the API integration
     githubUsername: { type: String, default: "" }, 
     bio: { type: String, default: "" },
     avatar: { type: String, default: null },
     followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    // REMOVED ENUM: Now allows any custom interests typed in the "Other" field
     interests: { 
         type: [String], 
-        enum: [
-            'web systems', 'ai & ml', 'cybersecurity', 'cloud computing', 
-            'data analytics', 'devops', 'iot systems', 'blockchain',
-            'web development', 'ui/ux design', 'database management', 
-            'mobile dev', 'technical writing'
-        ],
         default: [] 
     },
     gender: { type: String, enum: ['male', 'female', 'other'], default: 'other' },
@@ -33,7 +28,6 @@ const userSchema = new mongoose.Schema({
     }
 }, { timestamps: true });
 
-// FIXED ASYNC PRE-SAVE
 userSchema.pre('save', async function () {
     if (!this.isModified('password')) return;
 
