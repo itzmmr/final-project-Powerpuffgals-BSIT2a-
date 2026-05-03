@@ -1,3 +1,4 @@
+<!-- following.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,7 +8,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
-      <link rel="stylesheet" href="styles/following.css">
+    <link rel="stylesheet" href="styles/dashboard.css">
+    <link rel="stylesheet" href="styles/following.css">
 </head>
 <body>
     
@@ -29,64 +31,70 @@
                         <hr>
                         <div id="dropdown-notification-list">
                             <p class="small text-muted text-center">No new notifications.</p>
-                       </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Updated nav-item: Icon only -->
+                <div class="nav-item">
+                    <a class="nav-link d-flex align-items-center text-white" href="profile.html">
+                        <i class="fas fa-user-circle fs-3"></i>
+                    </a>
                 </div>
             </div>
-           <div class="nav-item">
-    <a class="nav-link d-flex align-items-center text-white" href="profile.html">
-        <i class="fas fa-user-circle fs-3 me-2"></i>
-        <span id="navUsername" class="fw-semibold d-none d-md-inline">User</span>
-    </a>
-</div>
         </div>
-    </div>
-</nav>
+    </nav>
 
     <div class="container-fluid px-lg-5 flex-grow-1">
         <div class="row">
             <div class="col-lg-3">
                 <aside class="sidebar-left">
                     <div class="search-wrapper mb-4 d-flex align-items-center">
-                        <i class="fas fa-search text-muted me-2"></i>
-                        <input type="text" class="form-control border-0 shadow-none p-0 bg-transparent" id="sidebarSearchInput" placeholder="Search tutorials...">
+                        <a href="homesearch.html" style="text-decoration: none; display: flex; width: 100%; align-items: center; color: inherit;">
+                            <i class="fas fa-search text-muted me-2"></i>
+                            <input type="search" class="form-control border-0 shadow-none p-0 bg-transparent" id="sidebarSearchInput" autocomplete="one-time-code" placeholder="Search tutorials..." readonly style="cursor: pointer;">
+                        </a>
                     </div>
                     <a href="dashboard.html" class="fb-icon-item"><i class="fas fa-home"></i><span>Home</span></a>
                     <a href="following.html" class="fb-icon-item active-link"><i class="fas fa-user-check"></i><span>Following</span></a>
                     <a href="github.html" class="fb-icon-item"><i class="fab fa-github"></i><span>GitHub</span></a>
                     <a href="settings.html" class="fb-icon-item"><i class="fas fa-sliders-h"></i><span>Settings</span></a>
-                              
                     <div class="flex-grow-5"></div>
-
-        <a href="javascript:void(0)" class="fb-icon-item mt-auto" onclick="logout()">
-        <i class="fas fa-sign-out-alt"></i>
-        <span data-key="logout">Logout</span>
-    </a>
-         </aside>
+                    <a href="javascript:void(0)" class="fb-icon-item mt-auto" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span data-key="logout">Logout</span>
+                    </a>
+                </aside>
             </div>
 
             <div class="col-lg-9 py-5">
-    <div class="content-header text-center mb-4">
-        <div id="pageIcon" class="placeholder-icon mb-3"></div>
-        <h2 class="fw-bold mb-1" id="pageTitle"></h2> 
-        <p class="text-muted fs-5">Stay updated with posts from the community members you follow.</p>
-    </div>
+                <div class="feed-area">
+                    <div class="content-card fb-card text-center mb-4 p-4">
+                        <div id="pageIcon" class="placeholder-icon mb-3">
+                            <i class="fas fa-user-check"></i>
+                        </div>
+                        <h2 class="fw-bold mb-2" id="pageTitle">Following</h2>
+                        <p class="text-muted fs-5 mb-0">Stay updated with posts from the community members you follow.</p>
+                    </div>
 
-    <div id="postsContainer">
-        <div class="text-center py-5">
-            <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Loading feed...</span>
+                    <div id="postsContainer">
+                        <div class="text-center py-5">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading feed...</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <button class="btn btn-nexus" onclick="window.location.href='dashboard.html'">
+                            <i class="fas fa-home me-2"></i> Return to Feed
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="text-center mt-5">
-        <button class="btn btn-nexus" onclick="window.location.href='dashboard.html'">
-            <i class="fas fa-home me-2"></i> Return to Feed
-        </button>
-    </div>
-</div>
-
-    <footer class="text-center text-white">
+    <footer class="text-center text-white mt-5">
         <div class="container">
             <span class="nexus-brand">NEXUS</span><span class="writes-brand">Writes</span>
             <p class="small opacity-50 mt-2 mb-0">© 2026 NEXUSWrites. Your Tech. Your Story.</p>
@@ -94,6 +102,8 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-     <script src="js/following.js"></script>
+    <script src="js/dashboard.js"></script> 
+    <script src="js/following.js"></script>
+    <script src="js/settings.js"></script>
 </body>
 </html>
