@@ -31,7 +31,7 @@ async function loadUserData() {
     if (!token) return;
 
     try {
-        const response = await fetch('http://localhost:5000/api/notifications', {
+        const response = await fetch('https://final-project-powerpuffgals-bsit2a.onrender.com/api/notifications', {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -124,7 +124,7 @@ async function fetchAndRenderFollowedPosts() {
     }
 
     try {
-        const response = await fetch('http://localhost:5000/api/posts', {
+        const response = await fetch('https://final-project-powerpuffgals-bsit2a.onrender.com/api/posts', {
             headers: { 'Authorization': `Bearer ${user?.token}` }
         });
         

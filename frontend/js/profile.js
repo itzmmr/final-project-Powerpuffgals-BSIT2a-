@@ -72,7 +72,7 @@ async function loadGitHubPortfolio(username) {
         }
 
         // --- 3. FETCH REPOSITORY DATA ---
-        const response = await fetch(`http://localhost:5000/api/github/${username}`, {
+        const response = await fetch(`https://final-project-powerpuffgals-bsit2a.onrender.com/api/github/${username}`, {
             headers: { 
                 'Authorization': `Bearer ${activeToken}`,
                 'Content-Type': 'application/json' 
@@ -153,7 +153,7 @@ async function loadUserPosts(targetProfileId) {
             return;
         }
 
-        const response = await fetch(`http://localhost:5000/api/posts/user/${targetProfileId}`, {
+        const response = await fetch(`https://final-project-powerpuffgals-bsit2a.onrender.com/api/posts/user/${targetProfileId}`, {
             headers: { 
                 'Authorization': `Bearer ${activeToken}`,
                 'Content-Type': 'application/json' 
@@ -244,7 +244,7 @@ async function loadUserPosts(targetProfileId) {
             return; 
         }
 
-        const response = await fetch(`http://localhost:5000/api/users/stats/${targetProfileId}`, {
+        const response = await fetch(`https://final-project-powerpuffgals-bsit2a.onrender.com/api/users/stats/${targetProfileId}`, {
             headers: { 
                 'Authorization': `Bearer ${activeToken}`,
                 'Content-Type': 'application/json' 
@@ -375,7 +375,7 @@ async function linkGitHubAccount() {
         const user = JSON.parse(localStorage.getItem('nexusUser'));
         
         // Update the backend
-        const response = await fetch(`http://localhost:5000/api/users/${user._id}`, {
+        const response = await fetch(`https://final-project-powerpuffgals-bsit2a.onrender.com/api/users/${user._id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ githubUsername: username })
@@ -425,7 +425,7 @@ async function loadGitHubPortfolio(username) {
         }
 
         // FETCH: This is now dynamic based on the 'username' passed from loadProfile
-        const response = await fetch(`http://localhost:5000/api/github/${username}`, {
+        const response = await fetch(`https://final-project-powerpuffgals-bsit2a.onrender.com/api/github/${username}`, {
             headers: {
                 'Authorization': `Bearer ${activeToken}`,
                 'Content-Type': 'application/json'
@@ -528,7 +528,7 @@ async function loadGitHubPortfolio(username) {
     }
 
     try {
-        const response = await fetch(`http://localhost:5000/api/users/follow/${targetProfileId}`, {
+        const response = await fetch(`https://final-project-powerpuffgals-bsit2a.onrender.com/api/users/follow/${targetProfileId}`, {
             method: 'POST',
             headers: { 
                 'Authorization': `Bearer ${token}`,
@@ -574,7 +574,7 @@ async function loadGitHubPortfolio(username) {
     container.innerHTML = `<div class="text-center py-5 opacity-50"><h5>Loading technical feed...</h5></div>`;
 
     try {
-        const response = await fetch(`http://localhost:5000/api/posts/user/${targetUserId}`, {
+        const response = await fetch(`https://final-project-powerpuffgals-bsit2a.onrender.com/api/posts/user/${targetUserId}`, {
             headers: { 
                 // FIXED: Using the direct token instead of user.token
                 'Authorization': `Bearer ${token}`,
@@ -683,7 +683,7 @@ const updatedData = {
 
     try {
         // 4. SEND TO BACKEND
-        const response = await fetch(`http://localhost:5000/api/users/update`, {
+        const response = await fetch(`https://final-project-powerpuffgals-bsit2a.onrender.com/api/users/update`, {
             method: 'PUT',
             headers: { 
                 'Content-Type': 'application/json',

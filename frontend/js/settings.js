@@ -96,7 +96,7 @@ async function saveProfile() {
     if (saveBtn) saveBtn.innerText = "Saving...";
 
     try {
-        const response = await fetch('http://localhost:5000/api/users/update', {
+        const response = await fetch('https://final-project-powerpuffgals-bsit2a.onrender.com/api/users/update', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -244,7 +244,7 @@ async function handlePasswordChange() {
     }
 
     try {
-        // Change the URL to match your Node server (e.g., http://localhost:5000/api/users/change-password)
+        // Change the URL to match your Node server (e.g., https://final-project-powerpuffgals-bsit2a.onrender.com/api/users/change-password)
         const response = await fetch('/api/users/change-password', {
             method: 'POST',
             headers: { 
@@ -294,7 +294,7 @@ async function handlePasswordChange() {
     try {
         console.log("📡 Attempting to change password via port 5000..."); 
 
-        const response = await fetch('http://localhost:5000/api/users/update-password', {
+        const response = await fetch('https://final-project-powerpuffgals-bsit2a.onrender.com/api/users/update-password', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',

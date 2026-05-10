@@ -7,7 +7,7 @@ const increment = 6;
 async function fetchPostsFromBackend() {
     const resultsGrid = document.getElementById('resultsGrid');
     try {
-        const response = await fetch('http://localhost:5000/api/posts?limit=100'); 
+        const response = await fetch('https://final-project-powerpuffgals-bsit2a.onrender.com/api/posts?limit=100'); 
         if (!response.ok) throw new Error('Server unavailable');
         const data = await response.json();
         allPosts = Array.isArray(data) ? data : (data.posts || []);
@@ -103,7 +103,7 @@ async function submitReply(postId, targetId) {
     if (!input || !input.value.trim()) return;
     const text = input.value.trim();
     try {
-        const response = await fetch(`http://localhost:5000/api/posts/${postId}/comment/${targetId}/reply`, {
+        const response = await fetch(`https://final-project-powerpuffgals-bsit2a.onrender.com/api/posts/${postId}/comment/${targetId}/reply`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${user.token}` },
             body: JSON.stringify({ text })
@@ -124,7 +124,7 @@ async function togglePostLike(postId) {
     const user = JSON.parse(localStorage.getItem('nexusUser'));
     if (!user || !user.token) return alert("Please log in to like.");
     try {
-        const response = await fetch(`http://localhost:5000/api/posts/like/${postId}`, {
+        const response = await fetch(`https://final-project-powerpuffgals-bsit2a.onrender.com/api/posts/like/${postId}`, {
             method: 'PUT',
             headers: { 'Authorization': `Bearer ${user.token}` }
         });
@@ -142,7 +142,7 @@ async function toggleCommentLike(postId, commentId, buttonElement) {
     const user = JSON.parse(localStorage.getItem('nexusUser'));
     if (!user || !user.token) return alert("Please log in to like.");
     try {
-        const response = await fetch(`http://localhost:5000/api/posts/${postId}/comment/${commentId}/like`, {
+        const response = await fetch(`https://final-project-powerpuffgals-bsit2a.onrender.com/api/posts/${postId}/comment/${commentId}/like`, {
             method: 'PUT',
             headers: { 'Authorization': `Bearer ${user.token}` }
         });
@@ -256,7 +256,7 @@ async function handleModalCommentSubmit(postId) {
     if (!user || !user.token) return alert("Please log in to comment.");
     if (icon) icon.className = "fas fa-spinner fa-spin";
     try {
-        const response = await fetch(`http://localhost:5000/api/posts/${postId}/comment`, {
+        const response = await fetch(`https://final-project-powerpuffgals-bsit2a.onrender.com/api/posts/${postId}/comment`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${user.token}` },
             body: JSON.stringify({ text })
