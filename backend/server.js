@@ -15,9 +15,10 @@ connectDB();
 
 // 2. Global Middleware
 app.use(cors({
-    origin: '*', 
+    origin: ['http://127.0.0.1:5500', 'https://final-project-powerpuffgals-bsit2a.onrender.com'], 
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
 }));
 
 app.use(express.json({ limit: '10mb' })); 
@@ -27,6 +28,12 @@ app.use(express.urlencoded({ limit: '10mb', extended: true }));
 app.use((req, res, next) => {
     console.log(`📡 ${req.method} request to: ${req.originalUrl}`);
     next();
+});
+
+// Fix manifest.json MIME type for PWA
+app.get('/manifest.json', (req, res) => {
+    res.setHeader('Content-Type', 'application/manifest+json');
+    res.sendFile(path.join(__dirname, '../frontend/manifest.json'));
 });
 
 // Serve uploaded files (avatars, post images) publicly
