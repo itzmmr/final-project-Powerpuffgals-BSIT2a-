@@ -195,18 +195,17 @@ else if (isCommentOwner && userObj.name) {
             : '';
 
         return `
-        <div class="comment-thread mb-4">
+        <div class="comment-thread mb-3">
             <div class="comment-box p-3">
-                <div class="d-flex justify-content-between align-items-center mb-1">
-                    <strong class="comment-author-name">
-                        <i class="fas fa-user-circle me-1"></i>${escapeHtml(displayName)}
-                    </strong>
+                <div class="d-flex justify-content-between align-items-start mb-2">
                     <div class="d-flex align-items-center gap-2">
-                        ${tagsHtml}
-                        <small class="opacity-75" style="font-size: 0.7rem;">
-                            ${comment.createdAt ? new Date(comment.createdAt).toLocaleDateString() : 'Just now'}
-                        </small>
+                        <i class="fas fa-user-circle" style="font-size:1.4rem;"></i>
+                        <div>
+                            <strong class="comment-author-name d-block" style="font-size:0.9rem;">${escapeHtml(displayName)}</strong>
+                            <small style="font-size: 0.7rem; opacity: 0.65;">${comment.createdAt ? new Date(comment.createdAt).toLocaleDateString() : 'Just now'}</small>
+                        </div>
                     </div>
+                    ${tagsHtml ? `<div class="d-flex align-items-center gap-1">${tagsHtml}</div>` : ''}
                 </div>
                 <p class="mb-0 comment-text-body" id="text-${cId}">${escapeHtml(comment.text || '')}</p>
             </div>
@@ -317,77 +316,105 @@ async function submitMainComment(postId) {
 async function editComment(postId, commentId) {
     const textElement = document.getElementById(`text-${commentId}`);
     const oldText = textElement ? textElement.innerText : "";
-    
-    const newText = prompt("Update your message:", oldText);
-    
-    // Check if newText is null (cancel) or empty or same as old
-    if (newText === null || newText.trim() === "" || newText === oldText) return;
 
-    const user = JSON.parse(localStorage.getItem('nexusUser'));
-    if (!user || !user.token) return alert("Please log in again.");
+    const textarea = document.getElementById('editCommentTextarea');
+    const saveBtn = document.getElementById('editCommentSaveBtn');
+    textarea.value = oldText;
 
-    try {
-        // FIXED: Using /comment/ (singular) to match the Delete route and controller logic
-        const response = await fetch(`http://localhost:5000/api/posts/${postId}/comment/${commentId}`, {
-            method: 'PUT',
-            headers: { 
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${user.token}` 
-            },
-            body: JSON.stringify({ text: newText.trim() })
-        });
+    const modalEl = document.getElementById('nexusEditCommentModal');
+    const modalInstance = new bootstrap.Modal(modalEl);
+    modalInstance.show();
 
-        if (response.ok) {
-            // Success notification using your refresh logic
-            if (typeof loadFeed === 'function') {
-                loadFeed();
-            } else if (typeof fetchAllPostsAndRefresh === 'function') {
-                fetchAllPostsAndRefresh();
-            }
-        } else {
-            const data = await response.json();
-            alert(data.message || "Edit failed. You might not be the owner.");
+    const newSaveBtn = saveBtn.cloneNode(true);
+    saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
+
+    newSaveBtn.addEventListener('click', async function () {
+        const newText = textarea.value.trim();
+        if (!newText || newText === oldText) {
+            modalInstance.hide();
+            return;
         }
-    } catch (err) {
-        console.error("Edit failed:", err);
-        alert("Server error. Check if the backend is running.");
-    }
+
+        const user = JSON.parse(localStorage.getItem('nexusUser'));
+        if (!user || !user.token) {
+            modalInstance.hide();
+            return alert("Please log in again.");
+        }
+
+        try {
+            const response = await fetch(`http://localhost:5000/api/posts/${postId}/comment/${commentId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${user.token}`
+                },
+                body: JSON.stringify({ text: newText })
+            });
+
+            modalInstance.hide();
+
+            if (response.ok) {
+                if (typeof loadFeed === 'function') {
+                    loadFeed();
+                } else if (typeof fetchAllPostsAndRefresh === 'function') {
+                    fetchAllPostsAndRefresh();
+                }
+            } else {
+                const data = await response.json();
+                alert(data.message || "Edit failed. You might not be the owner.");
+            }
+        } catch (err) {
+            console.error("Edit failed:", err);
+            alert("Server error. Check if the backend is running.");
+        }
+    });
 }
 
 // --- 2. DELETE COMMENT ---
 async function deleteComment(postId, commentId) {
-    if (!confirm("Are you sure you want to delete this comment? All replies to this comment will also be removed.")) return;
-    
     const user = JSON.parse(localStorage.getItem('nexusUser'));
     if (!user || !user.token) {
         alert("Please log in to perform this action.");
         return;
     }
 
-    try {
-        const response = await fetch(`http://localhost:5000/api/posts/${postId}/comment/${commentId}`, {
-            method: 'DELETE',
-            headers: { 
-                'Authorization': `Bearer ${user.token}`,
-                'Content-Type': 'application/json'
-            }
-        });
+    const message = document.getElementById('nexusDeleteConfirmMessage');
+    const confirmBtn = document.getElementById('nexusDeleteConfirmBtn');
+    message.textContent = "Are you sure you want to delete this comment? All replies to this comment will also be removed.";
 
-        if (response.ok) {
-            // Unified refresh check[cite: 3]
-            if (typeof loadFeed === 'function') {
-                loadFeed(); 
-            } else if (typeof fetchAllPostsAndRefresh === 'function') {
-                fetchAllPostsAndRefresh();
+    const modalEl = document.getElementById('nexusDeleteConfirmModal');
+    const modalInstance = new bootstrap.Modal(modalEl);
+    modalInstance.show();
+
+    const newBtn = confirmBtn.cloneNode(true);
+    confirmBtn.parentNode.replaceChild(newBtn, confirmBtn);
+
+    newBtn.addEventListener('click', async function () {
+        modalInstance.hide();
+        try {
+            const response = await fetch(`http://localhost:5000/api/posts/${postId}/comment/${commentId}`, {
+                method: 'DELETE',
+                headers: { 
+                    'Authorization': `Bearer ${user.token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                if (typeof loadFeed === 'function') {
+                    loadFeed(); 
+                } else if (typeof fetchAllPostsAndRefresh === 'function') {
+                    fetchAllPostsAndRefresh();
+                }
+            } else {
+                const errorData = await response.json();
+                alert(`Delete failed: ${errorData.message || "Unauthorized"}`);
             }
-        } else {
-            const errorData = await response.json();
-            alert(`Delete failed: ${errorData.message || "Unauthorized"}`);
+        } catch (err) {
+            console.error("Delete failed", err);
+            alert("A server error occurred. Please try again.");
         }
-    } catch (err) {
-        console.error("Delete failed", err);
-        alert("A server error occurred. Please try again.");
-    }
+    }, { once: true });
 }
 
 function toggleReplyInput(postId, targetId) {
@@ -510,18 +537,14 @@ async function fetchAllPostsAndRefresh() {
         isLoading = false;
     }
 }
-
-// Displays the current page of posts
-function displayCurrentPage(filter = "") {
+function displayCurrentPage(filter = "", isAppending = false) {
     const container = document.getElementById('postsContainer');
-    if (!container) {
-        console.error("postsContainer element not found!");
-        return;
-    }
+    if (!container) return;
 
     const userSnapshot = localStorage.getItem('nexusUser');
     const user = userSnapshot ? JSON.parse(userSnapshot) : null;
 
+    // 1. Filtering Logic
     let postsToShow = allPostsRaw;
     if (filter && filter.trim() !== "") {
         const search = filter.toLowerCase();
@@ -536,39 +559,63 @@ function displayCurrentPage(filter = "") {
     const end = start + POSTS_PER_PAGE;
     const pagePosts = postsToShow.slice(start, end);
 
-    if (pagePosts.length === 0 && totalPosts === 0) {
-        container.innerHTML = `
-            <div class="text-center p-5 bg-light rounded shadow-sm">
-                <i class="fas fa-seedling fa-3x text-success mb-3"></i>
-                <p class="text-muted">No tutorials found. Be the first to bloom!</p>
-            </div>`;
-        return;
-    }
-
+    // 2. Build the posts HTML
     let postsHtml = '';
     for (let post of pagePosts) {
-        try {
-            postsHtml += renderSinglePost(post, user);
-        } catch (err) {
-            console.error("Error rendering post", post._id, err);
-            postsHtml += `<div class="alert alert-warning">Failed to render post: ${err.message}</div>`;
+        postsHtml += renderSinglePost(post, user);
+    }
+
+    // 3. Render the posts (APPEND to keep old ones, REPLACE for fresh search)
+    if (isAppending) {
+        container.insertAdjacentHTML('beforeend', postsHtml);
+    } else {
+        container.innerHTML = postsHtml;
+    }
+
+    // --- THE FIX STARTS HERE ---
+    
+    const wrapper = document.getElementById('loadMoreWrapper');
+    const btn = document.getElementById('loadMoreBtn');
+    
+    // Check if we ran out of posts
+    const reachedEnd = pagePosts.length === 0 || end >= totalPosts;
+
+    if (reachedEnd) {
+        // If we hit the end, we find the existing wrapper and CHANGE its content
+        if (wrapper) {
+            wrapper.innerHTML = `
+                <div class="py-4 text-center animate__animated animate__fadeIn">
+                    <p class="fw-bold text-muted mb-0">✨ You're all caught up today!</p>
+                    <small class="text-secondary">Check back later for more tutorials. 🌿</small>
+                </div>`;
+            // Remove the ID so the "Load More" logic doesn't try to use it again
+            wrapper.removeAttribute('id');
+        } else if (!isAppending && totalPosts > 0) {
+            // If it's the first load and we're already caught up, add the message
+            container.insertAdjacentHTML('afterend', `
+                <div class="py-4 text-center animate__animated animate__fadeIn">
+                    <p class="fw-bold text-muted mb-0">✨ You're all caught up today!</p>
+                </div>`);
+        }
+    } else {
+        // If there are MORE posts to show
+        if (!wrapper) {
+            // Create the wrapper if it doesn't exist (first load)
+            const loadMoreHtml = `
+                <div id="loadMoreWrapper" class="text-center my-4">
+                    <button id="loadMoreBtn" class="btn btn-nexus px-4" onclick="loadMorePosts()">
+                        Load More <i class="fas fa-arrow-down ms-2"></i>
+                    </button>
+                </div>`;
+            container.insertAdjacentHTML('afterend', loadMoreHtml);
+        } else if (btn) {
+            // If it already exists, just reset the "Loading..." spinner back to a button
+            btn.disabled = false;
+            btn.innerHTML = `Load More <i class="fas fa-arrow-down ms-2"></i>`;
         }
     }
-
-    const hasMore = end < totalPosts;
-    let loadMoreHtml = '';
-    if (hasMore && (!filter || filter.trim() === "")) {
-        loadMoreHtml = `
-            <div id="loadMoreWrapper" class="text-center my-4">
-                <button class="btn btn-nexus px-4" onclick="loadMorePosts()" ${isLoading ? 'disabled' : ''}>
-                    Load More <i class="fas fa-arrow-down ms-2"></i>
-                </button>
-            </div>`;
-    }
-
-    container.innerHTML = postsHtml + loadMoreHtml;
 }
-
+    
 // Helper: get post author ID (robust)
 function getPostAuthorId(post) {
     if (!post.author) return null;
@@ -576,6 +623,8 @@ function getPostAuthorId(post) {
     if (post.author._id) return post.author._id;
     if (post.author.id) return post.author.id;
     return null;
+
+    
 }
 
 // Helper to render a single post (fixed ownership detection, tag display)
@@ -600,6 +649,7 @@ function renderSinglePost(post, user) {
             ${isFollowingUser ? '• Following' : '• Follow'}
         </span>` : '';
     // --- END OF UPDATE ---
+    
 
     // FIXED: Normalize tags so they always show up correctly
     const tagsArray = normalizeTags(post.tags);
@@ -655,16 +705,51 @@ function renderSinglePost(post, user) {
         </div>
     </div>`;
 }
+async function loadMorePosts() {
+    const btn = document.getElementById('loadMoreBtn');
+    if (!btn) return;
 
-// Loads the next page of posts
-function loadMorePosts() {
-    if (isLoading) return;
-    const totalPages = Math.ceil(allPostsRaw.length / POSTS_PER_PAGE);
-    if (currentPage >= totalPages) return;
+    // 1. Show loading state
+    btn.disabled = true;
+    btn.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span> Loading...`;
+
+    // 2. Increment the page
     currentPage++;
-    displayCurrentPage();
-    const loadMoreDiv = document.getElementById('loadMoreWrapper');
-    if (loadMoreDiv) loadMoreDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    // 3. Get token for the request
+    const user = JSON.parse(localStorage.getItem('nexusUser'));
+    const token = user?.token;
+
+    try {
+        // 4. FETCH the next set of posts from the backend
+        const response = await fetch(`http://localhost:5000/api/posts?page=${currentPage}&limit=${POSTS_PER_PAGE}`, {
+            headers: { 
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const data = await response.json();
+        const nextPosts = data.posts || [];
+
+        if (nextPosts.length > 0) {
+            // 5. Add new posts to the global list
+            allPostsRaw = [...allPostsRaw, ...nextPosts];
+            
+            // 6. Append to UI
+            displayCurrentPage("", true); 
+        } else {
+            // No more posts to load
+            const wrapper = document.getElementById('loadMoreWrapper');
+            if (wrapper) wrapper.innerHTML = `<p class="text-muted mt-3">No more tutorials to show. 🌿</p>`;
+        }
+    }
+        catch (err) {
+        console.error("Load More Error:", err);
+        btn.disabled = false;
+        btn.innerHTML = `Try Again <i class="fas fa-redo ms-2"></i>`;
+        currentPage--; // Reset page count on error
+    }
 }
 
 // Main entry point
@@ -878,8 +963,22 @@ function editPost(id) {
 }
 
 async function deletePost(id) {
-    if(confirm("Delete this tutorial?")) {
-        const user = JSON.parse(localStorage.getItem('nexusUser'));
+    const user = JSON.parse(localStorage.getItem('nexusUser'));
+    if (!user || !user.token) return;
+
+    const message = document.getElementById('nexusDeleteConfirmMessage');
+    const confirmBtn = document.getElementById('nexusDeleteConfirmBtn');
+    message.textContent = "Delete this tutorial? This action cannot be undone.";
+
+    const modalEl = document.getElementById('nexusDeleteConfirmModal');
+    const modalInstance = new bootstrap.Modal(modalEl);
+    modalInstance.show();
+
+    const newBtn = confirmBtn.cloneNode(true);
+    confirmBtn.parentNode.replaceChild(newBtn, confirmBtn);
+
+    newBtn.addEventListener('click', async function () {
+        modalInstance.hide();
         try {
             const response = await fetch(`http://localhost:5000/api/posts/${id}`, {
                 method: 'DELETE',
@@ -888,14 +987,14 @@ async function deletePost(id) {
                 }
             });
             if (response.ok) {
-                fetchAllPostsAndRefresh(); 
+                fetchAllPostsAndRefresh();
             } else {
                 alert("You can only delete your own posts!");
             }
         } catch (err) {
             console.error("Delete failed:", err);
         }
-    }
+    }, { once: true });
 }
 
 async function togglePostLike(id) {
@@ -1049,3 +1148,25 @@ function toggleFollow(userId, buttonElement) {
     }
     localStorage.setItem('nexusFollowedUsers', JSON.stringify(followedUsers));
 }
+
+function applyGlobalTheme() {
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    if (savedTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        document.body.setAttribute('data-theme', 'dark'); // Double insurance
+    } else {
+        document.documentElement.removeAttribute('data-theme');
+        document.body.removeAttribute('data-theme');
+    }
+}
+
+// Run immediately to prevent "white flash" on load
+applyGlobalTheme();
+
+// Also run on DOMContentLoaded to catch dynamic elements
+document.addEventListener('DOMContentLoaded', applyGlobalTheme);
+
+
+  function showLogoutModal() {
+    new bootstrap.Modal(document.getElementById("nexusLogoutModal")).show();
+  }

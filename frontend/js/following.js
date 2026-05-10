@@ -159,3 +159,27 @@ async function fetchAndRenderFollowedPosts() {
             </div>`;
     }
 }
+function syncTheme() {
+    // 1. Match the key from settings.js
+    const savedTheme = localStorage.getItem('nexusTheme') || 'light';
+    const isDark = savedTheme === 'dark';
+
+    // 2. Apply the class your CSS uses
+    document.body.classList.toggle('dark-mode', isDark);
+
+    // 3. Target the sidebar (essential for that white bar fix)
+    const sidebar = document.querySelector('.sidebar-left');
+    if (sidebar) {
+        sidebar.classList.toggle('dark-mode', isDark);
+    }
+}
+
+// Run immediately to stop the "white flash"
+syncTheme();
+
+// Run again when the page is fully loaded to ensure sidebar is caught
+document.addEventListener('DOMContentLoaded', syncTheme);
+
+  function showLogoutModal() {
+    new bootstrap.Modal(document.getElementById("nexusLogoutModal")).show();
+  }

@@ -24,65 +24,24 @@ if(document.getElementById('fontSizeSlider')) {
 }
     }
 });
-
-// 3. CORE FUNCTIONS
-function changeLanguage(lang) {
-    // 1. Look for the data in the big window.translations object at the top
-    const data = window.translations[lang]; 
-    
-    if (!data) {
-        console.error("Translation for " + lang + " not found!");
-        return;
-    }
-
-    // 2. Translate everything with data-translate OR data-key
-    document.querySelectorAll('[data-translate], [data-key]').forEach(el => {
-        const key = el.getAttribute('data-translate') || el.getAttribute('data-key');
-        if (data[key]) {
-            // Handle placeholders for search bars
-            if (el.tagName === 'INPUT' && el.placeholder) {
-                el.placeholder = data[key];
-            } else {
-                el.innerText = data[key];
-            }
-        }
-    });
-
-    // 3. Save to localStorage so other pages can see it
-    localStorage.setItem('nexusLang', lang);
-}
-
-// --- 2. YOUR CHANGE LANGUAGE FUNCTION (Updated to use window.translations) ---
-function changeLanguage(lang) {
-    // FIX: Look at window.translations specifically
-    const data = window.translations ? window.translations[lang] : null; 
-    
-    if (!data) {
-        console.warn("Translation data not ready yet.");
-        return;
-    }
-
-    document.querySelectorAll('[data-translate]').forEach(el => {
-        const key = el.getAttribute('data-translate');
-        if (data[key]) {
-            if (el.tagName === 'INPUT' && el.placeholder) {
-                el.placeholder = data[key];
-            } else {
-                el.innerText = data[key];
-            }
-        }
-    });
-
-    localStorage.setItem('nexusLang', lang);
-}
-
 function loadSettings() {
     const savedTheme = localStorage.getItem('nexusTheme') || 'light';
-    document.body.classList.toggle('dark-mode', savedTheme === 'dark');
+    const isDark = savedTheme === 'dark';
+
+    // 1. Apply dark mode to the body
+    document.body.classList.toggle('dark-mode', isDark);
+
+    // 2. APPLY DARK MODE TO SIDEBAR (This fixes your issue)
+    const sidebar = document.querySelector('.sidebar-left');
+    if (sidebar) {
+        sidebar.classList.toggle('dark-mode', isDark);
+    }
+
     if(document.getElementById('themeSelect')) document.getElementById('themeSelect').value = savedTheme;
 
+    // --- Keep the rest of your code exactly as it was ---
     const savedLang = localStorage.getItem('nexusLang') || 'English';
-    changeLanguage(savedLang);
+    if (typeof changeLanguage === "function") changeLanguage(savedLang); 
     if(document.getElementById('langSelect')) document.getElementById('langSelect').value = savedLang;
 
     const userData = JSON.parse(localStorage.getItem('nexusUser') || '{}');
@@ -219,10 +178,11 @@ function applyLanguage() {
         }
     });
 }
-
-function logout() {
+function logoutUser() {
     localStorage.removeItem('nexusUser');
     localStorage.removeItem('token');
+    // It's also good practice to clear the theme/font/lang if you want a total reset,
+    // but keeping them is fine if you want the next user to have the same theme.
     window.location.href = 'login.html';
 }
 
@@ -436,12 +396,6 @@ function showStatusModal(title, message, type = 'error') {
     }
 });
 
-function logout() {
-    localStorage.removeItem('nexusUser');
-    localStorage.removeItem('token');
-    window.location.href = 'login.html';
-}
-
 document.addEventListener('DOMContentLoaded', () => {
     // Apply the saved theme immediately on page load
     const savedTheme = localStorage.getItem('nexusTheme');
@@ -451,3 +405,27 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.classList.remove('dark-mode');
     }
 });
+
+function applyGlobalTheme() {
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    if (savedTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        document.body.setAttribute('data-theme', 'dark'); // Double insurance
+    } else {
+        document.documentElement.removeAttribute('data-theme');
+        document.body.removeAttribute('data-theme');
+    }
+}
+
+// Run immediately to prevent "white flash" on load
+applyGlobalTheme();
+
+// Also run on DOMContentLoaded to catch dynamic elements
+document.addEventListener('DOMContentLoaded', applyGlobalTheme);
+
+(function() {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+    }
+})();
