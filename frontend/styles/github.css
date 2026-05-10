@@ -1,142 +1,248 @@
+/* ============================================================
+   NEXUSWrites – github.css
+   ============================================================ */
 
-        :root {
-            --nexus-teal: #1a535c; 
-            --nexus-cyan: #4ecdc4;
-            --nexus-light-bg: #f4f7f6;
-            --nexus-card-white: #ffffff;
-            --text-dark: #2c3e50;
-            --text-muted: #64748b;
-            --border-soft: rgba(78, 205, 196, 0.2);
-            --header-footer-bg: #1a535c;
-        }
+:root {
+    --nexus-teal:       #1a535c;
+    --nexus-cyan:       #4ecdc4;
+    --nexus-light-bg:   #f4f7f6;
+    --nexus-card-white: #ffffff;
+    --text-dark:        #2c3e50;
+    --text-muted:       #64748b;
+    --border-soft:      rgba(78, 205, 196, 0.2);
+    --header-footer-bg: #1a535c;
+}
 
-        /* --- VISIBILITY & DARK MODE OVERRIDES --- */
-        body.dark-mode {
-            --nexus-light-bg: #0f172a;
-            --nexus-card-white: #1e293b;
-            --text-dark: #f8fafc;
-            --text-muted: #94a3b8;
-            --border-soft: rgba(255, 255, 255, 0.1);
-        }
+body.dark-mode {
+    --nexus-light-bg:    #0f172a;
+    --nexus-card-white:  #1e293b;
+    --text-dark:         #f8fafc;
+    --text-muted:        #94a3b8;
+    --border-soft:       rgba(255,255,255,0.1);
+}
 
-        /* Global Text Visibility for Dark Mode */
-        body.dark-mode h2, body.dark-mode h4, body.dark-mode h5, body.dark-mode h6,
-        body.dark-mode .text-muted, body.dark-mode .fb-icon-item span,
-        body.dark-mode .dropdown-item, body.dark-mode .repo-title {
-            color: #ffffff !important;
-        }
+body {
+    background-color: var(--nexus-light-bg) !important;
+    color: var(--text-dark);
+    font-family: 'Inter', sans-serif;
+    transition: background 0.3s, color 0.3s;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
 
-        body { 
-            background-color: var(--nexus-light-bg) !important; 
-            color: var(--text-dark); 
-            font-family: 'Inter', sans-serif; 
-            transition: background 0.3s, color 0.3s; 
-            min-height: 100vh; 
-            display: flex; 
-            flex-direction: column; 
-        }
+/* ── NAVBAR ─────────────────────────────────────────────────── */
+.navbar {
+    background-color: var(--header-footer-bg) !important;
+    border-bottom: 4px solid var(--nexus-cyan) !important;
+    padding: 0.8rem 0;
+    z-index: 1050;
+}
+.nexus-brand {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    color: #ffffff;
+    font-size: 1.25rem;
+    letter-spacing: 1px;
+}
+.writes-brand {
+    font-family: 'Dancing Script', cursive;
+    color: #4ecdc4;
+    font-size: 1.4rem;
+    margin-left: 3px;
+}
+.logo-box {
+    width: 50px; height: 50px;
+    border-radius: 50%;
+    background-image: url('../images/NEXUSWritesLogo.png');
+    background-size: 115%;
+    background-position: center;
+    background-repeat: no-repeat;
+    border: 1px solid rgba(255,255,255,0.2);
+    overflow: hidden;
+}
+.dropdown-menu {
+    background-color: var(--nexus-card-white) !important;
+    border: 1px solid var(--border-soft) !important;
+}
+body.dark-mode .dropdown-menu { background-color: #1e293b !important; }
 
-        /* --- NAVBAR & BRANDING --- */
-        .navbar, footer { 
-            background-color: var(--header-footer-bg) !important; 
-            border-bottom: 4px solid var(--nexus-cyan) !important;
-            z-index: 1050;
-        }
-        .navbar { padding: 0.8rem 0; }
-        
-        .nexus-brand {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 800;
-            color: #ffffff;
-            font-size: 1.25rem;
-            letter-spacing: 1px;
-            line-height: 1;
-        }
+/* ── SIDEBAR ────────────────────────────────────────────────── */
+.sidebar-left {
+    position: fixed !important;
+    top: 78px !important;
+    left: 0 !important;
+    width: 75px !important;
+    height: calc(100vh - 78px) !important;
+    background-color: var(--nexus-card-white) !important;
+    border-right: 1.5px solid #dce4e8 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    padding-top: 30px !important;
+    z-index: 1000 !important;
+    box-shadow: none !important;
+}
+body.dark-mode .sidebar-left {
+    background-color: #0f172a !important;
+    border-right-color: #1e293b !important;
+}
 
-        .writes-brand {
-            font-family: 'Dancing Script', cursive;
-            color: #4ecdc4;
-            font-size: 1.4rem;
-            line-height: 1;
-            margin-left: 3px;
-        }
+.fb-icon-item {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 50px !important;
+    height: 50px !important;
+    margin-bottom: 20px !important;
+    text-decoration: none !important;
+    background: transparent !important;
+    border: none !important;
+    border-radius: 12px;
+    transition: background 0.2s;
+}
+.fb-icon-item i {
+    font-size: 1.5rem !important;
+    color: var(--nexus-teal) !important;
+}
+.fb-icon-item:hover i,
+.fb-icon-item.active-link i { color: var(--nexus-cyan) !important; }
+.fb-icon-item.active-link   { background: rgba(78,205,196,0.12) !important; }
 
-        .logo-box {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background-image: url('../images/NEXUSWritesLogo.png'); 
-            background-size: 115%; 
-            background-position: center;
-            background-repeat: no-repeat;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
+body.dark-mode .fb-icon-item i       { color: #4ecdc4 !important; }
+body.dark-mode .fb-icon-item:hover i { color: #38b2ac !important; }
 
-        /* --- SIDEBAR --- */
-        .sidebar-left { padding: 1.5rem 1rem; height: calc(100vh - 80px); position: sticky; top: 80px; }
-        .fb-icon-item { padding: 12px 20px !important; margin-bottom: 8px; font-weight: 600; border-radius: 12px; color: var(--text-dark) !important; display: flex; align-items: center; text-decoration: none; transition: 0.2s; }
-        .fb-icon-item:hover, .fb-icon-item.active-link { background: rgba(78, 205, 196, 0.15) !important; border-right: 4px solid var(--nexus-cyan); }
-        .fb-icon-item i { width: 30px; color: var(--nexus-teal); font-size: 1.2rem; }
-        body.dark-mode .fb-icon-item i { color: var(--nexus-cyan) !important; }
+.sidebar-left .mt-auto {
+    margin-top: auto !important;
+    margin-bottom: 30px !important;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
 
-        /* Search Wrapper */
-        .search-wrapper { background: white; border-radius: 35px; border: 1px solid var(--border-soft); padding: 8px 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        body.dark-mode .search-wrapper { background: #1e293b; }
+/* ── MAIN CONTENT ───────────────────────────────────────────── */
+.main-content-wrapper {
+    margin-left: 75px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: calc(100% - 75px);
+    padding: 40px 20px;
+}
 
-        /* --- CONTENT CARD & GITHUB SPECIFICS --- */
-        .content-card { 
-            background: var(--nexus-card-white) !important; 
-            border-radius: 15px; 
-            padding: 50px 40px; 
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08); 
-            border-top: 5px solid var(--nexus-cyan) !important;
-        }
-        .placeholder-icon { 
-            font-size: 0; /* This hides the broken "X" box character */
-            margin-bottom: 25px; 
-            width: 80px; 
-            height: 80px;
-            margin-left: auto;
-            margin-right: auto;
-            background-image: url('https://github.githubassets.com/favicons/favicon.svg');
-            background-size: contain;
-            background-position: center;
-            background-repeat: no-repeat;
-            display: block;
-        }
-        
-        .btn-nexus-primary {
-            background: var(--nexus-teal);
-            color: white;
-            border: none;
-            padding: 12px 35px;
-            font-weight: 700;
-            border-radius: 30px;
-            transition: 0.3s;
-        }
-        .btn-nexus-primary:hover { background: #133d44; color: var(--nexus-cyan); }
+/* ── CONTENT CARD ───────────────────────────────────────────── */
+.content-card {
+    background: var(--nexus-card-white) !important;
+    border-radius: 16px;
+    padding: 50px 40px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    border-top: 5px solid var(--nexus-cyan) !important;
+    width: 100%;
+}
+body.dark-mode .content-card            { background-color: #1e293b !important; color: #f8fafc !important; }
+body.dark-mode .content-card h2,
+body.dark-mode .content-card p          { color: #f8fafc !important; }
+body.dark-mode .content-card .text-muted { color: #94a3b8 !important; }
 
-        .section-highlight {
-            background: rgba(78, 205, 196, 0.05);
-            border: 1px dashed var(--nexus-cyan);
-            min-height: 100px;
-            padding: 20px;
-        }
+/* ── SEARCH INPUT ───────────────────────────────────────────── */
+.input-group.rounded-pill {
+    border: 1px solid var(--border-soft);
+    background: var(--nexus-card-white);
+}
+body.dark-mode .input-group.rounded-pill {
+    background-color: #1e293b !important;
+    border-color: #334155 !important;
+}
+#githubUsername {
+    background-color: #ffffff !important;
+    color: #2c3e50 !important;
+    border: none !important;
+}
+#githubUsername::placeholder { color: #94a3b8 !important; }
+#githubUsername:focus {
+    box-shadow: 0 0 0 3px rgba(78,205,196,0.15) !important;
+    outline: none !important;
+}
+body.dark-mode #githubUsername             { background-color: #1e293b !important; color: #fff !important; }
+body.dark-mode #githubUsername::placeholder { color: #64748b !important; }
 
-        .repo-card {
-            background: var(--nexus-card-white);
-            border: 1px solid var(--border-soft);
-            transition: 0.3s;
-        }
-        .repo-card:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+/* ── BUTTON ─────────────────────────────────────────────────── */
+.btn-nexus-primary {
+    background: var(--nexus-teal);
+    color: white;
+    border: none;
+    font-weight: 700;
+    border-radius: 30px;
+    transition: 0.3s;
+}
+.btn-nexus-primary:hover { background: #133d44; color: var(--nexus-cyan); }
 
-        /* Footer */
-        footer { border-top: 4px solid var(--nexus-cyan) !important; padding: 40px 0; margin-top: auto; }
-        
-        /* Dropdown Visibility */
-        .dropdown-menu { background-color: var(--nexus-card-white) !important; border: 1px solid var(--border-soft) !important; }
-        body.dark-mode .dropdown-menu { background-color: #1e293b !important; }
+/* ── SECTION HIGHLIGHT ──────────────────────────────────────── */
+.section-highlight {
+    background: rgba(78,205,196,0.04) !important;
+    border: 1px dashed var(--nexus-cyan) !important;
+    min-height: 100px;
+    padding: 20px;
+}
+body.dark-mode .section-highlight  { background: rgba(78,205,196,0.06) !important; border-color: rgba(78,205,196,0.3) !important; }
+body.dark-mode .section-highlight p,
+body.dark-mode #github-content p   { color: #94a3b8 !important; }
+
+/* ── REPO CARDS ─────────────────────────────────────────────── */
+.repo-card {
+    background: var(--nexus-card-white) !important;
+    border: 1px solid var(--border-soft) !important;
+    transition: 0.3s;
+}
+.repo-card:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+body.dark-mode .repo-card              { background-color: #0f172a !important; border-color: #334155 !important; }
+body.dark-mode .repo-card h6,
+body.dark-mode .repo-card .repo-title  { color: #ffffff !important; }
+body.dark-mode .repo-card p,
+body.dark-mode .repo-card .text-muted  { color: #94a3b8 !important; }
+body.dark-mode .repo-card small.text-info { color: #4ecdc4 !important; }
+body.dark-mode .repo-card a            { color: #4ecdc4 !important; }
+
+/* ── SYNC BANNER ────────────────────────────────────────────── */
+.sync-banner      { background-color: rgba(78,205,196,0.08) !important; }
+.sync-banner-text { color: var(--text-dark) !important; }
+body.dark-mode .sync-banner            { background-color: rgba(78,205,196,0.1) !important; border-color: #4ecdc4 !important; }
+body.dark-mode .sync-banner-text       { color: #f8fafc !important; }
+body.dark-mode .sync-banner strong     { color: #4ecdc4 !important; }
+
+/* ── MODALS DARK MODE ───────────────────────────────────────── */
+body.dark-mode .modal-content          { background-color: #1e293b !important; color: #f8fafc !important; }
+body.dark-mode #syncModalMessage       { color: #94a3b8 !important; }
+body.dark-mode .modal-content h4       { color: #4ecdc4 !important; }
+body.dark-mode #nexusAlertMessage,
+body.dark-mode .modal-body p.text-dark { color: #f8fafc !important; }
+
+/* ── GLOBAL DARK TEXT ───────────────────────────────────────── */
+body.dark-mode h1, body.dark-mode h2, body.dark-mode h3,
+body.dark-mode h4, body.dark-mode h5, body.dark-mode h6 { color: #f8fafc !important; }
+body.dark-mode .text-muted, body.dark-mode small         { color: #94a3b8 !important; }
+
+/* ── MOBILE BOTTOM NAV ──────────────────────────────────────── */
+@media (max-width: 991px) {
+    .sidebar-left {
+        position: fixed !important;
+        bottom: 0 !important; top: auto !important; left: 0 !important;
+        width: 100% !important; height: 65px !important;
+        flex-direction: row !important;
+        justify-content: space-around !important;
+        align-items: center !important;
+        border-top: 1px solid var(--border-soft) !important;
+        border-right: none !important;
+        padding: 0 10px !important;
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.05) !important;
+    }
+    body.dark-mode .sidebar-left { background: #1e293b !important; border-top-color: #334155 !important; }
+    .sidebar-left .fb-icon-item  { width: auto !important; height: auto !important; margin-bottom: 0 !important; padding: 8px 12px !important; }
+    .sidebar-left .mt-auto       { margin: 0 !important; padding: 0 !important; }
+    .main-content-wrapper        { margin-left: 0 !important; width: 100% !important; padding-bottom: 80px !important; }
+}
+@media (max-width: 480px) {
+    .sidebar-left          { height: 58px !important; }
+    .sidebar-left .fb-icon-item i { font-size: 1.4rem !important; }
+    .content-card          { padding: 30px 20px; }
+}

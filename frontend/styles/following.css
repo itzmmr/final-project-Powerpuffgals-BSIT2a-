@@ -75,6 +75,61 @@ body {
     overflow: hidden;
 }
 
+/* ===== UNIFIED SIDEBAR (DESKTOP) – ADDED FOR CONSISTENCY ===== */
+.sidebar-left {
+    position: fixed !important;
+    top: 80px !important;
+    left: 0 !important;
+    width: 80px !important;
+    height: calc(100vh - 80px) !important;
+    background: var(--nexus-card-white, #ffffff) !important;
+    border-right: 1px solid var(--border-soft, rgba(0,0,0,0.08)) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    padding-top: 30px !important;
+    z-index: 1000 !important;
+    box-shadow: none !important;
+}
+
+.sidebar-left .fb-icon-item {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 50px !important;
+    height: 50px !important;
+    margin-bottom: 20px !important;
+    background: transparent !important;
+    border: none !important;
+    border-radius: 12px !important;
+    transition: all 0.2s ease;
+}
+
+.sidebar-left .fb-icon-item i {
+    font-size: 1.5rem !important;
+    color: var(--nexus-teal, #1a535c) !important;
+    margin: 0 !important;
+}
+
+.sidebar-left .fb-icon-item:hover i,
+.sidebar-left .fb-icon-item.active-link i {
+    color: var(--nexus-cyan, #4ecdc4) !important;
+}
+
+.sidebar-left .fb-icon-item.active-link {
+    background: rgba(78, 205, 196, 0.15) !important;
+}
+
+.sidebar-left .mt-auto {
+    margin-top: auto !important;
+    margin-bottom: 30px !important;
+}
+
+body.dark-mode .sidebar-left {
+    background: #0f172a !important;
+    border-right-color: #1e293b !important;
+}
+
 /* --- SIDEBAR --- */
 .sidebar-left { padding: 1.5rem 1rem; height: calc(100vh - 80px); position: sticky; top: 80px; }
 .fb-icon-item { padding: 12px 20px !important; margin-bottom: 8px; font-weight: 600; border-radius: 12px; color: var(--text-dark) !important; display: flex; align-items: center; text-decoration: none; transition: 0.2s; }
@@ -277,4 +332,506 @@ h2 {
 
 .following-posts-list {
     text-align: left;
+}
+
+/* Sidebar Layout Fix */
+.sidebar-left {
+    display: flex !important;
+    flex-direction: column !important;
+    min-height: 85vh !important; /* Forces vertical space */
+    align-items: flex-start !important;
+    padding-left: 10px !important;
+}
+
+/* Reset decorations */
+.sidebar-left .fb-icon-item {
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 15px 0 !important;
+    display: block !important;
+    width: fit-content;
+}
+
+/* Kill pseudo-elements/shadows */
+.sidebar-left .fb-icon-item::before,
+.sidebar-left .fb-icon-item::after {
+    content: none !important;
+    display: none !important;
+}
+
+/* Colors */
+.sidebar-left .fb-icon-item i {
+    font-size: 1.6rem;
+    color: #1a535c;
+}
+
+/* Highlight the active (Following) icon */
+.sidebar-left .fb-icon-item.active-link i {
+    color: #4ecdc4 !important;
+}
+
+/* Push logout down */
+.logout-container {
+    margin-top: auto !important;
+    padding-bottom: 20px !important;
+}
+
+/* FORCE CONSISTENT SIDEBAR LAYOUT */
+.sidebar-left {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important; /* Keep icons strictly left */
+    padding-left: 20px !important;      /* Fixed horizontal position */
+    width: 60px !important;             /* Fixed sidebar width so it can't shift */
+    min-height: 85vh !important;
+}
+
+/* FORCE CONSISTENT ICON SPACING */
+.fb-icon-item {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 40px !important;             /* Fixed box for the icon */
+    height: 40px !important;            /* Fixed box for the icon */
+    margin-bottom: 15px !important;     /* Fixed gap between icons */
+    padding: 0 !important;              /* Remove any internal padding causing shifts */
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    text-decoration: none !important;
+}
+
+/* ENSURE NO HIDDEN ELEMENTS ADD WIDTH */
+.sidebar-left span, 
+.sidebar-left .fb-icon-item::before, 
+.sidebar-left .fb-icon-item::after {
+    display: none !important;
+    content: none !important;
+}
+
+/* Push Logout to bottom but keep it slightly raised */
+.mt-auto {
+    margin-top: auto !important;
+    /* Change this from 20px to 50px or 60px to lift it higher */
+    padding-bottom: 60px !important; 
+    margin-left: 0 !important; 
+}
+
+/* Ensure the sidebar container has a strict starting point */
+.sidebar-left {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important; 
+    padding-left: 25px !important; /* This is your "Left Alignment" anchor */
+    width: 80px !important;
+    border-right: 1px solid #e0e0e0 !important;
+    min-height: 100vh !important;
+    position: fixed;
+    left: 0;
+    top: 70px;
+    background: #f8f9fa;
+}
+
+/* Force every item to be the exact same width and centered internally */
+.fb-icon-item {
+    display: flex !important;
+    width: 45px !important;  /* Fixed footprint */
+    height: 45px !important; /* Fixed footprint */
+    justify-content: center !important; /* Centers icon horizontally */
+    align-items: center !important;     /* Centers icon vertically */
+    margin-bottom: 25px !important;
+    text-decoration: none !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* Match the search icon color/size to the rest */
+.fb-icon-item i {
+    font-size: 1.5rem !important;
+    color: #1a535c;
+}
+
+/* Active Highlight */
+.fb-icon-item.active-link i {
+    color: #4ecdc4 !important;
+}
+
+.sidebar-left {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important; 
+    padding-left: 25px !important;
+    padding-top: 20px !important; /* Internal spacing for icons */
+    width: 80px !important;
+    border-right: 1px solid #e0e0e0 !important;
+    
+    /* THE FIX: Start below the header */
+    position: fixed !important;
+    left: 0 !important;
+    top: 80px !important; /* Match this to the actual height of your NexusWrites header */
+    
+    /* THE FIX: Stay behind header but above content */
+    z-index: 999 !important; 
+    background: #f8f9fa !important;
+    height: calc(100vh - 80px) !important;
+}
+
+/* Ensure your Header/Navbar stays on top of everything */
+header, .navbar, .top-header {
+    position: fixed !important;
+    top: 0;
+    width: 100%;
+    z-index: 1050 !important; /* Higher than sidebar */
+    height: 80px; /* Force a consistent height */
+}
+
+/* Ensure the body or the main container respects the sticky navbar */
+body {
+    padding-top: 20px; /* Adjust this value if your navbar is taller */
+}
+
+.feed-area {
+    margin-top: 30px; /* Pushes the card down so the top border is visible */
+    padding-top: 10px;
+}
+
+/* Fix for the Sidebar to make sure it also starts below the navbar */
+.sidebar-left {
+    padding-top: 20px;
+    z-index: 1000; /* Keeps it above the feed but below navbar dropdowns */
+}
+
+/* Optional: Make the card itself have a slight top margin to show the shadow */
+.fb-card {
+    margin-top: 15px;
+}
+
+.btn-nexus {
+    background-color: #1a535c; /* The dark teal color from your brand */
+    color: #ffffff;
+    border: none;
+    border-radius: 50px; /* This creates the "pill" shape */
+    padding: 12px 30px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn-nexus:hover {
+    background-color: #144046; /* Slightly darker on hover */
+    color: #ffffff;
+    transform: translateY(-2px); /* Subtle lift effect */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Ensure the icon and text align perfectly */
+.btn-nexus i {
+    font-size: 0.9rem;
+    vertical-align: middle;
+}
+
+/* --- UNIVERSAL DARK MODE STYLES --- */
+
+/* 1. The Sidebar Fix (The white bar in your image) */
+body.dark-mode .sidebar-left {
+    background-color: #0f172a !important; /* Deep navy/black */
+    border-right: 1px solid #1e293b !important;
+}
+
+/* 2. Global Background & Primary Text */
+body.dark-mode {
+    background-color: #0f172a !important;
+    color: #f8fafc !important;
+}
+
+/* 3. Dashboard/Following Cards & Containers */
+body.dark-mode .card, 
+body.dark-mode .content-card, 
+body.dark-mode .post-container,
+body.dark-mode .github-repo-item,
+body.dark-mode .list-group-item {
+    background-color: #1e293b !important;
+    border-color: #334155 !important;
+    color: #f8fafc !important;
+}
+
+/* 4. Force ALL Text Visibility (Headings, Paragraphs, Spans) */
+body.dark-mode h1, body.dark-mode h2, body.dark-mode h3, 
+body.dark-mode h4, body.dark-mode h5, body.dark-mode h6, 
+body.dark-mode p, body.dark-mode span, body.dark-mode label,
+body.dark-mode .nav-link, body.dark-mode .fw-bold {
+    color: #f8fafc !important;
+}
+
+/* 5. Sidebar Icons & Active Links */
+body.dark-mode .fb-icon-item {
+    color: #0dcaf0 !important; /* Your Cyan Brand Color */
+}
+
+body.dark-mode .fb-icon-item.active-link {
+    background-color: rgba(13, 202, 240, 0.15) !important;
+}
+
+/* 6. Inputs & Selects (Settings/Search) */
+body.dark-mode .form-control, 
+body.dark-mode .form-select {
+    background-color: #1e293b !important;
+    color: #ffffff !important;
+    border-color: #334155 !important;
+}
+
+/* 7. Muted/Small Text Fix */
+body.dark-mode .text-muted, 
+body.dark-mode small {
+    color: #94a3b8 !important;
+}
+
+/* ===== MOBILE BOTTOM NAVIGATION BAR – ADDED ===== */
+@media (max-width: 991px) {
+    .sidebar-left {
+        position: fixed !important;
+        bottom: 0 !important;
+        top: auto !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 65px !important;
+        flex-direction: row !important;
+        justify-content: space-around !important;
+        align-items: center !important;
+        background: var(--nexus-card-white, #ffffff) !important;
+        border-top: 1px solid var(--border-soft, rgba(0,0,0,0.1)) !important;
+        border-right: none !important;
+        padding: 0 10px !important;
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.05) !important;
+    }
+
+    body.dark-mode .sidebar-left {
+        background: #1e293b !important;
+        border-top-color: #334155 !important;
+    }
+
+    .sidebar-left .fb-icon-item {
+        width: auto !important;
+        height: auto !important;
+        margin-bottom: 0 !important;
+        padding: 8px 12px !important;
+    }
+
+    .sidebar-left .fb-icon-item span,
+    .sidebar-left .fb-icon-item .label-text {
+        display: none !important;
+    }
+
+    .sidebar-left .fb-icon-item i {
+        font-size: 1.6rem !important;
+    }
+
+    .sidebar-left .fb-icon-item.active-link {
+        background: transparent !important;
+        position: relative;
+    }
+    .sidebar-left .fb-icon-item.active-link i {
+        color: var(--nexus-cyan, #4ecdc4) !important;
+    }
+
+    .sidebar-left .mt-auto {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .container-fluid.flex-grow-1,
+    .feed-area,
+    main,
+    .main-content-wrapper {
+        padding-bottom: 80px !important;
+    }
+
+    .row.g-0,
+    .row {
+        margin-bottom: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .sidebar-left {
+        height: 58px !important;
+    }
+    .sidebar-left .fb-icon-item i {
+        font-size: 1.4rem !important;
+    }
+}
+
+/* Target only the posts container */
+#postsContainer {
+    width: 95% !important;        /* Makes it widen */
+    max-width: 1100px !important;  /* Sets the limit for the width */
+    margin: 20px auto !important;  /* Centers it horizontally */
+    display: block !important;     /* Ensures it behaves as a centered block */
+    padding-left: 40px;            /* Slight nudge to balance against sidebar */
+}
+
+/* Ensure the cards inside the container fill the new width */
+#postsContainer .fb-card, 
+#postsContainer .post-card {
+    width: 100% !important;
+    margin-bottom: 25px !important;
+}
+
+/* Widen only the posts container */
+#postsContainer {
+    width: 95% !important;         /* Fills almost the whole horizontal space */
+    max-width: 1400px !important;  /* The "Wide" limit */
+    margin: 30px auto !important;  /* Keeps it centered */
+    padding-left: 50px;            /* Balances the visual weight against the sidebar */
+}
+
+/* Force the cards inside to take up every bit of that new width */
+#postsContainer .fb-card, 
+#postsContainer .post-card,
+#postsContainer .card {
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+/* Target only the posts container to make it wide and centered */
+#postsContainer {
+    /* Use the remaining screen space: 100% minus the 80px sidebar */
+    width: calc(100% - 100px) !important; 
+    max-width: 1400px !important; /* This is the 'Wider' part */
+    
+    /* Center it within the space to the right of the sidebar */
+    margin-left: 90px !important; /* Pushes it past the 80px sidebar */
+    margin-right: auto !important;
+    margin-top: 30px !important;
+
+    display: block !important;
+}
+
+/* Force the cards inside to fill that new wide container */
+#postsContainer .fb-card, 
+#postsContainer .post-card, 
+#postsContainer .card {
+    width: 100% !important;
+    min-width: 100% !important;
+    display: block !important;
+}
+
+/* WIDEN AND CENTER WITHIN THE AVAILABLE SPACE */
+#postsContainer {
+    /* 1. Set the width to fill the available space minus a 40px gap on each side */
+    width: calc(100% - 160px) !important; 
+    max-width: 1400px !important; 
+    
+    /* 2. Push it past the sidebar (80px) plus the left gap (40px) */
+    margin-left: 120px !important; 
+    margin-right: 40px !important; 
+    
+    /* 3. Ensure it doesn't cause a horizontal scroll */
+    box-sizing: border-box !important;
+    display: block !important;
+    margin-top: 30px !important;
+}
+
+/* Force the actual post card to fill this container */
+#postsContainer .fb-card, 
+#postsContainer .post-card, 
+#postsContainer .card {
+    width: 100% !important;
+    margin: 0 auto 30px auto !important;
+}
+
+/* Ensure the body doesn't allow sideways scrolling */
+body {
+    overflow-x: hidden !important;
+}
+
+/* 1. Center the entire feed area and give it space from the sidebar */
+.main-content-wrapper, 
+main {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important; /* This handles the centering */
+    width: calc(100% - 80px) !important;
+    margin-left: 80px !important; /* Push away from fixed sidebar */
+}
+
+/* 2. Make BOTH the header card and the posts container much wider */
+.content-card, 
+#postsContainer {
+    width: 90% !important;        /* Fill more of the screen */
+    max-width: 1200px !important;  /* This is the 'wider' limit - increase to 1400px if needed */
+    margin: 20px auto !important;
+}
+
+/* 3. Force the dynamically generated posts to be 100% width of the new wide container */
+#postsContainer .fb-card, 
+#postsContainer .post-card, 
+#postsContainer .card {
+    width: 100% !important;
+    min-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    display: block !important;
+}
+
+/* 4. Fix for the image inside the post so it looks good wide */
+#postsContainer img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Pushes the content down from the navbar */
+.col.pt-5 {
+    padding-top: 80px !important; 
+}
+
+/* Forces every post card to be centered and full width of its parent */
+#postsContainer > div, 
+.fb-card, 
+.post-card {
+    width: 100% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    display: block !important;
+}
+
+/* Optional: ensures the internal post content doesn't look weirdly aligned */
+.post-card {
+    text-align: left; /* Keeps text readable while the card itself is centered */
+}
+
+/* Pushes content down from the navbar */
+.feed-area {
+    margin-top: 80px !important;
+}
+
+/* Forces everything inside the posts container to center and stretch */
+#postsContainer {
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+}
+
+/* This makes sure the posts generated by JS aren't "small" or "left-aligned" */
+.fb-card, .post-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-bottom: 20px !important;
+}
+
+/* Sidebar fix to ensure it stays visible and fixed */
+.sidebar-left {
+    position: fixed;
+    top: 70px; /* Adjust based on navbar height */
+    left: 0;
+    width: 80px;
+    height: calc(100vh - 70px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
 }
