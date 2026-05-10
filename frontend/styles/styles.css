@@ -757,3 +757,93 @@ body {
     .notification-scroll-wrapper::-webkit-scrollbar-thumb:hover {
         background: #555 !important; /* Gets darker when you hover */
     }
+/* Wrapper for signup form – handles mobile keyboard & centering */
+.signup-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100svh;  /* svh = small viewport height, ignores browser bars */
+    padding: 20px 0 100px 0;
+    width: 100%;
+}
+
+.signup-card-container {
+    margin-bottom: 0 !important;  /* remove the old 100px bottom margin */
+    width: 100%;
+    max-width: 520px;
+}
+
+/* ===== MOBILE TOUCH TARGET FIXES ===== */
+.exit-arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;          /* Minimum touch target size */
+    height: 44px;
+    font-size: 1.4rem;
+    background: rgba(26, 83, 92, 0.08);
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    color: #1a535c;
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    z-index: 1100;
+}
+
+.exit-arrow i {
+    font-size: 1.2rem;
+}
+
+.exit-arrow:active {
+    transform: scale(0.92);
+    background: rgba(26, 83, 92, 0.2);
+}
+
+/* ===== NOTIFICATIONS PAGE RESPONSIVE FIXES ===== */
+.notification-header {
+    flex-wrap: wrap;
+    gap: 12px;
+}
+.notification-header h4 {
+    font-size: 1.5rem;
+    margin: 0;
+}
+.btn-mark-read {
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    white-space: nowrap;
+}
+.notification-scroll-wrapper {
+    height: auto;
+    min-height: 60vh;
+    max-height: calc(100vh - 180px);
+    overflow-y: auto;
+    border-radius: 1rem;
+}
+@media (max-width: 576px) {
+    .notification-header h4 {
+        font-size: 1.3rem;
+    }
+    .btn-mark-read {
+        padding: 6px 12px;
+        font-size: 0.75rem;
+    }
+    .notification-scroll-wrapper {
+        max-height: calc(100vh - 150px);
+        margin-bottom: 20px;
+    }
+    .container.mt-5 {
+        margin-top: 1rem !important;
+        padding-bottom: 70px;
+    }
+}
+.list-group-item {
+    padding: 16px 12px !important;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.list-group-item:active {
+    background-color: rgba(78, 205, 196, 0.1);
+}

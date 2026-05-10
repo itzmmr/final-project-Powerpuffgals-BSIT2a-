@@ -91,7 +91,60 @@ body {
     justify-content: center;
     overflow: hidden;
 }
+/* ===== UNIFIED SIDEBAR (DESKTOP) – ADDED FOR CONSISTENCY ===== */
+.sidebar-left {
+    position: fixed !important;
+    top: 80px !important;
+    left: 0 !important;
+    width: 80px !important;
+    height: calc(100vh - 80px) !important;
+    background: var(--nexus-card-white, #ffffff) !important;
+    border-right: 1px solid var(--border-soft, rgba(0,0,0,0.08)) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    padding-top: 30px !important;
+    z-index: 1000 !important;
+    box-shadow: none !important;
+}
 
+.sidebar-left .fb-icon-item {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 50px !important;
+    height: 50px !important;
+    margin-bottom: 20px !important;
+    background: transparent !important;
+    border: none !important;
+    border-radius: 12px !important;
+    transition: all 0.2s ease;
+}
+
+.sidebar-left .fb-icon-item i {
+    font-size: 1.5rem !important;
+    color: var(--nexus-teal, #1a535c) !important;
+    margin: 0 !important;
+}
+
+.sidebar-left .fb-icon-item:hover i,
+.sidebar-left .fb-icon-item.active-link i {
+    color: var(--nexus-cyan, #4ecdc4) !important;
+}
+
+.sidebar-left .fb-icon-item.active-link {
+    background: rgba(78, 205, 196, 0.15) !important;
+}
+
+.sidebar-left .mt-auto {
+    margin-top: auto !important;
+    margin-bottom: 30px !important;
+}
+
+body.dark-mode .sidebar-left {
+    background: #0f172a !important;
+    border-right-color: #1e293b !important;
+}
 /* --- SIDEBAR --- */
 .sidebar-left { padding: 1.5rem 1rem; height: calc(100vh - 80px); position: sticky; top: 80px; }
 .fb-icon-item { padding: 12px 20px !important; margin-bottom: 8px; font-weight: 600; border-radius: 12px; color: var(--text-dark) !important; display: flex; align-items: center; text-decoration: none; transition: 0.2s; }
@@ -364,4 +417,491 @@ body.dark-mode .settings-card,
 body.dark-mode .search-post-card {
     background-color: var(--bg-card) !important;
     border-color: #2d3748 !important;
+}
+
+/* Sidebar Layout Fix */
+.sidebar-left {
+    display: flex !important;
+    flex-direction: column !important;
+    min-height: 85vh !important; 
+    align-items: flex-start !important;
+    padding-left: 10px !important;
+}
+
+/* Reset all item decorations (Backgrounds, Borders, Shadows) */
+.sidebar-left .fb-icon-item,
+.sidebar-left .fb-icon-item.active-link {
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 15px 0 !important;
+    display: block !important;
+    width: fit-content !important;
+}
+
+/* Kill pseudo-elements (the curved teal lines) */
+.sidebar-left .fb-icon-item::before,
+.sidebar-left .fb-icon-item::after {
+    content: none !important;
+    display: none !important;
+}
+
+/* Icon Colors & Size */
+.sidebar-left .fb-icon-item i {
+    font-size: 1.6rem;
+    color: #1a535c;
+    transition: color 0.2s ease;
+}
+
+/* Highlight Settings icon teal */
+.sidebar-left .fb-icon-item.active-link i,
+.sidebar-left .fb-icon-item:hover i {
+    color: #4ecdc4 !important;
+}
+
+/* Force Logout to bottom */
+.logout-container {
+    margin-top: auto !important;
+    padding-bottom: 20px !important;
+}
+
+/* FORCE CONSISTENT SIDEBAR LAYOUT */
+.sidebar-left {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important; /* Keep icons strictly left */
+    padding-left: 20px !important;      /* Fixed horizontal position */
+    width: 60px !important;             /* Fixed sidebar width so it can't shift */
+    min-height: 85vh !important;
+}
+.sidebar-left {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important; 
+    padding-left: 25px !important;
+    padding-top: 20px !important; /* Internal spacing for icons */
+    width: 80px !important;
+    border-right: 1px solid #e0e0e0 !important;
+    
+    /* THE FIX: Start below the header */
+    position: fixed !important;
+    left: 0 !important;
+    top: 80px !important; /* Match this to the actual height of your NexusWrites header */
+    
+    /* THE FIX: Stay behind header but above content */
+    z-index: 999 !important; 
+    background: #f8f9fa !important;
+    height: calc(100vh - 80px) !important;
+}
+
+/* Ensure your Header/Navbar stays on top of everything */
+header, .navbar, .top-header {
+    position: fixed !important;
+    top: 0;
+    width: 100%;
+    z-index: 1050 !important; /* Higher than sidebar */
+    height: 80px; /* Force a consistent height */
+}
+
+/* This prevents content from hiding under the sticky navbar */
+    body {
+        padding-top: 80px; /* Adjust based on your navbar height */
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    /* Ensures the main content area takes up available space */
+    .container-fluid.flex-grow-1 {
+        margin-top: 20px;
+    }
+
+    /* Fix for the sidebar positioning */
+    .sidebar-left {
+        position: sticky;
+        top: 100px;
+    }
+
+    /* Ensure modals are always on top */
+    .modal {
+        z-index: 1060 !important;
+    }
+    
+    /* GLOBAL DARK MODE OVERRIDES */
+[data-theme="dark"], 
+[data-theme="dark"] body {
+    background-color: #0f172a !important; /* Deep Navy/Black */
+    color: #f1f5f9 !important; /* Off-white text */
+}
+
+/* Target every possible text element inside dark mode */
+[data-theme="dark"] h1, [data-theme="dark"] h2, [data-theme="dark"] h3, 
+[data-theme="dark"] h4, [data-theme="dark"] h5, [data-theme="dark"] h6, 
+[data-theme="dark"] p, [data-theme="dark"] span, [data-theme="dark"] label,
+[data-theme="dark"] .nav-link, [data-theme="dark"] .fw-bold {
+    color: #f1f5f9 !important;
+}
+
+/* Card & Sidebar Fixes (Dashboard/Following/GitHub) */
+[data-theme="dark"] .content-card, 
+[data-theme="dark"] .sidebar-left, 
+[data-theme="dark"] .card, 
+[data-theme="dark"] .modal-content,
+[data-theme="dark"] .list-group-item {
+    background-color: #1e293b !important; /* Lighter slate for cards */
+    border-color: #334155 !important;
+    color: #f1f5f9 !important;
+}
+
+/* Form Inputs (So you can see what you type) */
+[data-theme="dark"] .form-control, 
+[data-theme="dark"] .form-select {
+    background-color: #0f172a !important;
+    border-color: #334155 !important;
+    color: #ffffff !important;
+}
+
+/* Ensure Muted Text doesn't disappear */
+[data-theme="dark"] .text-muted {
+    color: #94a3b8 !important;
+}
+
+/* Specifically target the sidebar when dark mode is active */
+[data-theme="dark"] .sidebar-left {
+    background: #121212 !important; /* Match your main dark background */
+    background-color: #121212 !important;
+    border-right: 1px solid #2d2d2d !important; /* Subtle separator */
+}
+
+/* Fix the icon links in dark mode */
+[data-theme="dark"] .fb-icon-item {
+    color: #0dcaf0 !important; /* Keep your cyan brand color */
+    background: transparent !important;
+}
+
+/* Fix the active link background so it doesn't look weird */
+[data-theme="dark"] .fb-icon-item.active-link {
+    background-color: rgba(13, 202, 240, 0.15) !important; 
+    color: #0dcaf0 !important;
+}
+
+/* Hover effect for a better feel */
+[data-theme="dark"] .fb-icon-item:hover {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+
+/* --- UNIVERSAL DARK MODE STYLES --- */
+
+/* 1. The Sidebar Fix (The white bar in your image) */
+body.dark-mode .sidebar-left {
+    background-color: #0f172a !important; /* Deep navy/black */
+    border-right: 1px solid #1e293b !important;
+}
+
+/* 2. Global Background & Primary Text */
+body.dark-mode {
+    background-color: #0f172a !important;
+    color: #f8fafc !important;
+}
+
+/* 3. Dashboard/Following Cards & Containers */
+body.dark-mode .card, 
+body.dark-mode .content-card, 
+body.dark-mode .post-container,
+body.dark-mode .github-repo-item,
+body.dark-mode .list-group-item {
+    background-color: #1e293b !important;
+    border-color: #334155 !important;
+    color: #f8fafc !important;
+}
+
+/* 4. Force ALL Text Visibility (Headings, Paragraphs, Spans) */
+body.dark-mode h1, body.dark-mode h2, body.dark-mode h3, 
+body.dark-mode h4, body.dark-mode h5, body.dark-mode h6, 
+body.dark-mode p, body.dark-mode span, body.dark-mode label,
+body.dark-mode .nav-link, body.dark-mode .fw-bold {
+    color: #f8fafc !important;
+}
+
+/* 5. Sidebar Icons & Active Links */
+body.dark-mode .fb-icon-item {
+    color: #0dcaf0 !important; /* Your Cyan Brand Color */
+}
+
+body.dark-mode .fb-icon-item.active-link {
+    background-color: rgba(13, 202, 240, 0.15) !important;
+}
+
+/* 6. Inputs & Selects (Settings/Search) */
+body.dark-mode .form-control, 
+body.dark-mode .form-select {
+    background-color: #1e293b !important;
+    color: #ffffff !important;
+    border-color: #334155 !important;
+}
+
+/* 7. Muted/Small Text Fix */
+body.dark-mode .text-muted, 
+body.dark-mode small {
+    color: #94a3b8 !important;
+}
+
+/* Target the Edit Profile card specifically if possible */
+.settings-card:first-child, 
+.edit-profile-selector { 
+    box-shadow: none !important;
+    background-color: transparent !important;
+    border: 1px solid transparent !important;
+}
+
+/* Re-enable the hover effect you actually want */
+.settings-card:first-child:hover,
+.edit-profile-selector:hover {
+    border: 1px solid #4FD1C5 !important; /* That teal/blue color */
+    background-color: rgba(79, 209, 197, 0.1) !important;
+}
+
+/* ===== MOBILE BOTTOM NAVIGATION BAR – ADDED ===== */
+@media (max-width: 991px) {
+    .sidebar-left {
+        position: fixed !important;
+        bottom: 0 !important;
+        top: auto !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 65px !important;
+        flex-direction: row !important;
+        justify-content: space-around !important;
+        align-items: center !important;
+        background: var(--nexus-card-white, #ffffff) !important;
+        border-top: 1px solid var(--border-soft, rgba(0,0,0,0.1)) !important;
+        border-right: none !important;
+        padding: 0 10px !important;
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.05) !important;
+    }
+
+    body.dark-mode .sidebar-left {
+        background: #1e293b !important;
+        border-top-color: #334155 !important;
+    }
+
+    .sidebar-left .fb-icon-item {
+        width: auto !important;
+        height: auto !important;
+        margin-bottom: 0 !important;
+        padding: 8px 12px !important;
+    }
+
+    .sidebar-left .fb-icon-item span,
+    .sidebar-left .fb-icon-item .label-text {
+        display: none !important;
+    }
+
+    .sidebar-left .fb-icon-item i {
+        font-size: 1.6rem !important;
+    }
+
+    .sidebar-left .fb-icon-item.active-link {
+        background: transparent !important;
+        position: relative;
+    }
+    .sidebar-left .fb-icon-item.active-link i {
+        color: var(--nexus-cyan, #4ecdc4) !important;
+    }
+
+    .sidebar-left .mt-auto {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .container-fluid.flex-grow-1,
+    .feed-area,
+    main,
+    .main-content-wrapper {
+        padding-bottom: 80px !important;
+    }
+
+    .row.g-0,
+    .row {
+        margin-bottom: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .sidebar-left {
+        height: 58px !important;
+    }
+    .sidebar-left .fb-icon-item i {
+        font-size: 1.4rem !important;
+    }
+}
+
+/* ============================================================
+   NEXUSWRITES SETTINGS – DARK MODE VISIBILITY FIXES
+   ============================================================ */
+
+/* --- 1. EDIT PROFILE MODAL --- */
+body.dark-mode .modal-content {
+    background-color: #1e293b !important;
+    color: #f8fafc !important;
+    border: 1px solid #334155 !important;
+}
+body.dark-mode .modal-body {
+    background-color: #1e293b !important;
+}
+body.dark-mode .modal-footer {
+    background-color: #1e293b !important;
+    border-top: 1px solid #334155 !important;
+}
+body.dark-mode .modal-content .form-label,
+body.dark-mode .modal-content label,
+body.dark-mode .modal-content h5,
+body.dark-mode .modal-content h6,
+body.dark-mode .modal-content p,
+body.dark-mode .modal-content span,
+body.dark-mode .modal-content small {
+    color: #f8fafc !important;
+}
+body.dark-mode .modal-content .text-muted {
+    color: #94a3b8 !important;
+}
+body.dark-mode .modal-content .form-control,
+body.dark-mode .modal-content .form-select {
+    background-color: #0f172a !important;
+    color: #ffffff !important;
+    border: 1px solid #334155 !important;
+}
+body.dark-mode .modal-content .form-control::placeholder {
+    color: #64748b !important;
+}
+body.dark-mode .modal-content .form-control:focus,
+body.dark-mode .modal-content .form-select:focus {
+    border-color: #4ecdc4 !important;
+    box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.15) !important;
+}
+body.dark-mode .modal-content input[type="checkbox"] {
+    accent-color: #4ecdc4;
+}
+body.dark-mode #avatarWrapper {
+    background: #0f172a !important;
+    border-color: #334155 !important;
+}
+body.dark-mode #avatarWrapper:hover {
+    border-color: #4ecdc4 !important;
+}
+body.dark-mode #avatarWrapper i {
+    color: #94a3b8 !important;
+}
+body.dark-mode .interest-box {
+    background-color: #0f172a !important;
+    border-radius: 10px;
+    padding: 10px;
+    border: 1px solid #334155 !important;
+}
+
+/* --- 2. EDIT PROFILE CARD --- */
+.profile-bg {
+    background-color: #6366f1 !important;
+    color: white !important;
+}
+.profile-bg i {
+    color: white !important;
+}
+body.dark-mode .settings-item {
+    background: rgba(255, 255, 255, 0.04) !important;
+    border: 1px solid #334155 !important;
+    color: #f8fafc !important;
+}
+body.dark-mode .settings-item:hover {
+    background: rgba(78, 205, 196, 0.1) !important;
+    border-color: #4ecdc4 !important;
+}
+body.dark-mode .settings-item h6,
+body.dark-mode .settings-item small {
+    color: #f8fafc !important;
+}
+body.dark-mode .settings-item .text-muted {
+    color: #94a3b8 !important;
+}
+body.dark-mode .settings-item .fa-chevron-right {
+    color: #64748b !important;
+}
+
+/* --- 3. PRIVACY & SECURITY --- */
+.privacy-box {
+    background-color: rgba(0, 0, 0, 0.03);
+    border-color: var(--border-soft) !important;
+}
+body.dark-mode .privacy-box {
+    background-color: #0f172a !important;
+    border-color: #334155 !important;
+}
+body.dark-mode #privacyView .form-control {
+    background-color: #1e293b !important;
+    color: #ffffff !important;
+    border: 1px solid #334155 !important;
+}
+body.dark-mode #privacyView .form-control::placeholder {
+    color: #64748b !important;
+}
+body.dark-mode #privacyView h4,
+body.dark-mode #privacyView h6,
+body.dark-mode #privacyView label,
+body.dark-mode #privacyView span {
+    color: #f8fafc !important;
+}
+body.dark-mode #privacyView hr {
+    border-color: #334155 !important;
+}
+
+/* --- 4. HELP CENTER ACCORDION --- */
+body.dark-mode .accordion-item {
+    background-color: transparent !important;
+    border-color: #334155 !important;
+}
+body.dark-mode .accordion-button {
+    background-color: #1e293b !important;
+    color: #f8fafc !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+body.dark-mode .accordion-button:not(.collapsed) {
+    background-color: rgba(78, 205, 196, 0.1) !important;
+    color: #4ecdc4 !important;
+}
+body.dark-mode .accordion-button::after {
+    filter: invert(1) brightness(2) !important;
+}
+body.dark-mode .accordion-collapse {
+    background-color: #0f172a !important;
+}
+body.dark-mode .accordion-body {
+    background-color: #0f172a !important;
+    color: #94a3b8 !important;
+    border-top: 1px solid #334155 !important;
+}
+body.dark-mode #helpView h4 {
+    color: #f8fafc !important;
+}
+
+/* --- 5. CONTENT CARDS (all sub-views) --- */
+body.dark-mode .content-card {
+    background-color: #1e293b !important;
+    border-color: #4ecdc4 !important;
+    color: #f8fafc !important;
+}
+body.dark-mode .content-card h4,
+body.dark-mode .content-card h6,
+body.dark-mode .content-card p,
+body.dark-mode .content-card label {
+    color: #f8fafc !important;
+}
+body.dark-mode .btn-exit {
+    background: rgba(255,255,255,0.08) !important;
+    color: #94a3b8 !important;
+}
+body.dark-mode .btn-exit:hover {
+    background: #ff5e5e !important;
+    color: white !important;
 }

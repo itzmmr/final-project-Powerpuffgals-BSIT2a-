@@ -1,4 +1,3 @@
-
         :root {
             --nexus-teal: #1a535c; 
             --nexus-cyan: #4ecdc4;
@@ -241,3 +240,118 @@
             font-size: 0.8rem;
             letter-spacing: 0.5px;
         }
+
+        /* ============================================================
+   PROFILE – THEME-AWARE CARD CLASSES
+   ============================================================ */
+
+/* GitHub repo cards */
+.repo-card-custom {
+    background-color: var(--nexus-card-white) !important;
+    border-color: var(--border-soft) !important;
+    color: var(--text-dark) !important;
+    transition: background 0.3s, color 0.3s;
+}
+
+.repo-card-custom h6 {
+    color: var(--text-dark) !important;
+}
+
+.text-secondary-custom {
+    color: var(--text-muted) !important;
+    font-size: 0.75rem;
+}
+
+/* Post cards inside profileContentContainer */
+.profile-post-card {
+    background-color: var(--nexus-card-white) !important;
+    border-radius: 20px;
+    border-left: 8px solid var(--nexus-teal) !important;
+    margin-bottom: 2rem;
+    padding: 2rem;
+    width: 100%;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    transition: background 0.3s, color 0.3s;
+}
+
+.profile-post-card .post-title {
+    color: var(--nexus-teal) !important;
+    font-weight: 700;
+}
+
+.profile-post-card .post-body {
+    color: var(--text-muted) !important;
+    margin-bottom: 1rem;
+}
+
+.profile-post-card .post-meta {
+    color: var(--text-muted) !important;
+    border-top: 1px solid var(--border-soft) !important;
+    padding-top: 0.75rem;
+}
+
+.profile-post-card .post-image-wrapper {
+    background-color: var(--nexus-light-bg) !important;
+    padding: 0.5rem;
+    border-radius: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+/* Category badge on post cards */
+.profile-post-badge {
+    background-color: #5b6d5b !important;
+    color: #ffffff !important;
+}
+
+/* Dark mode overrides */
+body.dark-mode .repo-card-custom {
+    background-color: #1e293b !important;
+    border-color: #334155 !important;
+    color: #f8fafc !important;
+}
+
+body.dark-mode .repo-card-custom h6 {
+    color: #f8fafc !important;
+}
+
+body.dark-mode .text-secondary-custom {
+    color: #94a3b8 !important;
+}
+
+body.dark-mode .profile-post-card {
+    background-color: #1e293b !important;
+    border-left-color: var(--nexus-cyan) !important;
+}
+
+body.dark-mode .profile-post-card .post-title {
+    color: var(--nexus-cyan) !important;
+}
+
+body.dark-mode .profile-post-card .post-body {
+    color: #94a3b8 !important;
+}
+
+body.dark-mode .profile-post-card .post-meta {
+    color: #64748b !important;
+    border-top-color: #334155 !important;
+}
+
+body.dark-mode .profile-post-card .post-image-wrapper {
+    background-color: #0f172a !important;
+}
+
+/* GitHub "no account linked" box */
+.github-empty-box {
+    background-color: var(--nexus-card-white) !important;
+    border: 1px solid var(--border-soft) !important;
+    border-radius: 12px;
+    padding: 1rem;
+    text-align: center;
+    color: var(--text-muted);
+}
+
+body.dark-mode .github-empty-box {
+    background-color: #1e293b !important;
+    border-color: #334155 !important;
+    color: #94a3b8 !important;
+}
