@@ -52,7 +52,14 @@ function openPostModal() {
 }
 
 async function handlePostSubmit() {
-    const user = JSON.parse(localStorage.getItem('nexusUser'));
+    // 1. Get user and check if they exist to avoid "cannot read property token of null"
+    const userData = localStorage.getItem('nexusUser');
+    if (!userData) {
+        alert("You must be logged in to post.");
+        return;
+    }
+    
+    const user = JSON.parse(userData);
     const title = document.getElementById('postTitle').value;
     const content = document.getElementById('postContent').value;
     const tagsInput = document.getElementById('postTags').value; 
@@ -62,8 +69,9 @@ async function handlePostSubmit() {
 
     // Convert string to array for hashtag support
     const tagsArray = tagsInput.split(',').map(tag => tag.trim()).filter(tag => tag !== "");
-
     const category = categorySelect === "OTHER" ? categoryCustom : categorySelect;
+
+    // 2. Prepare FormData
     const formData = new FormData();
     formData.append('title', title);
     formData.append('content', content);
@@ -77,16 +85,28 @@ async function handlePostSubmit() {
     try {
         const response = await fetch('https://final-project-powerpuffgals-bsit2a.onrender.com/api/posts', {
             method: 'POST',
-            headers: { 'Authorization': `Bearer ${user.token}` },
+            headers: { 
+                // Ensure there is a space after Bearer and the token exists
+                'Authorization': `Bearer ${user.token}` 
+                // NOTE: DO NOT add 'Content-Type': 'multipart/form-data' here. 
+                // Browser handles it automatically for FormData.
+            },
             body: formData
         });
+
         if (response.ok) {
             location.reload();
         } else {
             const err = await response.json();
+            // If the backend says "malformed", the token string in localStorage might be corrupted
             alert(err.message || "Failed to publish tutorial");
+            
+            if (err.message.includes("token") || response.status === 401) {
+                console.error("Token Issue. Check localStorage 'nexusUser' structure.");
+            }
         }
     } catch (err) {
+        console.error("Fetch error:", err);
         alert("Connection error while posting.");
     }
 }

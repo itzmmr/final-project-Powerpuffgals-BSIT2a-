@@ -255,7 +255,7 @@ async function toggleCommentLike(postId, commentId) {
 
     try {
         // Change 'comments' to 'posts' if your backend groups everything under posts
-        const response = await fetch(`https://final-project-powerpuffgals-bsit2a.onrender.com/api/posts/${postId}/comment/${commentId}/like`, {
+        const response = await fetch(`http://localhost:5000/api/posts/${postId}/comment/${commentId}/like`, {
             method: 'PUT',
             headers: { 
                 'Authorization': `Bearer ${user.token}`,
@@ -290,7 +290,7 @@ async function submitMainComment(postId) {
     if (!text) return;
     try {
         input.disabled = true;
-        const response = await fetch(`https://final-project-powerpuffgals-bsit2a.onrender.com/api/posts/${postId}/comment`, {
+        const response = await fetch(`http://localhost:5000/api/posts/${postId}/comment`, {
             method: 'POST',
             headers: { 
                 'Content-Type': 'application/json',
@@ -342,7 +342,7 @@ async function editComment(postId, commentId) {
         }
 
         try {
-            const response = await fetch(`https://final-project-powerpuffgals-bsit2a.onrender.com/api/posts/${postId}/comment/${commentId}`, {
+            const response = await fetch(`http://localhost:5000/api/posts/${postId}/comment/${commentId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -392,7 +392,7 @@ async function deleteComment(postId, commentId) {
     newBtn.addEventListener('click', async function () {
         modalInstance.hide();
         try {
-            const response = await fetch(`https://final-project-powerpuffgals-bsit2a.onrender.com/api/posts/${postId}/comment/${commentId}`, {
+            const response = await fetch(`http://localhost:5000/api/posts/${postId}/comment/${commentId}`, {
                 method: 'DELETE',
                 headers: { 
                     'Authorization': `Bearer ${user.token}`,
@@ -439,7 +439,7 @@ async function submitReply(postId, targetId) {
     
     try {
         // FIXED: Ensuring route matches the standard nested structure
-        const response = await fetch(`https://final-project-powerpuffgals-bsit2a.onrender.com/api/posts/${postId}/comment/${targetId}/reply`, {
+        const response = await fetch(`http://localhost:5000/api/posts/${postId}/comment/${targetId}/reply`, {
             method: 'POST',
             headers: { 
                 'Content-Type': 'application/json',
@@ -493,7 +493,7 @@ async function fetchAllPostsAndRefresh() {
     const token = user.token;
 
     try {
-        const response = await fetch('https://final-project-powerpuffgals-bsit2a.onrender.com/api/posts', {
+        const response = await fetch('http://localhost:5000/api/posts', {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
@@ -722,7 +722,7 @@ async function loadMorePosts() {
 
     try {
         // 4. FETCH the next set of posts from the backend
-        const response = await fetch(`https://final-project-powerpuffgals-bsit2a.onrender.com/api/posts?page=${currentPage}&limit=${POSTS_PER_PAGE}`, {
+        const response = await fetch(`http://localhost:5000/api/posts?page=${currentPage}&limit=${POSTS_PER_PAGE}`, {
             headers: { 
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
@@ -772,7 +772,7 @@ async function handleFollowAction(targetId) {
     if (!user || !user.token) return;
     
     try {
-        const response = await fetch(`https://final-project-powerpuffgals-bsit2a.onrender.com/api/users/follow/${targetId}`, {
+        const response = await fetch(`http://localhost:5000/api/users/follow/${targetId}`, {
             method: 'POST',
             headers: { 
                 'Authorization': `Bearer ${user.token}`,
@@ -849,13 +849,16 @@ async function handlePostSubmit() {
         }
     }
     if (!title.trim() || !content.trim() || !category) {
-        alert("Title, Content, and Category are required!");
+        const modalEl = document.getElementById('nexusAlertModal');
+        document.getElementById('alertModalMessage').textContent = "Title, Content, and Category are required!";
+        new bootstrap.Modal(modalEl).show();
         return;
     }
     const user = JSON.parse(localStorage.getItem('nexusUser'));
     if (!user || !user.token) {
-        alert("Session expired. Please log in again.");
-        window.location.href = 'login.html';
+        const modalEl = document.getElementById('nexusAlertModal');
+        document.getElementById('alertModalMessage').textContent = "Session expired. Please log in again.";
+        new bootstrap.Modal(modalEl).show();
         return;
     }
 
@@ -866,10 +869,10 @@ async function handlePostSubmit() {
         .filter(tag => tag !== "");
 
     try {
-        let url = 'https://final-project-powerpuffgals-bsit2a.onrender.com/api/posts';
+        let url = 'http://localhost:5000/api/posts';
         let method = 'POST';
         if (editId) {
-            url = `https://final-project-powerpuffgals-bsit2a.onrender.com/api/posts/${editId}`;
+            url = `http://localhost:5000/api/posts/${editId}`;
             method = 'PUT';
         }
         
@@ -904,11 +907,15 @@ async function handlePostSubmit() {
             if (modalInstance) modalInstance.hide();
             location.reload(); 
         } else {
-            alert(data.message || "Failed to save post.");
+            const modalEl = document.getElementById('nexusAlertModal');
+            document.getElementById('alertModalMessage').textContent = data.message || "Failed to save post.";
+            new bootstrap.Modal(modalEl).show();
         }
     } catch (err) {
         console.error("Connection Error:", err);
-        alert("Could not connect to the server.");
+        const modalEl = document.getElementById('nexusAlertModal');
+        document.getElementById('alertModalMessage').textContent = "Could not connect to the server.";
+        new bootstrap.Modal(modalEl).show();
     }
 }
 
@@ -980,7 +987,7 @@ async function deletePost(id) {
     newBtn.addEventListener('click', async function () {
         modalInstance.hide();
         try {
-            const response = await fetch(`https://final-project-powerpuffgals-bsit2a.onrender.com/api/posts/${id}`, {
+            const response = await fetch(`http://localhost:5000/api/posts/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${user.token}`
@@ -989,7 +996,9 @@ async function deletePost(id) {
             if (response.ok) {
                 fetchAllPostsAndRefresh();
             } else {
-                alert("You can only delete your own posts!");
+                const modalEl = document.getElementById('nexusAlertModal');
+                document.getElementById('alertModalMessage').textContent = "You can only delete your own posts!";
+                new bootstrap.Modal(modalEl).show();
             }
         } catch (err) {
             console.error("Delete failed:", err);
@@ -1000,7 +1009,7 @@ async function deletePost(id) {
 async function togglePostLike(id) {
     const user = JSON.parse(localStorage.getItem('nexusUser'));
     try {
-        const response = await fetch(`https://final-project-powerpuffgals-bsit2a.onrender.com/api/posts/like/${id}`, {
+        const response = await fetch(`http://localhost:5000/api/posts/like/${id}`, {
             method: 'PUT',
             headers: { 
                 'Authorization': `Bearer ${user.token}` 
@@ -1066,7 +1075,7 @@ async function loadNotifications() {
         return;
     }
     try {
-        const response = await fetch('https://final-project-powerpuffgals-bsit2a.onrender.com/api/notifications', {
+        const response = await fetch('http://localhost:5000/api/notifications', {
             method: 'GET',
             headers: { 
                 'Authorization': `Bearer ${token}`,
