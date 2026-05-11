@@ -70,8 +70,7 @@ async function fetchGitHubRepos() {
     const container = document.getElementById('github-content');
 
     if (!username) {
-        document.getElementById('githubAlertMessage').textContent = 'Please enter a username.';
-new bootstrap.Modal(document.getElementById('githubAlertModal')).show();
+        nexusAlert('Please enter a GitHub username.', 'GitHub Search', 'fa-github');
         return;
     }
 
@@ -82,7 +81,7 @@ new bootstrap.Modal(document.getElementById('githubAlertModal')).show();
         </div>`;
 
     try {
-        const response = await fetch(`https://final-project-powerpuffgals-bsit2a.onrender.com/api/github/${username}`);
+        const response = await fetch(`http://localhost:5000/api/github/${username}`);
         if (!response.ok) throw new Error('User not found');
 
         const repos = await response.json();
@@ -157,7 +156,7 @@ async function syncThisAccount(username) {
     }
 
     try {
-        const response = await fetch('https://final-project-powerpuffgals-bsit2a.onrender.com/api/users/update', {
+        const response = await fetch('http://localhost:5000/api/users/update', {
             method:  'PUT',
             headers: {
                 'Content-Type':  'application/json',
@@ -186,15 +185,4 @@ async function syncThisAccount(username) {
     } catch (err) {
         nexusAlert('Connection error. Is your backend running on port 5000?', 'Connection Error', 'fa-plug');
     }
-}
-
-function nexusAlert(message, title = 'Notice', icon = 'fa-info-circle') {
-    document.getElementById('alertModalMessage').innerText = message;
-    document.getElementById('nexusAlertTitle').innerText   = title;
-    document.getElementById('nexusAlertIcon').className    = `fas ${icon}`;
-    new bootstrap.Modal(document.getElementById('nexusAlertModal')).show();
-}
-
-function showLogoutModal() {
-    new bootstrap.Modal(document.getElementById('nexusLogoutModal')).show();
 }

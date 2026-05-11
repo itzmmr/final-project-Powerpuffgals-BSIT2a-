@@ -128,28 +128,28 @@
 
 <!-- ══ MODAL 2: Themed Alert ══ -->
 <div class="modal fade" id="nexusAlertModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" style="max-width:360px;">
-        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
-            <div class="modal-header border-0 px-4 py-3 d-flex align-items-center justify-content-between"
+    <div class="modal-dialog modal-dialog-centered" style="max-width:320px;">
+        <div class="modal-content border shadow rounded-3 overflow-hidden">
+            <div class="modal-header px-3 py-2 d-flex align-items-center justify-content-between"
                  style="background-color:#1a535c;">
                 <div class="d-flex align-items-center gap-2">
-                    <i id="nexusAlertIcon" class="fas fa-info-circle me-2"
-                       style="color:#4ecdc4; font-size:1rem;"></i>
-                    <span id="nexusAlertTitle" class="fw-bold text-white"
-                          style="font-family:'Montserrat',sans-serif; font-size:1rem;">Notice</span>
+                    <i id="nexusAlertIcon" class="fas fa-info-circle"
+                       style="color:#fff; font-size:1rem;"></i>
+                    <span id="nexusAlertTitle" class="fw-bold text-white mb-0"
+                          style="font-family:'Inter',sans-serif; font-size:0.95rem;">Heads Up!</span>
                 </div>
                 <button type="button" class="btn p-0 lh-1" data-bs-dismiss="modal"
-                        style="color:#ffffffaa; font-size:1.3rem; background:none; border:none;">&times;</button>
+                        style="color:#ffffffcc; font-size:1.2rem; background:none; border:none;">&times;</button>
             </div>
             <div class="modal-body px-4 py-4 text-center" style="background:#fff;">
                 <p id="nexusAlertMessage" class="mb-0 text-dark"
-                   style="font-size:0.95rem; font-family:'Inter',sans-serif; line-height:1.5;"></p>
+                   style="font-size:0.9rem; font-family:'Inter',sans-serif; line-height:1.5;"></p>
             </div>
-            <div class="modal-footer border-0 px-4 pb-4 pt-0 justify-content-center"
+            <div class="modal-footer border-0 px-4 pb-3 pt-0 justify-content-center"
                  style="background:#fff;">
-                <button type="button" class="btn px-5 rounded-3 text-white" data-bs-dismiss="modal"
-                        style="background-color:#1a535c; font-family:'Inter',sans-serif; font-size:0.875rem;">
-                    OK
+                <button type="button" class="btn px-4 rounded-2 border" data-bs-dismiss="modal"
+                        style="font-family:'Inter',sans-serif; font-size:0.875rem; color:#333;">
+                    Got it
                 </button>
             </div>
         </div>
@@ -194,32 +194,6 @@
 <script src="js/github.js"></script>
 <script src="js/settings.js"></script>
 <script src="js/app.js"></script>
-
-<!-- GitHub Alert Modal -->
-<div class="modal fade" id="githubAlertModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" style="max-width: 360px;">
-    <div class="modal-content border-0 shadow-lg" style="background-color: var(--nexus-card-white, #fff)">
-      <div class="modal-header border-0 text-white py-2 px-3" style="background: #1a535c;">
-        <h6 class="modal-title fw-bold mb-0"><i class="fas fa-exclamation-circle me-2"></i>Heads Up!</h6>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body py-3 px-3 text-center">
-        <p id="githubAlertMessage" class="mb-0" style="font-size:0.9rem;"></p>
-      </div>
-      <div class="modal-footer border-0 justify-content-center py-2">
-        <button type="button" class="btn btn-outline-secondary btn-sm px-4" data-bs-dismiss="modal">Got it</button>
-      </div>
-    </div>
-  </div>
-</div>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const savedLang = localStorage.getItem('nexusLang') || 'English';
-            if (typeof changeLanguage === 'function') {
-                changeLanguage(savedLang);
-            }
-        });
-    </script>
 
 </body>
 </html>
