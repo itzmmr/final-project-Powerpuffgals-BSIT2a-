@@ -17,107 +17,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet"  href="styles/settings.css">
-
-<style>
-/* ===== NEXUS SIDEBAR – FORCED CONSISTENT ===== */
-:root {
-    --nexus-teal: #1a535c;
-    --nexus-cyan: #4ecdc4;
-    --nexus-card-white: #ffffff;
-    --border-soft: rgba(78, 205, 196, 0.2);
-}
-.sidebar-left {
-    position: fixed !important;
-    top: 80px !important;
-    left: 0 !important;
-    width: 80px !important;
-    height: calc(100vh - 80px) !important;
-    background: var(--nexus-card-white, #ffffff) !important;
-    border-right: 1px solid var(--border-soft, rgba(0,0,0,0.08)) !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    padding: 30px 0 0 0 !important;
-    z-index: 1000 !important;
-    box-shadow: none !important;
-}
-.sidebar-left .fb-icon-item {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    width: 50px !important;
-    height: 50px !important;
-    margin-bottom: 20px !important;
-    background: transparent !important;
-    border: none !important;
-    border-right: none !important;
-    border-radius: 12px !important;
-    text-decoration: none !important;
-    transition: all 0.2s ease;
-    padding: 0 !important;
-}
-.sidebar-left .fb-icon-item i {
-    font-size: 1.5rem !important;
-    color: var(--nexus-teal, #1a535c) !important;
-    margin: 0 !important;
-    width: auto !important;
-}
-.sidebar-left .fb-icon-item:hover,
-.sidebar-left .fb-icon-item:hover i {
-    color: var(--nexus-cyan, #4ecdc4) !important;
-    background: rgba(78, 205, 196, 0.15) !important;
-}
-.sidebar-left .fb-icon-item.active-link {
-    background: rgba(78, 205, 196, 0.15) !important;
-}
-.sidebar-left .fb-icon-item.active-link i {
-    color: var(--nexus-cyan, #4ecdc4) !important;
-}
-.sidebar-left .mt-auto {
-    margin-top: auto !important;
-    margin-bottom: 30px !important;
-}
-body.dark-mode .sidebar-left {
-    background: #0f172a !important;
-    border-right-color: #1e293b !important;
-}
-body.dark-mode .sidebar-left .fb-icon-item i {
-    color: var(--nexus-cyan, #4ecdc4) !important;
-}
-@media (max-width: 991px) {
-    .sidebar-left {
-        position: fixed !important;
-        bottom: 0 !important;
-        top: auto !important;
-        left: 0 !important;
-        width: 100% !important;
-        height: 65px !important;
-        flex-direction: row !important;
-        justify-content: space-around !important;
-        align-items: center !important;
-        padding: 0 10px !important;
-        border-right: none !important;
-        border-top: 1px solid var(--border-soft) !important;
-    }
-    .sidebar-left .fb-icon-item {
-        width: auto !important;
-        height: auto !important;
-        margin-bottom: 0 !important;
-        padding: 8px 12px !important;
-    }
-    .sidebar-left .fb-icon-item i {
-        font-size: 1.6rem !important;
-    }
-    .sidebar-left .mt-auto {
-        margin: 0 !important;
-        padding: 0 !important;
-    }
-}
-@media (max-width: 480px) {
-    .sidebar-left { height: 58px !important; }
-    .sidebar-left .fb-icon-item i { font-size: 1.4rem !important; }
-}
-</style>
 </head>
 <body id="mainBody">
 
@@ -320,11 +219,8 @@ body.dark-mode .sidebar-left .fb-icon-item i {
 
   </div></div>
 
-<<<<<<< HEAD
-=======
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/settings.js"></script>
->>>>>>> 28672927d8f2b1d4014aa28394b16d6b8013d4d2
 <!-- Profile Update Status Modal -->
 <div class="modal fade" id="statusModal" tabindex="-1" aria-labelledby="statusTitle" aria-hidden="true" role="dialog">
     <div class="modal-dialog modal-dialog-centered">
@@ -460,37 +356,5 @@ body.dark-mode .sidebar-left .fb-icon-item i {
   </div>
 </div>
 
-<!-- Logout Confirmation Modal -->
-<div class="modal fade" id="nexusLogoutModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" style="max-width: 360px;">
-    <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
-      <div class="modal-header border-0 px-4 py-3 d-flex align-items-center justify-content-between" style="background-color: #1a535c;">
-        <div class="d-flex align-items-center gap-2">
-          <i class="fas fa-sign-out-alt" style="color: #fff; font-size: 1rem;"></i>
-          <span class="fw-bold text-white" style="font-family: 'Montserrat', sans-serif; font-size: 1rem;">Log Out</span>
-        </div>
-        <button type="button" class="btn p-0 lh-1" data-bs-dismiss="modal" style="color: #ffffffaa; font-size: 1.3rem; background: none; border: none;">&times;</button>
-      </div>
-      <div class="modal-body px-4 py-4 text-center" style="background: #fff;">
-        <p class="mb-0 text-dark" style="font-size: 0.95rem; font-family: 'Inter', sans-serif; line-height: 1.5;">
-          Are you sure you want to log out of <strong>NEXUSWrites</strong>?
-        </p>
-      </div>
-      <div class="modal-footer border-0 px-4 pb-4 pt-0 d-flex gap-2 justify-content-center" style="background: #fff;">
-        <button type="button" class="btn btn-outline-secondary px-4 rounded-3" data-bs-dismiss="modal"
-                style="font-family: 'Inter', sans-serif; font-size: 0.875rem;">Cancel</button>
-        <button type="button" class="btn px-4 rounded-3 text-white" onclick="logoutUser()"
-                style="background-color: #1a535c; font-family: 'Inter', sans-serif; font-size: 0.875rem;">
-          <i class="fas fa-sign-out-alt me-1"></i> Log Out
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-<script>
-  function showLogoutModal() {
-    new bootstrap.Modal(document.getElementById("nexusLogoutModal")).show();
-  }
-</script>
 </body>
 </html>

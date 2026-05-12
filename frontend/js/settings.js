@@ -14,23 +14,6 @@ function changeFontSize(size) {
     document.body.style.fontSize = size + 'px';
     localStorage.setItem('nexusFontSize', size);
 }
-}
-    }
-});
-function loadSettings() {
-    const savedTheme = localStorage.getItem('nexusTheme') || 'light';
-    const isDark = savedTheme === 'dark';
-
-    // 1. Apply dark mode to the body
-    document.body.classList.toggle('dark-mode', isDark);
-
-    // 2. APPLY DARK MODE TO SIDEBAR (This fixes your issue)
-    const sidebar = document.querySelector('.sidebar-left');
-    if (sidebar) {
-        sidebar.classList.toggle('dark-mode', isDark);
-    }
-
-    if(document.getElementById('themeSelect')) document.getElementById('themeSelect').value = savedTheme;
 
 // ============================================
 // THEME
@@ -84,10 +67,7 @@ function loadSettings() {
     const slider = document.getElementById('fontSizeSlider');
     if (slider) slider.value = savedSize;
 
-    // --- Keep the rest of your code exactly as it was ---
     const savedLang = localStorage.getItem('nexusLang') || 'English';
-    if (typeof changeLanguage === "function") changeLanguage(savedLang); 
-    if(document.getElementById('langSelect')) document.getElementById('langSelect').value = savedLang;
     if (typeof changeLanguage === 'function') changeLanguage(savedLang);
     const langDrop = document.getElementById('langSelect');
     if (langDrop) langDrop.value = savedLang;
@@ -177,19 +157,13 @@ async function saveProfile() {
 
     const user = JSON.parse(localStorage.getItem('nexusUser') || '{}');
 
-    const user = JSON.parse(localStorage.getItem('nexusUser')) || {};
     const updateData = {
         name:           modalName,
         bio:            modalBio,
         role:           finalRole,
         githubUsername: modalGithub,
-<<<<<<< HEAD
-        interests: selectedInterests,
-        avatar: updatedAvatarBase64 || user.avatar || ""
-=======
         interests:      selectedInterests,
         avatar:         updatedAvatarBase64 || user.avatar || ""
->>>>>>> 28672927d8f2b1d4014aa28394b16d6b8013d4d2
     };
 
     const saveBtn = document.querySelector('button[onclick="saveProfile()"]');
@@ -207,11 +181,7 @@ async function saveProfile() {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-<<<<<<< HEAD
-                'Authorization': `Bearer ${localStorage.getItem('token')}` // This fixes the 401 Unauthorized
-=======
                 'Authorization': `Bearer ${token}`
->>>>>>> 28672927d8f2b1d4014aa28394b16d6b8013d4d2
             },
             body: JSON.stringify(updateData)
         });
@@ -219,18 +189,6 @@ async function saveProfile() {
         const result = await response.json();
 
         if (response.ok) {
-<<<<<<< HEAD
-            // Update local user data so the name changes instantly in the UI
-            localStorage.setItem('nexusUser', JSON.stringify(result.user));
-            
-            showStatusModal("Profile Updated!", "Your profile has been saved successfully. ✨", "success");
-
-            // Safety check for Bootstrap modal
-            if (typeof profileModal !== 'undefined' && profileModal) {
-                profileModal.hide();
-            }
-            
-=======
             // Merge updated fields into local user data
             const updatedUser = { ...user, ...result.user };
             localStorage.setItem('nexusUser', JSON.stringify(updatedUser));
@@ -242,7 +200,6 @@ async function saveProfile() {
 
             if (profileModal) profileModal.hide();
 
->>>>>>> 28672927d8f2b1d4014aa28394b16d6b8013d4d2
             setTimeout(() => location.reload(), 2000);
         } else {
             showStatusModal("Update Failed", result.message || "Something went wrong. Please try again.", "error");
@@ -269,14 +226,9 @@ function previewEditImage(input) {
                 preview.style.display = 'block';
                 icon.style.display = 'none';
             }
-<<<<<<< HEAD
-            updatedAvatarBase64 = e.target.result; // Store avatar for saving
-        }
-=======
             // Save base64 so saveProfile() can send it
             updatedAvatarBase64 = e.target.result;
         };
->>>>>>> 28672927d8f2b1d4014aa28394b16d6b8013d4d2
         reader.readAsDataURL(input.files[0]);
     }
 }
@@ -292,86 +244,9 @@ function toggleEditOther() {
     }
 }
 
-<<<<<<< HEAD
-function applyLanguage() {
-    // Safety check: if translations isn't defined yet, don't crash the script
-    if (typeof translations === 'undefined' && !window.translations) {
-        console.warn("NEXUSWrites: Translation data not ready yet.");
-        return;
-    }
-
-    const lang = localStorage.getItem('nexusLang') || 'English';
-    const dict = (window.translations || translations)[lang];
-
-    if (!dict) return;
-
-    document.querySelectorAll('[data-key], [data-translate]').forEach(el => {
-        const key = el.dataset.key || el.getAttribute('data-translate');
-        if (dict[key]) {
-            el.innerText = dict[key];
-        }
-    });
-}
-function logoutUser() {
-    localStorage.removeItem('nexusUser');
-    localStorage.removeItem('token');
-    // It's also good practice to clear the theme/font/lang if you want a total reset,
-    // but keeping them is fine if you want the next user to have the same theme.
-    window.location.href = 'login.html';
-}
-
-// Add this to the very bottom of settings.js
-document.addEventListener('DOMContentLoaded', () => {
-    // 1. Get the language saved in the browser's memory
-    const savedLang = localStorage.getItem('nexusLang') || 'English';
-    
-    // 2. Run the changeLanguage function immediately
-    if (typeof changeLanguage === 'function') {
-        changeLanguage(savedLang);
-    }
-    
-    // 3. Update the dropdown if it exists on this page
-    const langDrop = document.getElementById('langSelect');
-    if (langDrop) langDrop.value = savedLang;
-});
-
-// This function handles the slider input
-function changeFontSize(size) {
-    // 1. Update the label showing the number (e.g., 16px)
-    const display = document.getElementById('fontSizeValue');
-    if (display) {
-        display.innerText = size + 'px';
-    }
-
-    // 2. Apply the font size to the main content or body
-    // You can use document.body for everything, or a specific container
-    document.documentElement.style.setProperty('--base-font-size', size + 'px');
-    document.body.style.fontSize = size + 'px';
-
-    // 3. Save the setting so it doesn't reset on refresh
-    localStorage.setItem('nexusFontSize', size);
-}
-
-// This runs automatically on EVERY page
-document.addEventListener('DOMContentLoaded', () => {
-    // FONT SIZE STICKY LOGIC
-    const savedSize = localStorage.getItem('nexusFontSize') || '16';
-    changeFontSize(savedSize);
-    
-    // Sync the slider if we are on the settings page
-    const slider = document.getElementById('fontSizeSlider');
-    if (slider) slider.value = savedSize;
-
-    // LANGUAGE STICKY LOGIC
-    const savedLang = localStorage.getItem('nexusLang') || 'English';
-    changeLanguage(savedLang);
-});
-
-=======
 // ============================================
 // PASSWORD CHANGE
 // ============================================
->>>>>>> 28672927d8f2b1d4014aa28394b16d6b8013d4d2
 async function handlePasswordChange() {
     const currentPass = document.getElementById('currentPassInput').value;
     const newPass     = document.getElementById('newPassInput').value;
@@ -465,18 +340,6 @@ function showStatusModal(title, message, type = 'error') {
     }, { once: true });
 }
 
-<<<<<<< HEAD
-// Allow pressing "Enter" to submit password change
-['currentPassInput', 'newPassInput', 'confirmPassInput'].forEach(id => {
-    const input = document.getElementById(id);
-    if (input) {
-        input.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') handlePasswordChange();
-        });
-    }
-});
-
-=======
 // ============================================
 // LOGOUT
 // ============================================
@@ -493,7 +356,6 @@ function showLogoutModal() {
 // ============================================
 // INIT — single DOMContentLoaded
 // ============================================
->>>>>>> 28672927d8f2b1d4014aa28394b16d6b8013d4d2
 document.addEventListener('DOMContentLoaded', () => {
     loadSettings();
 
@@ -502,27 +364,3 @@ document.addEventListener('DOMContentLoaded', () => {
         profileModal = new bootstrap.Modal(modalElem);
     }
 });
-
-function applyGlobalTheme() {
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    if (savedTheme === 'dark') {
-        document.documentElement.setAttribute('data-theme', 'dark');
-        document.body.setAttribute('data-theme', 'dark'); // Double insurance
-    } else {
-        document.documentElement.removeAttribute('data-theme');
-        document.body.removeAttribute('data-theme');
-    }
-}
-
-// Run immediately to prevent "white flash" on load
-applyGlobalTheme();
-
-// Also run on DOMContentLoaded to catch dynamic elements
-document.addEventListener('DOMContentLoaded', applyGlobalTheme);
-
-(function() {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') {
-        document.documentElement.setAttribute('data-theme', 'dark');
-    }
-})();

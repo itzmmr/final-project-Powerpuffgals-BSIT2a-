@@ -186,4 +186,3 @@ async function syncThisAccount(username) {
         nexusAlert('Connection error. Is your backend running on port 5000?', 'Connection Error', 'fa-plug');
     }
 }
-

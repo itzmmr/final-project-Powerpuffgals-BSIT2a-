@@ -1,8 +1,9 @@
-// homesearch.js
+// homesearch.js - UPDATED FOR SEPARATED INPUTS & SYNCED BUTTON STYLES
 let allPosts = []; 
 let displayedCount = 6; 
 const increment = 6;    
 
+// --- 1. CORE FETCHING ---
 async function fetchPostsFromBackend() {
     const resultsGrid = document.getElementById('resultsGrid');
     try {
@@ -17,6 +18,7 @@ async function fetchPostsFromBackend() {
     }
 }
 
+// --- 2. RECURSIVE COMMENT RENDERING (Synced with Dashboard Style) ---
 function renderComments(commentList, postId) {
     if (!commentList || commentList.length === 0) return '';
 
@@ -47,7 +49,7 @@ function renderComments(commentList, postId) {
                         ${comment.createdAt ? new Date(comment.createdAt).toLocaleDateString() : 'Just now'}
                     </small>
                 </div>
-                <p class="mb-0 comment-text-body" id="comment-text-${cId}">${comment.text || ''}</p>
+                <p class="mb-0 text-white comment-text-body" id="comment-text-${cId}">${comment.text || ''}</p>
             </div>
             <div class="comment-actions ms-2 d-flex gap-3 mt-2">
                 <a href="javascript:void(0)" class="action-btn" onclick="toggleCommentLike('${pId}', '${cId}', this)">
@@ -65,6 +67,7 @@ function renderComments(commentList, postId) {
                     </a>
                 ` : ''}
             </div>
+            <!-- Reply Input - UPDATED: SEPARATED STRUCTURE WITH GREEN BUTTON -->
             <div id="reply-input-${pId}-${cId}" class="mt-2 ms-3 d-none">
                 <div class="input-group">
                     <input type="text" class="form-control comment-input-field" 
@@ -81,6 +84,7 @@ function renderComments(commentList, postId) {
     }).join('');
 }
 
+// --- 3. COMMENT & REPLY ACTIONS ---
 function toggleReplyInput(postId, targetId) {
     const el = document.getElementById(`reply-input-${postId}-${targetId}`);
     if (el) {
@@ -150,6 +154,8 @@ async function toggleCommentLike(postId, commentId, buttonElement) {
     } catch (err) { console.error(err); }
 }
 
+// --- 4. POST DETAIL & SEARCH UI ---
+
 function openPostDetail(postId) {
     const post = allPosts.find(p => p._id === postId);
     if (!post) return;
@@ -159,32 +165,40 @@ function openPostDetail(postId) {
     
     const profileImg = post.author?.profilePicture 
         ? `<img src="${post.author.profilePicture}" class="rounded-circle shadow-sm" style="width: 45px; height: 45px; object-fit: cover; border: 2px solid #2dd4bf;">`
-        : `<div style="width:45px;height:45px;border-radius:50%;background:linear-gradient(135deg,#1a535c,#4ecdc4);display:flex;align-items:center;justify-content:center;border:2px solid #2dd4bf;"><i class="fas fa-user" style="color:white;font-size:1.2rem;"></i></div>`;
+        : `<div class="rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 45px; height: 45px; background-color: #1a535c; color: white; border: 2px solid #2dd4bf;"><i class="fas fa-user-tie"></i></div>`;
 
     document.getElementById('modalPostHeader').innerHTML = `
-        <div class="d-flex align-items-center gap-3 p-2">
-            ${profileImg}
+        <div class="d-flex align-items-center p-2">
+            <div class="me-3">${profileImg}</div>
             <div>
-                <div class="fw-bold" style="font-size:1rem;">${post.author?.name || 'Nexus Writer'}</div>
-                <div style="font-size:0.8rem;color:#94a3b8;">${post.createdAt ? new Date(post.createdAt).toLocaleDateString() : ''}</div>
+                <h6 class="mb-0 fw-bold post-author-display">${post.author?.name || "Anonymous User"}</h6>
+                <small class="text-muted">${post.createdAt ? new Date(post.createdAt).toLocaleDateString() : ''}</small>
             </div>
         </div>`;
 
-    document.getElementById('modalPostTitle').innerText = post.title || '';
-    document.getElementById('modalPostContent').innerText = post.content || '';
+    document.getElementById('modalPostTitle').innerText = post.title;
+    
+    const imageContainer = document.getElementById('modalPostImageContainer');
+    const contentArea = document.getElementById('modalPostContent');
+    
+    if (imageContainer) imageContainer.innerHTML = ''; 
+    
+    const imageHtml = post.image ? `<img src="${post.image}" class="img-fluid rounded mb-3 shadow-sm w-100" style="max-height: 500px; object-fit: contain; background: #f8f9fa;">` : '';
 
-    const imgContainer = document.getElementById('modalImageContainer');
-    const imgEl = document.getElementById('modalPostImage');
-    if (post.image) {
-        imgEl.src = post.image;
-        imgContainer.style.display = 'block';
-    } else {
-        imgContainer.style.display = 'none';
+    if (imageContainer) {
+        imageContainer.innerHTML = imageHtml;
+        imageContainer.style.display = post.image ? 'block' : 'none';
+    } else if (contentArea && post.image) {
+        const existingImgs = contentArea.parentElement.querySelectorAll('.img-fluid');
+        existingImgs.forEach(img => img.remove());
+        contentArea.insertAdjacentHTML('beforebegin', imageHtml);
     }
+    
+    if (contentArea) contentArea.innerText = post.content;
 
     const tagContainer = document.getElementById('modalPostTags');
     if (tagContainer) {
-        tagContainer.innerHTML = (post.tags || []).map(t => `<span class="badge modal-tag-badge me-1">#${t}</span>`).join('');
+        tagContainer.innerHTML = (post.tags || []).map(t => `<span class="badge bg-light text-dark me-1 border">#${t}</span>`).join('');
     }
     
     const likeCountEl = document.getElementById('modal-like-count');
@@ -193,10 +207,10 @@ function openPostDetail(postId) {
         likeCountEl.innerText = post.likes?.length || 0;
         heartIcon.className = post.likes?.includes(myId) ? "fas fa-heart fs-5 text-danger" : "far fa-heart fs-5 text-dark";
     }
-
-    document.getElementById('modal-like-btn').onclick = () => togglePostLike(postId);
+document.getElementById('modal-like-btn').onclick = () => togglePostLike(postId);
     document.getElementById('modalCommentsList').innerHTML = renderComments(post.comments || [], post._id);
     
+    // --- ADD THIS PART BELOW ---
     const submitBtn = document.getElementById('modal-comment-submit-btn');
     if (submitBtn) {
         submitBtn.onclick = () => handleModalCommentSubmit(postId);
@@ -208,17 +222,28 @@ function openPostDetail(postId) {
             if (e.key === 'Enter') handleModalCommentSubmit(postId);
         };
     }
+    // ---------------------------
 
-    const modalEl = document.getElementById('postDetailModal');
-    modalEl.addEventListener('hidden.bs.modal', function () {
-        const backdrops = document.querySelectorAll('.modal-backdrop');
-        backdrops.forEach(b => b.remove());
-        document.body.classList.remove('modal-open');
-        document.body.style.overflow = 'auto';
-    }, { once: true });
+    new bootstrap.Modal(document.getElementById('postDetailModal')).show();
+    
+    // --- MAIN MODAL INPUT - SYNCED WITH GREEN BUTTON STYLE ---
+    const mainInputContainer = document.getElementById('modal-comment-section-container');
+    if (mainInputContainer) {
+        mainInputContainer.innerHTML = `
+            <div class="input-group">
+                <input type="text" class="form-control comment-input-field" 
+                       id="modal-comment-input-field" 
+                       placeholder="Join the discussion..."
+                       onkeypress="if(event.key==='Enter') handleModalCommentSubmit('${post._id}')">
+                <button class="btn" id="modal-comment-submit-btn"
+                        onclick="handleModalCommentSubmit('${post._id}')">
+                    <i class="fas fa-paper-plane" id="comment-submit-icon"></i>
+                </button>
+            </div>
+        `;
+    }
 
-    const modalInstance = bootstrap.Modal.getOrCreateInstance(modalEl);
-    modalInstance.show();
+    new bootstrap.Modal(document.getElementById('postDetailModal')).show();
 }
 
 async function handleModalCommentSubmit(postId) {
@@ -247,7 +272,7 @@ async function handleModalCommentSubmit(postId) {
 
 function displayPosts(categoryFilter = 'all', searchTerm = '', append = false) {
     const resultsGrid = document.getElementById('resultsGrid');
-    if (!resultsGrid) return; 
+    if(!resultsGrid) return; 
     if (!append) {
         resultsGrid.innerHTML = '';
         displayedCount = increment;
@@ -260,14 +285,14 @@ function displayPosts(categoryFilter = 'all', searchTerm = '', append = false) {
     });
 
     filtered.slice(0, displayedCount).forEach(post => {
-        const tagsHtml = (post.tags || []).map(t => `<span class="me-2 card-tag" style="font-size: 0.85rem;">#${t}</span>`).join(' ');
+        const tagsHtml = (post.tags || []).map(t => `<span class="me-2 text-muted" style="font-size: 0.85rem;">#${t}</span>`).join(' ');
         resultsGrid.innerHTML += `
             <div class="search-post-card p-4" onclick="openPostDetail('${post._id}')">
-                <span class="badge post-category-badge mb-3">${post.category || 'General'}</span>
-                <h3 class="fw-bold mb-2 post-card-title">${post.title}</h3>
+                <span class="badge mb-3" style="background-color: #4ecdc4 !important; color: #1a535c; font-size: 0.75rem;">${post.category || 'General'}</span>
+                <h3 class="fw-bold mb-2 h3-title" style="font-family: 'Montserrat', sans-serif; font-size: 1.5rem; line-height: 1.3;">${post.title}</h3>
                 <div class="mb-3 d-wrap">${tagsHtml}</div>
-                <p class="post-card-desc mb-3">${post.content ? post.content.substring(0, 160) + '...' : ''}</p>
-                <div class="d-flex align-items-center gap-3 post-card-meta small mt-auto pt-2 border-top">
+                <p class="text-muted mb-3 post-desc" style="font-size: 0.95rem; line-height: 1.5;">${post.content ? post.content.substring(0, 160) + '...' : ''}</p>
+                <div class="d-flex align-items-center gap-3 text-muted small mt-auto pt-2 border-top">
                     <span><i class="far fa-heart"></i> ${post.likes?.length || 0}</span>
                     <span><i class="far fa-comment"></i> ${post.comments?.length || 0}</span>
                 </div>
@@ -283,25 +308,57 @@ function switchTab(el, cat) {
 
 function handleInstantSuggestions(val) { displayPosts('all', val); }
 
-function clearInput() {
-    const input = document.getElementById('innerSearchInput');
-    const clearBtn = document.getElementById('clearBtn');
-    if (input) input.value = '';
-    if (clearBtn) clearBtn.style.display = 'none';
-    displayPosts('all');
-}
-
 document.addEventListener('DOMContentLoaded', () => {
     fetchPostsFromBackend();
     if (localStorage.getItem('nexusTheme') === 'dark') {
         document.body.classList.add('dark-mode');
     }
+});
 
-    const searchInput = document.getElementById('innerSearchInput');
-    const clearBtn = document.getElementById('clearBtn');
-    if (searchInput && clearBtn) {
-        searchInput.addEventListener('input', () => {
-            clearBtn.style.display = searchInput.value ? 'inline' : 'none';
-        });
-    }
+// 1. List your actual tutorials here
+const tutorials = [
+  { title: "How to Make Coffee", link: "post1.html" },
+  { title: "Heads Up Tutorial", link: "post2.html" }
+];
+
+// 2. Attach this to your existing input
+// Change 'YOUR_INPUT_ID' to the id of your actual search bar
+document.getElementById('YOUR_INPUT_ID').addEventListener('keyup', function() {
+  const input = this.value.toLowerCase();
+  
+  // Change 'YOUR_SUGGESTION_DIV_ID' to the id of your result area
+  const suggestionBox = document.getElementById('YOUR_SUGGESTION_DIV_ID');
+  
+  if (input === "") {
+    suggestionBox.innerHTML = "";
+    suggestionBox.style.display = "none"; // Hides it when empty
+    return;
+  }
+
+  // Filter logic (starts with the letters typed)
+  const matches = tutorials.filter(t => t.title.toLowerCase().startsWith(input));
+
+  suggestionBox.style.display = "block"; // Shows the box when typing
+
+  if (matches.length > 0) {
+    suggestionBox.innerHTML = matches.map(t => 
+      `<div class="search-item" onclick="location.href='${t.link}'">${t.title}</div>`
+    ).join('');
+  } else {
+    suggestionBox.innerHTML = `<div class="no-match">Tutorials not found or not posted.</div>`;
+  }
+  // --- THIS IS THE ONLY PART YOU NEED TO CHANGE TO REMOVE THE GREY PART ---
+    const modalEl = document.getElementById('postDetailModal');
+    
+    // 1. This is the "Kill Switch" for the grey backdrop
+    modalEl.addEventListener('hidden.bs.modal', function () {
+        const backdrops = document.querySelectorAll('.modal-backdrop');
+        backdrops.forEach(b => b.remove());
+        document.body.classList.remove('modal-open');
+        document.body.style.overflow = 'auto';
+    }, { once: true });
+
+    // 2. Open it ONCE (This replaces the two lines that caused the double grey screen)
+    const modalInstance = bootstrap.Modal.getOrCreateInstance(modalEl);
+    modalInstance.show();
 });
