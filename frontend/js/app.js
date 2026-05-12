@@ -31,79 +31,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-   
-    // --- 3. DASHBOARD PAGE LOGIC ---
-    if (path.includes('dashboard.html')) {
-        if (!user || !user.loggedIn) {
-            window.location.href = 'login.html';
-            return;
-        }
-
-        const feedUsername = document.getElementById('feedUsername');
-        if (feedUsername) feedUsername.textContent = `Welcome, ${user.name || "Nexus Writer"}!`;
-
-        const postsContainer = document.getElementById('postsContainer');
-        
-        async function loadFeed() {
-            if (!postsContainer) return;
-            postsContainer.innerHTML = '<div class="text-center py-5"><div class="spinner-border text-success"></div><p>Syncing with the Nexus...</p></div>';
-
-            try {
-                const response = await fetch('http://localhost:5000/api/posts', {
-                    headers: { 'Authorization': `Bearer ${user.token}` }
-                });
-                const posts = await response.json();
-
-                if (!posts || posts.length === 0) {
-                    postsContainer.innerHTML = '<div class="text-center p-5 bg-white rounded shadow-sm"><p class="text-muted">No tutorials shared yet. Start the conversation!</p></div>';
-                    return;
-                }
-
-                postsContainer.innerHTML = posts.map(post => {
-                    // SAFETY CHECK: This is the fix for your console error!
-                    const tagsHTML = (post.tags && typeof post.tags === 'string') 
-                        ? post.tags.split(',').map(tag => `<span class="badge bg-light text-dark me-1">#${tag.trim()}</span>`).join('')
-                        : '';
-
-                    return `
-                    <div class="card fb-card p-4 mb-4 shadow-sm border-0">
-                        <div class="d-flex align-items-center mb-3">
-                            <img src="${post.author?.avatar || 'https://via.placeholder.com/50'}" class="rounded-circle me-3 border" width="50" height="50">
-                            <div>
-                                <h6 class="mb-0 fw-bold">${post.author?.name || 'Dev Community'}</h6>
-                                <small class="text-muted">${new Date(post.createdAt).toLocaleDateString()}</small>
-                            </div>
-                        </div>
-                        <h5 class="fw-bold" style="color: #2d3e33;">${post.title}</h5>
-                        <div class="mb-2">${tagsHTML}</div>
-                        <span class="badge mb-3" style="background: #5b6d5b; width: fit-content;">${post.category}</span>
-                        <p class="text-secondary">${post.content.substring(0, 200)}...</p>
-                        ${post.image ? `<img src="${post.image}" class="img-fluid rounded mb-3" style="max-height: 300px; width: 100%; object-fit: cover;">` : ''}
-                        <div class="d-flex justify-content-between align-items-center border-top pt-3">
-                            <button class="btn btn-sm btn-link text-success text-decoration-none p-0" onclick="window.location.href='post.html?id=${post._id}'">Read Full Tutorial →</button>
-                            <div class="text-muted small"><i class="fas fa-heart text-danger"></i> ${post.likes?.length || 0}</div>
-                        </div>
-                    </div>`;
-                }).join('');
-            } catch (err) {
-                postsContainer.innerHTML = '<p class="text-danger">Failed to load posts. Is the backend running?</p>';
-            }
-        }
-        loadFeed();
-
-        const logoutBtn = document.getElementById('logoutBtn');
-        if (logoutBtn) {
-            logoutBtn.onclick = (e) => {
-                e.preventDefault();
-                localStorage.removeItem('nexusUser');
-                window.location.href = '../index.html'; 
-            };
-        }
-    }
-
-});
-
-// --- 5. PROFILE PAGE LOGIC ---
+       
+// --- PROFILE PAGE LOGIC ---
     if (path.includes('profile.html')) {
         if (!user || !user.loggedIn) {
             window.location.href = 'login.html';
@@ -113,6 +42,8 @@ document.addEventListener('DOMContentLoaded', function() {
         if (typeof loadProfile === 'function') loadProfile();
         if (typeof loadMyPosts === 'function') loadMyPosts();
     }
+
+});
 
 // --- GLOBAL UTILITIES ---
 function openPostModal() {
@@ -536,7 +467,9 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('page2').style.display = (page === 2) ? 'block' : 'none';
     }
 
-    document.getElementById('registerForm').addEventListener('submit', async function(e) {
+   const registerForm = document.getElementById('registerForm');
+if (registerForm) 
+    registerForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         const btn = document.getElementById('signupBtn');
         const btnText = btn.querySelector('.btn-text');
@@ -598,7 +531,9 @@ document.addEventListener('DOMContentLoaded', () => {
     //LOGIN PAGE SCRIPT
 
     
-   document.getElementById('loginForm').addEventListener('submit', async function(e) {
+   const loginForm = document.getElementById('loginForm');
+if (loginForm) 
+    loginForm.addEventListener('submit', async function(e) {
     e.preventDefault();
     
     // 1. Get Values & UI Elements
@@ -825,4 +760,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
-   
+
+// Register Service Worker for PWA
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+            .then(reg => console.log('✅ Service Worker registered! Scope:', reg.scope))
+            .catch(err => console.error('❌ Service Worker registration failed:', err));
+    });
+}

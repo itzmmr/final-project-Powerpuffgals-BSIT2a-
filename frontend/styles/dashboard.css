@@ -157,26 +157,10 @@ body.dark-mode .action-btn:hover i {
     text-decoration: underline;
 }
 
-.comment-input-field, 
-#commentInput,
-.input-group .form-control {
-    background-color: #ffffff !important;
-    color: #0f172a !important; 
-    border: 2px solid #2dd4bf !important;
-}
-
 .comment-input-field::placeholder,
 #commentInput::placeholder {
     color: #64748b !important;
     opacity: 1 !important;
-}
-
-body.dark-mode .comment-input-field,
-body.dark-mode #commentInput,
-body.dark-mode .input-group .form-control {
-    background-color: #ffffff !important;
-    color: #0f172a !important;
-    border: 2px solid #22d3ee !important;
 }
 
 body.dark-mode .comment-input-field:focus {
@@ -291,6 +275,61 @@ footer { border-top: 4px solid var(--nexus-cyan) !important; padding: 50px 0; ma
     clear: both;
 }
 
+/* ===== UNIFIED SIDEBAR (DESKTOP) – ADDED FOR CONSISTENCY ===== */
+.sidebar-left {
+    position: fixed !important;
+    top: 80px !important;
+    left: 0 !important;
+    width: 80px !important;
+    height: calc(100vh - 80px) !important;
+    background: var(--nexus-card-white, #ffffff) !important;
+    border-right: 1px solid var(--border-soft, rgba(0,0,0,0.08)) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    padding-top: 30px !important;
+    z-index: 1000 !important;
+    box-shadow: none !important;
+}
+
+.sidebar-left .fb-icon-item {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 50px !important;
+    height: 50px !important;
+    margin-bottom: 20px !important;
+    background: transparent !important;
+    border: none !important;
+    border-radius: 12px !important;
+    transition: all 0.2s ease;
+}
+
+.sidebar-left .fb-icon-item i {
+    font-size: 1.5rem !important;
+    color: var(--nexus-teal, #1a535c) !important;
+    margin: 0 !important;
+}
+
+.sidebar-left .fb-icon-item:hover i,
+.sidebar-left .fb-icon-item.active-link i {
+    color: var(--nexus-cyan, #4ecdc4) !important;
+}
+
+.sidebar-left .fb-icon-item.active-link {
+    background: rgba(78, 205, 196, 0.15) !important;
+}
+
+.sidebar-left .mt-auto {
+    margin-top: auto !important;
+    margin-bottom: 30px !important;
+}
+
+body.dark-mode .sidebar-left {
+    background: #0f172a !important;
+    border-right-color: #1e293b !important;
+}
+
 .sidebar-left { padding: 1.5rem 1rem; height: calc(100vh - 80px); position: sticky; top: 80px; }
 .fb-icon-item { padding: 12px 20px !important; margin-bottom: 8px; font-weight: 600; border-radius: 12px; color: var(--text-dark) !important; display: flex; align-items: center; text-decoration: none; transition: 0.2s; }
 .fb-icon-item:hover, .fb-icon-item.active-link { background: rgba(78, 205, 196, 0.15) !important; border-right: 4px solid var(--nexus-cyan); }
@@ -314,7 +353,17 @@ footer { border-top: 4px solid var(--nexus-cyan) !important; padding: 50px 0; ma
 
 .btn-nexus { background: var(--nexus-teal); color: white; border-radius: 8px; font-weight: 700; border: none; padding: 10px 20px; transition: 0.3s; }
 .btn-nexus:hover { background: #133d44; color: var(--nexus-cyan); }
-.fake-input { background: var(--nexus-light-bg); border: 1px solid var(--border-soft); color: var(--text-muted); padding: 18px 25px; border-radius: 35px; cursor: pointer; width: 100%; text-align: left; font-weight: 500; }
+.fake-input { 
+    background: var(--nexus-card-white); /* Uses the variable we fixed at the top */
+    border: 1px solid var(--border-soft); 
+    color: var(--text-muted); 
+    padding: 18px 25px; 
+    border-radius: 35px; 
+    cursor: pointer; 
+    width: 100%; 
+    text-align: left; 
+    font-weight: 500; 
+}
 
 body.dark-mode .form-control, body.dark-mode .form-select { background-color: #0f172a; border-color: rgba(255,255,255,0.1); }
 
@@ -382,4 +431,676 @@ body.dark-mode .settings-card,
 body.dark-mode .search-post-card {
     background-color: var(--bg-card) !important;
     border-color: #2d3748 !important;
+}
+
+/* Sidebar adjustments */
+.sidebar-left {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Keeps them toward the left */
+    padding-left: 10px;      /* Adjust this to move them further left/right */
+}
+
+.fb-icon-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;             /* Fixed width for a circular/square click area */
+    height: 50px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.fb-icon-item i {
+    font-size: 1.4rem;       /* Makes the icons stand out more since text is gone */
+    margin: 0;               /* Removes old margin used for text spacing */
+}
+
+/* Optional: Add a tooltip effect or hover background */
+.fb-icon-item:hover {
+    background-color: rgba(78, 205, 196, 0.1);
+    color: #4ecdc4 !important;
+}
+
+/* 1. Target the sidebar items specifically */
+.sidebar-left .fb-icon-item {
+    background: transparent !important; /* Removes that light teal box */
+    box-shadow: none !important;        /* Removes any outer glow */
+    border: none !important;           /* Removes any 3D borders */
+    filter: none !important;           /* Removes any SVG shadows */
+    padding: 10px !important;          /* Adjust for spacing */
+    display: flex !important;
+    justify-content: flex-start !important; /* Moves them to the left */
+    width: fit-content;
+}
+
+/* 2. Target the icons inside */
+.sidebar-left .fb-icon-item i {
+    font-size: 1.5rem;
+    color: #1a535c; /* Matches your navbar color */
+    margin: 0 !important;
+    text-shadow: none !important;      /* Removes shadow from the icon itself */
+}
+
+/* 3. Handle the 'Active' state (The one with the box in your photo) */
+.sidebar-left .fb-icon-item.active-link {
+    background: transparent !important; 
+    color: #4ecdc4 !important; /* Just change the color, don't add a box */
+    border-left: 3px solid #4ecdc4 !important; /* Optional: a clean line instead of a shadow */
+}
+
+/* Complete reset of the sidebar item decorations */
+.sidebar-left .fb-icon-item,
+.sidebar-left .fb-icon-item.active-link {
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    position: relative;
+    padding: 12px 0 !important; /* Adjust vertical spacing between icons */
+    margin-left: 0 !important;
+    width: fit-content !important;
+}
+
+/* Kill any pseudo-elements (the curved teal line in your photo) */
+.sidebar-left .fb-icon-item::before,
+.sidebar-left .fb-icon-item::after,
+.sidebar-left .active-link::before,
+.sidebar-left .active-link::after {
+    content: none !important;
+    display: none !important;
+    border: none !important;
+}
+
+/* Ensure the icon itself is clean and moved to the left */
+.sidebar-left .fb-icon-item i {
+    font-size: 1.6rem;
+    color: #1a535c; /* Your dark teal color */
+    text-shadow: none !important;
+    transition: color 0.2s ease;
+}
+
+/* Just change the color when active or hovered - no shapes/shadows */
+.sidebar-left .fb-icon-item.active-link i,
+.sidebar-left .fb-icon-item:hover i {
+    color: #4ecdc4 !important; /* Your bright teal color */
+}
+
+/* FORCE CONSISTENT SIDEBAR LAYOUT */
+.sidebar-left {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important; /* Keep icons strictly left */
+    padding-left: 20px !important;      /* Fixed horizontal position */
+    width: 60px !important;             /* Fixed sidebar width so it can't shift */
+    min-height: 85vh !important;
+}
+
+/* FORCE CONSISTENT ICON SPACING */
+.fb-icon-item {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 40px !important;             /* Fixed box for the icon */
+    height: 40px !important;            /* Fixed box for the icon */
+    margin-bottom: 15px !important;     /* Fixed gap between icons */
+    padding: 0 !important;              /* Remove any internal padding causing shifts */
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    text-decoration: none !important;
+}
+
+/* ENSURE NO HIDDEN ELEMENTS ADD WIDTH */
+.sidebar-left span, 
+.sidebar-left .fb-icon-item::before, 
+.sidebar-left .fb-icon-item::after {
+    display: none !important;
+    content: none !important;
+}
+
+/* PUSH LOGOUT TO THE EXACT SAME BOTTOM SPOT */
+.logout-container, .mt-auto {
+    margin-top: auto !important;
+    padding-bottom: 20px !important;
+}
+
+/* Sidebar Group Positioning */
+.sidebar-left {
+    display: flex !important;
+    flex-direction: column !important;
+    min-height: 85vh !important;
+    /* Adjust this to move the group up or down */
+    padding-top: 60px !important; 
+    /* Adjust this to move the group left or right */
+    padding-left: 30px !important; 
+    align-items: flex-start !important;
+}
+
+/* Search Bar Alignment */
+.search-wrapper {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    margin-bottom: 30px !important; /* Space between search and Home icon */
+    width: 100% !important;
+}
+
+.search-wrapper i.fa-search {
+    font-size: 1.4rem;
+    color: #1a535c !important;
+    width: 40px;
+    text-align: center;
+}
+
+/* Icons Style & Spacing */
+.fb-icon-item {
+    display: flex !important;
+    width: 40px !important;
+    height: 40px !important;
+    margin-bottom: 25px !important; /* Space between each icon */
+    align-items: center !important;
+    justify-content: center !important;
+    text-decoration: none !important;
+    background: none !important;
+    border: none !important;
+}
+/* Push Logout to bottom but keep it slightly raised */
+.mt-auto {
+    margin-top: auto !important;
+    /* Change this from 20px to 50px or 60px to lift it higher */
+    padding-bottom: 60px !important; 
+    margin-left: 0 !important; 
+}
+
+/* Sidebar Dock Layout */
+.sidebar-left {
+    display: flex !important;
+    flex-direction: column !important;
+    min-height: 100vh !important; 
+    width: 80px !important;       
+    padding-top: 40px !important; 
+    padding-left: 15px !important; 
+    align-items: flex-start !important;
+    border-right: 1px solid #e0e0e0 !important; 
+    position: fixed; 
+    left: 0;
+    top: 70px; 
+    background-color: #f8f9fa;
+    z-index: 1000; /* Ensures the whole sidebar stays on top and clickable */
+}
+
+/* Fix Searchbar Alignment & Clickability */
+.search-wrapper {
+    background: transparent !important;
+    border: none !important;
+    margin-bottom: 30px !important; /* Matches icon spacing to keep them grouped */
+    width: 45px !important; /* Match .fb-icon-item width */
+    height: 45px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.search-wrapper a {
+    display: flex !important;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer !important;
+}
+
+/* Hide the actual input text box but keep the icon functional */
+.search-wrapper input {
+    display: none !important; 
+}
+
+.search-wrapper i.fa-search {
+    font-size: 1.4rem;
+    color: #1a535c !important;
+    margin: 0 !important;
+}
+
+/* Keep icons consistent */
+.fb-icon-item {
+    display: flex !important;
+    width: 45px !important;
+    height: 45px !important;
+    margin-bottom: 30px !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+/* Kill the white background and border on the search container */
+.search-wrapper {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    width: 45px !important;
+    height: 45px !important;
+    margin-bottom: 30px !important;
+}
+
+/* Ensure the search icon matches the rest exactly */
+.search-wrapper .fb-icon-item {
+    margin-bottom: 0 !important; /* Reset margin for the wrapper child */
+    padding: 0 !important;
+}
+
+/* Force the vertical line to stay visible on the right */
+.sidebar-left {
+    border-right: 1px solid #e0e0e0 !important;
+    background-color: #f8f9fa !important;
+    padding-left: 15px !important;
+    width: 80px !important;
+}
+
+/* Ensure the sidebar container is strictly aligned to the left */
+.sidebar-left {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important; /* Lock icons to the left edge */
+    padding-left: 20px !important;      /* Fixed distance from screen edge */
+    width: 80px !important;
+}
+
+/* Fix Searchbar Alignment */
+.search-wrapper {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    width: 45px !important;  /* Match the width of .fb-icon-item */
+    height: 45px !important; /* Match the height of .fb-icon-item */
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+/* Force all icons (including search) to be the same size and centered */
+.fb-icon-item {
+    display: flex !important;
+    width: 45px !important;
+    height: 45px !important;
+    justify-content: center !important;
+    align-items: center !important;
+    margin-bottom: 25px !important;
+    background: none !important;
+    border: none !important;
+}
+
+/* Match the search icon size to your nav icons */
+.search-wrapper i.fa-search {
+    font-size: 1.4rem;
+    color: #1a535c !important;
+}
+
+.sidebar-left {
+    width: 80px; 
+    height: calc(100vh - 70px);
+    position: sticky;
+    top: 70px;
+    background: #fff;
+    border-right: 1px solid #eee;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+    z-index: 1000;
+}
+
+.fb-card {
+    border: none;
+    border-radius: 15px;
+    background-color: white;
+}
+
+/* --- UNIVERSAL DARK MODE STYLES --- */
+
+/* 1. The Sidebar Fix (The white bar in your image) */
+body.dark-mode .sidebar-left {
+    background-color: #0f172a !important; /* Deep navy/black */
+    border-right: 1px solid #1e293b !important;
+}
+
+/* 2. Global Background & Primary Text */
+body.dark-mode {
+    background-color: #0f172a !important;
+    color: #f8fafc !important;
+}
+
+/* 3. Dashboard/Following Cards & Containers */
+body.dark-mode .card, 
+body.dark-mode .content-card, 
+body.dark-mode .post-container,
+body.dark-mode .github-repo-item,
+body.dark-mode .list-group-item {
+    background-color: #1e293b !important;
+    border-color: #334155 !important;
+    color: #f8fafc !important;
+}
+
+/* 4. Force ALL Text Visibility (Headings, Paragraphs, Spans) */
+body.dark-mode h1, body.dark-mode h2, body.dark-mode h3, 
+body.dark-mode h4, body.dark-mode h5, body.dark-mode h6, 
+body.dark-mode p, body.dark-mode span, body.dark-mode label,
+body.dark-mode .nav-link, body.dark-mode .fw-bold {
+    color: #f8fafc !important;
+}
+
+/* 5. Sidebar Icons & Active Links */
+body.dark-mode .fb-icon-item {
+    color: #0dcaf0 !important; /* Your Cyan Brand Color */
+}
+
+body.dark-mode .fb-icon-item.active-link {
+    background-color: rgba(13, 202, 240, 0.15) !important;
+}
+
+/* 6. Inputs & Selects (Settings/Search) */
+body.dark-mode .form-control, 
+body.dark-mode .form-select {
+    background-color: #1e293b !important;
+    color: #ffffff !important;
+    border-color: #334155 !important;
+}
+
+/* 7. Muted/Small Text Fix */
+body.dark-mode .text-muted, 
+body.dark-mode small {
+    color: #94a3b8 !important;
+}
+
+/* --- DARK MODE TEXT VISIBILITY --- */
+
+/* 1. Force All Standard Text Elements */
+body.dark-mode, 
+body.dark-mode h1, body.dark-mode h2, body.dark-mode h3, 
+body.dark-mode h4, body.dark-mode h5, body.dark-mode h6, 
+body.dark-mode p, body.dark-mode span, body.dark-mode label, 
+body.dark-mode div:not(.logo-box) {
+    color: #f1f5f9 !important; /* Off-white for better readability */
+}
+
+/* 2. Fix for Dashboard Feed & Following Cards */
+body.dark-mode .card-title, 
+body.dark-mode .post-title, 
+body.dark-mode .user-name,
+body.dark-mode .fw-bold {
+    color: #ffffff !important; /* Pure white for bold titles */
+}
+
+/* 3. Fix for Links and Navigation */
+body.dark-mode a:not(.btn):not(.fb-icon-item) {
+    color: #0dcaf0 !important; /* Cyan for links so they stand out */
+}
+
+body.dark-mode .nav-link {
+    color: #f1f5f9 !important;
+}
+
+/* 4. Fix for Muted Text (Bio, Date, Small text) */
+/* We don't want these pure white, but they must be light enough to see */
+body.dark-mode .text-muted, 
+body.dark-mode small, 
+body.dark-mode .timestamp {
+    color: #94a3b8 !important; /* Light slate gray */
+}
+
+/* 5. Form & Input Text (Settings & Search) */
+body.dark-mode .form-control, 
+body.dark-mode .form-select,
+body.dark-mode textarea {
+    color: #ffffff !important;
+}
+
+body.dark-mode .form-control::placeholder {
+    color: #64748b !important; /* Visible placeholders */
+}
+
+/* 6. Fix for GitHub Repo Names and Descriptions */
+body.dark-mode .repo-name, 
+body.dark-mode .repo-description {
+    color: #f1f5f9 !important;
+}
+
+/* Specific fix for Tags/Badges in Dark Mode */
+body.dark-mode .badge, 
+body.dark-mode .tag,
+body.dark-mode .label {
+    background-color: #334155 !important; /* Slate background */
+    color: #0dcaf0 !important; /* Cyan text to match your brand */
+    border: 1px solid #475569 !important;
+}
+
+/* If you want the "Pill" tags to look different */
+body.dark-mode .rounded-pill {
+    background-color: rgba(13, 202, 240, 0.1) !important; /* Subtle cyan tint */
+    color: #0dcaf0 !important;
+}
+
+/* Ensure icons INSIDE tags are also cyan */
+body.dark-mode .tag i, 
+body.dark-mode .badge i {
+    color: #0dcaf0 !important;
+}
+
+/* This targets EVERYTHING that looks like an input box */
+body.dark-mode input, 
+body.dark-mode .form-control, 
+body.dark-mode [contenteditable="true"],
+body.dark-mode .comment-input,
+body.dark-mode .post-input {
+    background-color: #1e293b !important; /* Dark Slate */
+    background: #1e293b !important;      /* Extra backup */
+    color: #ffffff !important;           /* White text */
+    border: 1px solid #334155 !important;
+}
+
+/* This fixes the text you type and the placeholder text */
+body.dark-mode input::placeholder {
+    color: #94a3b8 !important;
+}
+
+/* This fixes the "Join the discussion" container if it's a div */
+body.dark-mode .input-group,
+body.dark-mode .input-container {
+    background-color: transparent !important;
+}
+
+/* This targets every single input and textarea on the page with maximum priority */
+body.dark-mode input.form-control,
+body.dark-mode textarea.form-control,
+body.dark-mode .input-group-text,
+body.dark-mode [type="text"],
+body.dark-mode [type="search"] {
+    background-color: #1e293b !important;
+    background: #1e293b !important;
+    color: #ffffff !important;
+    border: 1px solid #334155 !important;
+}
+
+/* Fix for the white containers that wrap the inputs */
+body.dark-mode .input-group,
+body.dark-mode .bg-white {
+    background-color: transparent !important;
+    background: transparent !important;
+}
+
+/* This fixes the text you type and the "Join the discussion" placeholder */
+body.dark-mode input::placeholder,
+body.dark-mode textarea::placeholder {
+    color: #94a3b8 !important;
+}
+
+/* --- FINAL DARK MODE INPUT CORRECTION --- */
+body.dark-mode .fake-input,
+body.dark-mode .comment-input-field,
+body.dark-mode #commentInput,
+body.dark-mode .form-control {
+    background-color: #1e293b !important; /* Dark Slate */
+    color: #ffffff !important;           /* White text */
+    border: 1px solid #334155 !important;
+}
+
+body.dark-mode .fake-input:hover {
+    background-color: #334155 !important;
+}
+
+body.dark-mode input::placeholder,
+body.dark-mode textarea::placeholder {
+    color: #94a3b8 !important; /* Visible placeholder */
+}
+
+/* --- DARK MODE CONTAINER FIX --- */
+
+/* This targets the large white boxes around the comments/inputs */
+body.dark-mode .card-body, 
+body.dark-mode .comment-thread-container,
+body.dark-mode .bg-white,
+body.dark-mode .input-group {
+    background-color: #1e293b !important; /* Match the card color */
+    background: #1e293b !important;
+    border-color: #334155 !important;
+}
+
+/* Fix for the white footer area if you have one */
+body.dark-mode .card-footer {
+    background-color: #0f172a !important;
+    border-top: 1px solid #334155 !important;
+}
+
+/* Ensure the "Post a tutorial" bar also turns dark */
+body.dark-mode .fake-input {
+    background-color: #0f172a !important;
+    color: #ffffff !important;
+    border: 1px solid #334155 !important;
+}
+
+/* Fix for the Notification Dropdown Parts */
+body.dark-mode .dropdown-header-container,
+body.dark-mode .notification-footer {
+    background-color: #1e293b !important;
+    border-color: #334155 !important;
+}
+
+/* Fix for the Post Bar background */
+body.dark-mode .fake-input {
+    background-color: #1e293b !important;
+    border: 1px solid #334155 !important;
+    color: #94a3b8 !important;
+}
+
+/* Fix for the main feed container */
+body.dark-mode .fb-card {
+    background-color: #1e293b !important;
+}
+
+/* This targets EVERYTHING that could be making it dark */
+body.dark-mode .settings-card,
+body.dark-mode .settings-card:first-child,
+.settings-card {
+    background: transparent !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+}
+
+/* This forces the blue/teal hover only when you actually hover */
+body.dark-mode .settings-card:hover,
+.settings-card:hover {
+    border: 1px solid #00d2ff !important; /* Adjust to your exact blue */
+    background-color: rgba(0, 210, 255, 0.1) !important;
+}
+
+/* --- COMMENT AREA THEME FIX --- */
+.comment-area {
+    background-color: rgba(0, 0, 0, 0.04);
+    border: 1px solid var(--border-soft);
+}
+
+body.dark-mode .comment-area {
+    background-color: #0f172a !important;
+    border: 1px solid #334155 !important;
+}
+
+/* Ensure the send button inside comment area matches */
+body.dark-mode .comment-area .btn-success {
+    background-color: var(--nexus-teal) !important;
+    border-color: var(--nexus-teal) !important;
+}
+
+/* ===== MOBILE BOTTOM NAVIGATION BAR – ADDED ===== */
+@media (max-width: 991px) {
+    .sidebar-left {
+        position: fixed !important;
+        bottom: 0 !important;
+        top: auto !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 65px !important;
+        flex-direction: row !important;
+        justify-content: space-around !important;
+        align-items: center !important;
+        background: var(--nexus-card-white, #ffffff) !important;
+        border-top: 1px solid var(--border-soft, rgba(0,0,0,0.1)) !important;
+        border-right: none !important;
+        padding: 0 10px !important;
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.05) !important;
+    }
+
+    body.dark-mode .sidebar-left {
+        background: #1e293b !important;
+        border-top-color: #334155 !important;
+    }
+
+    .sidebar-left .fb-icon-item {
+        width: auto !important;
+        height: auto !important;
+        margin-bottom: 0 !important;
+        padding: 8px 12px !important;
+    }
+
+    .sidebar-left .fb-icon-item span,
+    .sidebar-left .fb-icon-item .label-text {
+        display: none !important;
+    }
+
+    .sidebar-left .fb-icon-item i {
+        font-size: 1.6rem !important;
+    }
+
+    .sidebar-left .fb-icon-item.active-link {
+        background: transparent !important;
+        position: relative;
+    }
+    .sidebar-left .fb-icon-item.active-link i {
+        color: var(--nexus-cyan, #4ecdc4) !important;
+    }
+
+    .sidebar-left .mt-auto {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .container-fluid.flex-grow-1,
+    .feed-area,
+    main,
+    .main-content-wrapper {
+        padding-bottom: 80px !important;
+    }
+
+    .row.g-0,
+    .row {
+        margin-bottom: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .sidebar-left {
+        height: 58px !important;
+    }
+    .sidebar-left .fb-icon-item i {
+        font-size: 1.4rem !important;
+    }
 }

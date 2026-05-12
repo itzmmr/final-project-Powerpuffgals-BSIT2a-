@@ -603,28 +603,27 @@ async function loadGitHubPortfolio(username) {
             return;
         }
 
-        // PRESERVED: Your exact HTML mapping and styling
-        container.innerHTML = posts.map(post => `
+       container.innerHTML = posts.map(post => `
             <div class="row">
                 <div class="col-12">
-                    <div class="post-card mb-5 shadow-sm p-4" style="background: #fff; border-radius: 20px; border-left: 8px solid #1a535c;">
+                    <div class="profile-post-card">
                         <div class="d-flex justify-content-between mb-3">
-                            <h5 class="fw-bold" style="color: #1a535c;">${post.title}</h5>
-                            <span class="badge" style="background: #5b6d5b;">${post.category || 'Web Development'}</span>
+                            <h5 class="post-title">${post.title}</h5>
+                            <span class="badge profile-post-badge">${post.category || 'Web Development'}</span>
                         </div>
 
-                        <p class="text-secondary mb-3">${post.content}</p>
+                        <p class="post-body">${post.content}</p>
 
                         ${post.image ? `
-                            <div class="bg-light p-2 rounded-3 mb-3"> 
+                            <div class="post-image-wrapper"> 
                                 <img src="${post.image}" class="img-fluid rounded" 
                                      style="width: 100%; object-fit: cover; max-height: 450px;">
                             </div>` 
                         : ''}
 
-                        <div class="d-flex gap-3 pt-3 border-top">
-                            <small class="text-muted"><i class="fas fa-heart text-danger"></i> ${post.likes?.length || 0}</small>
-                            <small class="text-muted"><i class="fas fa-comment text-success"></i> ${post.comments?.length || 0}</small>
+                        <div class="d-flex gap-3 post-meta">
+                            <small><i class="fas fa-heart text-danger"></i> ${post.likes?.length || 0}</small>
+                            <small><i class="fas fa-comment text-success"></i> ${post.comments?.length || 0}</small>
                         </div>
                     </div>
                 </div>
@@ -720,3 +719,20 @@ const updatedData = {
         alert("Server error. Please ensure your backend is running.");
     }
 }
+
+function applyGlobalTheme() {
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    if (savedTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        document.body.setAttribute('data-theme', 'dark'); // Double insurance
+    } else {
+        document.documentElement.removeAttribute('data-theme');
+        document.body.removeAttribute('data-theme');
+    }
+}
+
+// Run immediately to prevent "white flash" on load
+applyGlobalTheme();
+
+// Also run on DOMContentLoaded to catch dynamic elements
+document.addEventListener('DOMContentLoaded', applyGlobalTheme);

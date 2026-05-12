@@ -1,3 +1,58 @@
+/* ===== UNIFIED SIDEBAR (DESKTOP) ===== */
+.sidebar-left {
+    position: fixed !important;
+    top: 80px !important;
+    left: 0 !important;
+    width: 80px !important;
+    height: calc(100vh - 80px) !important;
+    background: var(--nexus-card-white, #ffffff) !important;
+    border-right: 1px solid var(--border-soft, rgba(0,0,0,0.08)) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    padding-top: 30px !important;
+    z-index: 1000 !important;
+    box-shadow: none !important;
+}
+
+.sidebar-left .fb-icon-item {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 50px !important;
+    height: 50px !important;
+    margin-bottom: 20px !important;
+    background: transparent !important;
+    border: none !important;
+    border-radius: 12px !important;
+    transition: all 0.2s ease;
+}
+
+.sidebar-left .fb-icon-item i {
+    font-size: 1.5rem !important;
+    color: var(--nexus-teal, #1a535c) !important;
+    margin: 0 !important;
+}
+
+.sidebar-left .fb-icon-item:hover i,
+.sidebar-left .fb-icon-item.active-link i {
+    color: var(--nexus-cyan, #4ecdc4) !important;
+}
+
+.sidebar-left .fb-icon-item.active-link {
+    background: rgba(78, 205, 196, 0.15) !important;
+}
+
+.sidebar-left .mt-auto {
+    margin-top: auto !important;
+    margin-bottom: 30px !important;
+}
+
+body.dark-mode .sidebar-left {
+    background: #0f172a !important;
+    border-right-color: #1e293b !important;
+}
+
 /* homesearch.css - NESTED DASHBOARD SYNCED & FULLY UPDATED */
 :root {
     --nexus-teal: #1a535c; 
@@ -8,7 +63,6 @@
     --text-muted: #64748b;
     --border-soft: rgba(78, 205, 196, 0.2);
     --header-footer-bg: #1a535c;
-    /* Forest and Stone Palette */
     --forest-moss: #3e4f3f;
     --stone-taupe: #d7ccc8;
 }
@@ -41,7 +95,6 @@ body.dark-mode h3 {
     color: var(--nexus-cyan) !important;
 }
 
-/* Visibility fixes for dark mode text */
 body.dark-mode .text-muted, 
 body.dark-mode .small,
 body.dark-mode .interaction-btn span {
@@ -205,7 +258,7 @@ body.dark-mode .action-btn {
 .action-btn.text-success { color: #22c55e !important; }
 .action-btn.text-danger { color: #ef4444 !important; }
 
-/* --- NESTED DASHBOARD INPUT SYNC (GREEN BUTTON STYLE) --- */
+/* --- INPUT GROUP --- */
 .input-group {
     display: flex !important;
     width: 100% !important;
@@ -213,13 +266,13 @@ body.dark-mode .action-btn {
     background: transparent !important;
     border: none !important;
     gap: 0 !important;
-    flex-wrap: nowrap !important; /* Prevents button from jumping to next line[cite: 17] */
+    flex-wrap: nowrap !important;
 }
 
 .comment-input-field {
     flex: 1 !important;
     background-color: #ffffff !important;
-    color: #1e293b !important; /* Ensures text is dark and visible[cite: 17] */
+    color: #1e293b !important;
     border: 2px solid #2dd4bf !important;
     border-right: none !important; 
     padding: 10px 15px !important;
@@ -228,18 +281,17 @@ body.dark-mode .action-btn {
     border-top-right-radius: 0 !important;
     border-bottom-right-radius: 0 !important;
     outline: none !important;
-    min-width: 0; /* Prevents overflow hiding the button[cite: 17] */
+    min-width: 0;
 }
 
 body.dark-mode .comment-input-field {
     background-color: #ffffff !important; 
-    color: #1e293b !important; /* Forces visible text even in dark mode[cite: 17] */
+    color: #1e293b !important;
 }
 
-/* Fixed both the general send button and specific modal button to match image */
 .btn-send-comment, 
 #modal-comment-submit-btn {
-    background-color: #198754 !important; /* Success Green[cite: 17] */
+    background-color: #198754 !important;
     color: white !important;
     border: 2px solid #2dd4bf !important;
     border-left: none !important; 
@@ -247,13 +299,13 @@ body.dark-mode .comment-input-field {
     border-bottom-right-radius: 12px !important;
     border-top-left-radius: 0 !important;
     border-bottom-left-radius: 0 !important;
-    padding: 0 25px !important; /* Ensures button is fuller and visible[cite: 17] */
+    padding: 0 25px !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
     transition: background-color 0.2s;
     cursor: pointer !important;
-    min-width: 60px !important; /* Prevents button disappearance[cite: 17] */
+    min-width: 60px !important;
 }
 
 .btn-send-comment:hover, 
@@ -261,31 +313,29 @@ body.dark-mode .comment-input-field {
     background-color: #146c43 !important;
 }
 
-/* Modal Header Fix */
 body.dark-mode .modal-header .btn-close {
     filter: invert(1) grayscale(100%) brightness(200%);
 }
 
 #modal-comment-submit-btn {
     z-index: 10 !important;
-    display: flex !important; /* Forces it to stay visible */
+    display: flex !important;
     align-items: center;
     justify-content: center;
 }
 
-/* The main container */
+/* Pill comment input */
 .comment-pill-container {
     display: flex;
-    align-items: stretch; /* This makes the button full height */
+    align-items: stretch;
     border: 2px solid #2dd4bf !important;
-    border-radius: 12px !important; /* This creates the rounded-rectangle look instead of an oval */
+    border-radius: 12px !important;
     background-color: white;
-    overflow: hidden; /* This clips the button corners to match the container */
+    overflow: hidden;
     height: 45px; 
     width: 100%;
 }
 
-/* The Input field */
 .comment-pill-input {
     flex: 1;
     border: none !important;
@@ -295,12 +345,11 @@ body.dark-mode .modal-header .btn-close {
     font-size: 0.95rem;
 }
 
-/* The Button - Made to match the top one exactly */
 .comment-pill-button {
-    background-color: #1a8a70 !important; /* Matching that darker forest green */
+    background-color: #1a8a70 !important;
     color: white !important;
     border: none !important;
-    border-radius: 0 !important; /* Let the container's overflow:hidden handle the rounding */
+    border-radius: 0 !important;
     width: 65px;
     display: flex;
     align-items: center;
@@ -308,18 +357,245 @@ body.dark-mode .modal-header .btn-close {
     cursor: pointer;
 }
 
-/* Optional: Slight hover effect */
 .comment-pill-button:hover {
     background-color: #15735d !important;
 }
 
-/* Force the grey backdrop to vanish when the modal is closed */
 body:not(.modal-open) .modal-backdrop {
     display: none !important;
 }
 
-/* Ensure you can click your search bar again */
 body:not(.modal-open) {
     overflow: auto !important;
     pointer-events: auto !important;
+}
+
+/* ===== MOBILE BOTTOM NAV ===== */
+@media (max-width: 991px) {
+    .sidebar-left {
+        position: fixed !important;
+        bottom: 0 !important;
+        top: auto !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 65px !important;
+        flex-direction: row !important;
+        justify-content: space-around !important;
+        align-items: center !important;
+        background: var(--nexus-card-white, #ffffff) !important;
+        border-top: 1px solid var(--border-soft, rgba(0,0,0,0.1)) !important;
+        border-right: none !important;
+        padding: 0 10px !important;
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.05) !important;
+    }
+
+    body.dark-mode .sidebar-left {
+        background: #1e293b !important;
+        border-top-color: #334155 !important;
+    }
+
+    .sidebar-left .fb-icon-item {
+        width: auto !important;
+        height: auto !important;
+        margin-bottom: 0 !important;
+        padding: 8px 12px !important;
+    }
+
+    .sidebar-left .fb-icon-item span,
+    .sidebar-left .fb-icon-item .label-text {
+        display: none !important;
+    }
+
+    .sidebar-left .fb-icon-item i {
+        font-size: 1.6rem !important;
+    }
+
+    .sidebar-left .fb-icon-item.active-link {
+        background: transparent !important;
+        position: relative;
+    }
+    .sidebar-left .fb-icon-item.active-link i {
+        color: var(--nexus-cyan, #4ecdc4) !important;
+    }
+
+    .sidebar-left .mt-auto {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .container-fluid.flex-grow-1,
+    .feed-area,
+    main,
+    .main-content-wrapper {
+        padding-bottom: 80px !important;
+    }
+
+    .row.g-0,
+    .row {
+        margin-bottom: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .sidebar-left {
+        height: 58px !important;
+    }
+    .sidebar-left .fb-icon-item i {
+        font-size: 1.4rem !important;
+    }
+}
+
+/* ============================================================
+   THEME-AWARE POST CARD CLASSES (replaces inline styles in JS)
+   ============================================================ */
+
+.post-category-badge {
+    background-color: #4ecdc4 !important;
+    color: #1a535c !important;
+    font-size: 0.75rem;
+}
+
+.post-card-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.5rem;
+    line-height: 1.3;
+    color: var(--text-dark);
+}
+
+.card-tag {
+    color: var(--text-muted);
+}
+
+.post-card-desc {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: var(--text-muted);
+}
+
+.post-card-meta {
+    color: var(--text-muted);
+    border-top-color: var(--border-soft) !important;
+}
+
+/* Modal base – theme-aware */
+.modal-content {
+    background-color: var(--nexus-card-white);
+    color: var(--text-dark);
+}
+
+/* Modal tag badges */
+.modal-tag-badge {
+    background-color: #e2e8f0;
+    color: #1e293b;
+    border: 1px solid #cbd5e1;
+}
+
+/* Dark mode overrides */
+body.dark-mode .post-card-title {
+    color: var(--nexus-cyan) !important;
+}
+
+body.dark-mode .card-tag,
+body.dark-mode .post-card-desc,
+body.dark-mode .post-card-meta {
+    color: #94a3b8 !important;
+}
+
+body.dark-mode .post-card-meta {
+    border-top-color: #334155 !important;
+}
+
+body.dark-mode .modal-content {
+    background-color: #1e293b !important;
+    color: #f8fafc !important;
+}
+
+body.dark-mode .modal-tag-badge {
+    background-color: #334155 !important;
+    color: #e2e8f0 !important;
+    border-color: #475569 !important;
+}
+
+/* ============================================================
+   DARK MODE VISIBILITY FIXES
+   ============================================================ */
+
+body.dark-mode .tab-scroller {
+    background-color: #1e293b !important;
+    border-bottom: 1px solid #334155 !important;
+}
+
+body.dark-mode .search-tab {
+    color: #94a3b8 !important;
+}
+
+body.dark-mode .search-tab.active {
+    color: #4ecdc4 !important;
+    border-bottom-color: #4ecdc4 !important;
+}
+
+body.dark-mode .search-tab:hover {
+    color: #f8fafc !important;
+}
+
+body.dark-mode .search-input-container {
+    background-color: #1e293b !important;
+    border: 1px solid #334155 !important;
+}
+
+body.dark-mode .search-input-container input {
+    background-color: transparent !important;
+    color: #ffffff !important;
+}
+
+body.dark-mode .search-input-container input::placeholder {
+    color: #64748b !important;
+}
+
+body.dark-mode .search-mute {
+    color: #64748b !important;
+}
+
+body.dark-mode .clear-x {
+    color: #94a3b8 !important;
+}
+
+body.dark-mode .suggestion-floating-box {
+    background-color: #1e293b !important;
+    border: 1px solid #334155 !important;
+    color: #f8fafc !important;
+}
+
+body.dark-mode .suggestion-floating-box .suggestion-item,
+body.dark-mode .suggestion-floating-box div {
+    color: #f8fafc !important;
+}
+
+body.dark-mode .suggestion-floating-box .suggestion-item:hover {
+    background-color: rgba(78, 205, 196, 0.1) !important;
+}
+
+body.dark-mode .search-post-card {
+    background-color: #1e293b !important;
+    color: #f8fafc !important;
+}
+
+body.dark-mode .search-post-card h5,
+body.dark-mode .search-post-card h6,
+body.dark-mode .search-post-card p,
+body.dark-mode .search-post-card span {
+    color: #f8fafc !important;
+}
+
+body.dark-mode .search-post-card .text-muted {
+    color: #94a3b8 !important;
+}
+
+body.dark-mode #modalPostContent,
+body.dark-mode #modalPostTags {
+    color: #94a3b8 !important;
+}
+
+body.dark-mode .modal-content .text-dark {
+    color: #f8fafc !important;
 }

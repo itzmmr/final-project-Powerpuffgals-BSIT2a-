@@ -4,10 +4,120 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Settings | NEXUSWrites</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="manifest" href="manifest.json">
+
+<meta name="theme-color" content="#1a535c">
+
+<link rel="apple-touch-icon" href="images/icon-192.png">
+
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet"  href="styles/settings.css">
+
+<style>
+/* ===== NEXUS SIDEBAR – FORCED CONSISTENT ===== */
+:root {
+    --nexus-teal: #1a535c;
+    --nexus-cyan: #4ecdc4;
+    --nexus-card-white: #ffffff;
+    --border-soft: rgba(78, 205, 196, 0.2);
+}
+.sidebar-left {
+    position: fixed !important;
+    top: 80px !important;
+    left: 0 !important;
+    width: 80px !important;
+    height: calc(100vh - 80px) !important;
+    background: var(--nexus-card-white, #ffffff) !important;
+    border-right: 1px solid var(--border-soft, rgba(0,0,0,0.08)) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    padding: 30px 0 0 0 !important;
+    z-index: 1000 !important;
+    box-shadow: none !important;
+}
+.sidebar-left .fb-icon-item {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 50px !important;
+    height: 50px !important;
+    margin-bottom: 20px !important;
+    background: transparent !important;
+    border: none !important;
+    border-right: none !important;
+    border-radius: 12px !important;
+    text-decoration: none !important;
+    transition: all 0.2s ease;
+    padding: 0 !important;
+}
+.sidebar-left .fb-icon-item i {
+    font-size: 1.5rem !important;
+    color: var(--nexus-teal, #1a535c) !important;
+    margin: 0 !important;
+    width: auto !important;
+}
+.sidebar-left .fb-icon-item:hover,
+.sidebar-left .fb-icon-item:hover i {
+    color: var(--nexus-cyan, #4ecdc4) !important;
+    background: rgba(78, 205, 196, 0.15) !important;
+}
+.sidebar-left .fb-icon-item.active-link {
+    background: rgba(78, 205, 196, 0.15) !important;
+}
+.sidebar-left .fb-icon-item.active-link i {
+    color: var(--nexus-cyan, #4ecdc4) !important;
+}
+.sidebar-left .mt-auto {
+    margin-top: auto !important;
+    margin-bottom: 30px !important;
+}
+body.dark-mode .sidebar-left {
+    background: #0f172a !important;
+    border-right-color: #1e293b !important;
+}
+body.dark-mode .sidebar-left .fb-icon-item i {
+    color: var(--nexus-cyan, #4ecdc4) !important;
+}
+@media (max-width: 991px) {
+    .sidebar-left {
+        position: fixed !important;
+        bottom: 0 !important;
+        top: auto !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 65px !important;
+        flex-direction: row !important;
+        justify-content: space-around !important;
+        align-items: center !important;
+        padding: 0 10px !important;
+        border-right: none !important;
+        border-top: 1px solid var(--border-soft) !important;
+    }
+    .sidebar-left .fb-icon-item {
+        width: auto !important;
+        height: auto !important;
+        margin-bottom: 0 !important;
+        padding: 8px 12px !important;
+    }
+    .sidebar-left .fb-icon-item i {
+        font-size: 1.6rem !important;
+    }
+    .sidebar-left .mt-auto {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+}
+@media (max-width: 480px) {
+    .sidebar-left { height: 58px !important; }
+    .sidebar-left .fb-icon-item i { font-size: 1.4rem !important; }
+}
+</style>
 </head>
 <body id="mainBody">
 
@@ -45,23 +155,20 @@
         <div class="row">
             <div class="col-lg-3">
                 <aside class="sidebar-left">
-                    <div class="search-wrapper mb-4 d-flex align-items-center">
-    <a href="homesearch.html" style="text-decoration: none; display: flex; width: 100%; align-items: center; color: inherit;">
-        <i class="fas fa-search text-muted me-2"></i>
-        <input type="search" class="form-control border-0 shadow-none p-0 bg-transparent" id="sidebarSearchInput" autocomplete="one-time-code" placeholder="Search tutorials..." readonly style="cursor: pointer;">
+    <a href="homesearch.html" class="fb-icon-item">
+        <i class="fas fa-search"></i>
     </a>
-</div>
-                    <a href="dashboard.html" class="fb-icon-item"><i class="fas fa-home"></i><span>Home</span></a>
-                    <a href="following.html" class="fb-icon-item"><i class="fas fa-user-check"></i><span>Following</span></a>
-                    <a href="github.html" class="fb-icon-item"><i class="fab fa-github"></i><span>GitHub</span></a>
-                    <a href="settings.html" class="fb-icon-item active-link"><i class="fas fa-sliders-h"></i><span>Settings</span></a>
 
-                    <div class="flex-grow-5"></div>
-                                    
-        <a href="javascript:void(0)" class="fb-icon-item mt-auto" onclick="logout()">
-        <i class="fas fa-sign-out-alt"></i>
-        <span data-key="logout">Logout</span>
-    </a>
+    <a href="dashboard.html" class="fb-icon-item"><i class="fas fa-home"></i></a>
+    <a href="following.html" class="fb-icon-item"><i class="fas fa-user-check"></i></a>
+    <a href="github.html" class="fb-icon-item"><i class="fab fa-github"></i></a>
+    <a href="settings.html" class="fb-icon-item active-link"><i class="fas fa-sliders-h"></i></a>
+
+    <div class="mt-auto">
+        <a href="javascript:void(0)" class="fb-icon-item" onclick="showLogoutModal()">
+            <i class="fas fa-sign-out-alt"></i>
+        </a>
+    </div>
 </aside>
             </div>
 
@@ -218,35 +325,26 @@
     </div>
 </div>
 
-  </div></div></div></div><div></div></div>
+  </div></div>
 
-    <footer class="custom-footer text-center text-white">
-        <div class="container">
-            <span class="nexus-brand">NEXUS</span><span class="writes-brand">Writes</span>
-            <p class="footer-text">© 2026 NEXUSWrites. Your Tech. Your Story.</p>
-        </div>
-    </footer>
-
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="js/settings.js"></script>
+<!-- Profile Update Status Modal -->
 <div class="modal fade" id="statusModal" tabindex="-1" aria-labelledby="statusTitle" aria-hidden="true" role="dialog">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content bg-dark text-white border-soft shadow-lg" style="border-radius: 1.5rem;">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 1.5rem; overflow: hidden;">
             <div class="modal-body text-center p-5">
-                <div class="mb-4">
+                <div class="mb-3">
                     <i id="statusIcon" class="fas" style="font-size: 3rem;"></i>
                 </div>
-                <h4 id="statusTitle" class="fw-bold mb-3"></h4>
-                <p id="statusText" class="text-muted mb-4"></p>
-                
-                <button type="button" class="btn btn-nexus w-100 rounded-pill py-2" data-bs-dismiss="modal">Close</button>
+                <h4 id="statusTitle" class="fw-bold mb-2"></h4>
+                <p id="statusText" class="text-muted mb-4" style="font-size: 0.95rem;"></p>
+                <button type="button" class="btn btn-nexus w-100 rounded-pill py-2 fw-semibold" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
 </div>
-        </div>
-    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/settings.js"></script>
 
     <div class="modal fade" id="editProfileModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -309,16 +407,16 @@
                             <label class="form-label fw-bold small">INTERESTS / TECH STACK</label>
                             <div class="interest-box">
                                 <div class="row g-2">
-                                    <div class="col-6"><label class="small"><input type="checkbox" name="editInterest" value="Web Systems"> Web Systems</label></div>
-                                    <div class="col-6"><label class="small"><input type="checkbox" name="editInterest" value="AI & ML"> AI & ML</label></div>
-                                    <div class="col-6"><label class="small"><input type="checkbox" name="editInterest" value="Cybersecurity"> Cybersecurity</label></div>
-                                    <div class="col-6"><label class="small"><input type="checkbox" name="editInterest" value="Cloud Computing"> Cloud Tech</label></div>
-                                    <div class="col-6"><label class="small"><input type="checkbox" name="editInterest" value="Data Analytics"> Data Analytics</label></div>
-                                    <div class="col-6"><label class="small"><input type="checkbox" name="editInterest" value="DevOps"> DevOps</label></div>
-                                    <div class="col-6"><label class="small"><input type="checkbox" name="editInterest" value="IoT Systems"> IoT Systems</label></div>
-                                    <div class="col-6"><label class="small"><input type="checkbox" name="editInterest" value="Blockchain"> Blockchain</label></div>
-                                    <div class="col-6"><label class="small"><input type="checkbox" name="editInterest" value="Game Development"> Game Dev</label></div>
-                                    <div class="col-6"><label class="small"><input type="checkbox" name="editInterest" value="Open Source"> Open Source</label></div>
+                                    <div class="col-12 col-sm-6"><label class="small"><input type="checkbox" name="editInterest" value="Web Systems"> Web Systems</label></div>
+                                    <div class="col-12 col-sm-6"><label class="small"><input type="checkbox" name="editInterest" value="AI & ML"> AI & ML</label></div>
+                                    <div class="col-12 col-sm-6"><label class="small"><input type="checkbox" name="editInterest" value="Cybersecurity"> Cybersecurity</label></div>
+                                    <div class="col-12 col-sm-6"><label class="small"><input type="checkbox" name="editInterest" value="Cloud Computing"> Cloud Tech</label></div>
+                                    <div class="col-12 col-sm-6"><label class="small"><input type="checkbox" name="editInterest" value="Data Analytics"> Data Analytics</label></div>
+                                    <div class="col-12 col-sm-6"><label class="small"><input type="checkbox" name="editInterest" value="DevOps"> DevOps</label></div>
+                                    <div class="col-12 col-sm-6"><label class="small"><input type="checkbox" name="editInterest" value="IoT Systems"> IoT Systems</label></div>
+                                    <div class="col-12 col-sm-6"><label class="small"><input type="checkbox" name="editInterest" value="Blockchain"> Blockchain</label></div>
+                                    <div class="col-12 col-sm-6"><label class="small"><input type="checkbox" name="editInterest" value="Game Development"> Game Dev</label></div>
+                                    <div class="col-12 col-sm-6"><label class="small"><input type="checkbox" name="editInterest" value="Open Source"> Open Source</label></div>
                                 </div>
                             </div>
                             <input type="text" id="editInterestOther" class="form-control mt-2" placeholder="Other interest? (e.g. Robotics)">
@@ -333,6 +431,39 @@
         </div>
     </div>
     
+<script src="js/app.js"></script>
 
+<!-- Logout Confirmation Modal -->
+<div class="modal fade" id="nexusLogoutModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" style="max-width: 360px;">
+    <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+      <div class="modal-header border-0 px-4 py-3 d-flex align-items-center justify-content-between" style="background-color: #1a535c;">
+        <div class="d-flex align-items-center gap-2">
+          <i class="fas fa-sign-out-alt" style="color: #fff; font-size: 1rem;"></i>
+          <span class="fw-bold text-white" style="font-family: 'Montserrat', sans-serif; font-size: 1rem;">Log Out</span>
+        </div>
+        <button type="button" class="btn p-0 lh-1" data-bs-dismiss="modal" style="color: #ffffffaa; font-size: 1.3rem; background: none; border: none;">&times;</button>
+      </div>
+      <div class="modal-body px-4 py-4 text-center" style="background: #fff;">
+        <p class="mb-0 text-dark" style="font-size: 0.95rem; font-family: 'Inter', sans-serif; line-height: 1.5;">
+          Are you sure you want to log out of <strong>NEXUSWrites</strong>?
+        </p>
+      </div>
+      <div class="modal-footer border-0 px-4 pb-4 pt-0 d-flex gap-2 justify-content-center" style="background: #fff;">
+        <button type="button" class="btn btn-outline-secondary px-4 rounded-3" data-bs-dismiss="modal"
+                style="font-family: 'Inter', sans-serif; font-size: 0.875rem;">Cancel</button>
+        <button type="button" class="btn px-4 rounded-3 text-white" onclick="logoutUser()"
+                style="background-color: #1a535c; font-family: 'Inter', sans-serif; font-size: 0.875rem;">
+          <i class="fas fa-sign-out-alt me-1"></i> Log Out
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  function showLogoutModal() {
+    new bootstrap.Modal(document.getElementById("nexusLogoutModal")).show();
+  }
+</script>
 </body>
 </html>
