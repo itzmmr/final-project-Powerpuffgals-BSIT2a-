@@ -52,7 +52,14 @@ function openPostModal() {
 }
 
 async function handlePostSubmit() {
-    const user = JSON.parse(localStorage.getItem('nexusUser'));
+    // 1. Get user and check if they exist to avoid "cannot read property token of null"
+    const userData = localStorage.getItem('nexusUser');
+    if (!userData) {
+        alert("You must be logged in to post.");
+        return;
+    }
+    
+    const user = JSON.parse(userData);
     const title = document.getElementById('postTitle').value;
     const content = document.getElementById('postContent').value;
     const tagsInput = document.getElementById('postTags').value; 
@@ -62,8 +69,9 @@ async function handlePostSubmit() {
 
     // Convert string to array for hashtag support
     const tagsArray = tagsInput.split(',').map(tag => tag.trim()).filter(tag => tag !== "");
-
     const category = categorySelect === "OTHER" ? categoryCustom : categorySelect;
+
+    // 2. Prepare FormData
     const formData = new FormData();
     formData.append('title', title);
     formData.append('content', content);
@@ -75,18 +83,30 @@ async function handlePostSubmit() {
     if (imageFile) formData.append('image', imageFile);
 
     try {
-        const response = await fetch('http://localhost:5000/api/posts', {
+        const response = await fetch('https://final-project-powerpuffgals-bsit2a.onrender.com/api/posts', {
             method: 'POST',
-            headers: { 'Authorization': `Bearer ${user.token}` },
+            headers: { 
+                // Ensure there is a space after Bearer and the token exists
+                'Authorization': `Bearer ${user.token}` 
+                // NOTE: DO NOT add 'Content-Type': 'multipart/form-data' here. 
+                // Browser handles it automatically for FormData.
+            },
             body: formData
         });
+
         if (response.ok) {
             location.reload();
         } else {
             const err = await response.json();
+            // If the backend says "malformed", the token string in localStorage might be corrupted
             alert(err.message || "Failed to publish tutorial");
+            
+            if (err.message.includes("token") || response.status === 401) {
+                console.error("Token Issue. Check localStorage 'nexusUser' structure.");
+            }
         }
     } catch (err) {
+        console.error("Fetch error:", err);
         alert("Connection error while posting.");
     }
 }
@@ -175,7 +195,7 @@ async function submitReply(postId, targetId) {
     if (!input || !input.value.trim() || !user?.token) return;
 
     try {
-        const response = await fetch(`http://localhost:5000/api/posts/${postId}/comment/${targetId}/reply`, {
+        const response = await fetch(`https://final-project-powerpuffgals-bsit2a.onrender.com/api/posts/${postId}/comment/${targetId}/reply`, {
             method: 'POST',
             headers: { 
                 'Content-Type': 'application/json',
@@ -198,7 +218,7 @@ async function toggleCommentLike(postId, targetId) {
     if (!user?.token) return alert("Log in first!");
 
     try {
-        const response = await fetch(`http://localhost:5000/api/posts/${postId}/comment/${targetId}/like`, {
+        const response = await fetch(`https://final-project-powerpuffgals-bsit2a.onrender.com/api/posts/${postId}/comment/${targetId}/like`, {
             method: 'PUT',
             headers: { 
                 'Authorization': `Bearer ${user.token}`,
@@ -220,7 +240,7 @@ async function handleFollowAction(targetId) {
     }
 
     try {
-        const response = await fetch(`http://localhost:5000/api/users/follow/${targetId}`, {
+        const response = await fetch(`https://final-project-powerpuffgals-bsit2a.onrender.com/api/users/follow/${targetId}`, {
             method: 'POST',
             headers: { 
                 'Authorization': `Bearer ${user.token}`,
@@ -287,7 +307,7 @@ async function checkNotifications() {
     if (!token) return;
 
     try {
-        const response = await fetch('http://localhost:5000/api/notifications', {
+        const response = await fetch('https://final-project-powerpuffgals-bsit2a.onrender.com/api/notifications', {
             method: 'GET',
             headers: { 
                 'Authorization': `Bearer ${token}`,
@@ -389,7 +409,7 @@ async function checkNotifications() {
     if (!token) return;
 
     try {
-        const response = await fetch('http://localhost:5000/api/notifications/read', {
+        const response = await fetch('https://final-project-powerpuffgals-bsit2a.onrender.com/api/notifications/read', {
             method: 'PUT',
             headers: { 
                 'Authorization': `Bearer ${token}`,
@@ -502,7 +522,7 @@ if (registerForm)
         };
 
         try {
-            const response = await fetch('http://localhost:5000/api/users', {
+            const response = await fetch('https://final-project-powerpuffgals-bsit2a.onrender.com/api/users', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(signupData)
@@ -550,7 +570,7 @@ if (loginForm)
 
     try {
         // 3. HIT THE REAL BACKEND
-        const response = await fetch('http://localhost:5000/api/users/login', {
+        const response = await fetch('https://final-project-powerpuffgals-bsit2a.onrender.com/api/users/login', {
             method: 'POST',
             headers: { 
                 'Content-Type': 'application/json' 
@@ -614,7 +634,7 @@ if (loginForm)
     }
 
     try {
-        const response = await fetch('http://localhost:5000/api/notifications', {
+        const response = await fetch('https://final-project-powerpuffgals-bsit2a.onrender.com/api/notifications', {
             method: 'GET',
             headers: { 
                 'Authorization': `Bearer ${token}`, 
@@ -717,7 +737,7 @@ if (loginForm)
     if (!token) return;
 
     try {
-        const response = await fetch('http://localhost:5000/api/notifications/read', {
+        const response = await fetch('https://final-project-powerpuffgals-bsit2a.onrender.com/api/notifications/read', {
             method: 'PUT', // Ensure your backend route supports PUT
             headers: { 
                 'Authorization': `Bearer ${token}`,

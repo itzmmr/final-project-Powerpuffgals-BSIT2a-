@@ -1,208 +1,224 @@
-#                                    TEAM POWERPUFFGALS - NEXUSWrites
+# Powerpuffgals – FullStack Web Application
 
+![NEXUSWrites](ttps:/http:/github.com/user-attachments/assets/64bd8b5a-5e71-4890-b7e7-3eb0a42a19a0)
 ---
-
-## Project Description
-
+Project Description
+---
 NEXUSWrites is a full-stack web application developed for students, developers, and technology enthusiasts to publish technical content, showcase projects, and engage in collaborative discussions within a secure and structured digital environment. The platform integrates technical blogging, portfolio presentation, and social interaction features into a centralized system tailored specifically for the IT community.
 
 Designed as more than a traditional blogging platform, NEXUSWrites emphasizes professional knowledge sharing through categorized technical posts, threaded discussions, GitHub portfolio integration, cloud-based media management, and personalized user interaction. The system provides an accessible and responsive experience across desktop and mobile devices while promoting collaborative learning and technical growth.
 
 This project was developed as the Final Laboratory Requirement for IT 112: Web Systems and Technologies at Bicol University Polangui Campus during the Academic Year 2025–2026 by Group Powerpuffgals.
 
+Live Demo Link
 ---
 
-## Live Demo
 
-[NEXUSWrites Live Deployment](https://final-project-powerpuffgals-bsit2a.onrender.com?utm_source=chatgpt.com)
+# Key Features
 
+Secure Authentication & User Management 
+---
+● JWT-based authentication and authorization
+
+● Two-step user registration process
+
+● Server-side age validation (18+ requirement)
+
+● Secure password hashing using Bcrypt.js
+
+● Protected routes and session management
+
+Technical Content Management System
 ---
 
-## Core Features
+● Create, edit, and delete technical tutorials and posts
 
-### Secure Authentication & User Management
+● Categorized content organization
 
-* JWT-based authentication and authorization
-* Two-step user registration process
-* Server-side age validation (18+ requirement)
-* Secure password hashing using Bcrypt.js
-* Protected routes and session management
+● Tag-based filtering and discovery
 
-### Technical Content Management System
+● Rich technical discussion environment
 
-* Create, edit, and delete technical tutorials and posts
-* Categorized content organization
-* Tag-based filtering and discovery
-* Rich technical discussion environment
-* Responsive dashboard interface
+● Responsive dashboard interface
 
-### Cloud-Based Media Integration
-
-* Image uploads powered by Cloudinary
-* Optimized cloud media storage
-* Efficient file handling using Multer middleware
-
-### Nested Discussion System
-
-* Hierarchical threaded comments and replies
-* Structured technical discussions
-* Interactive user engagement system
-* Notification support for replies and interactions
-
-### GitHub Portfolio Integration
-
-* GitHub username synchronization
-* Live repository fetching through GitHub REST API
-* Public technical portfolio display
-* Repository details including language, stars, and descriptions
-
-### Personalized Social Features
-
-* Follow and unfollow functionality
-* Personalized content feed
-* Real-time notification system
-* User profile customization
-
-### Search & Categorization
-
-* Dynamic search functionality
-* Technical category filtering
-* Real-time search suggestions
-* Organized content navigation
-
-### Progressive Web Application (PWA)
-
-* Installable web application support
-* Offline asset caching using service workers
-* Responsive and mobile-friendly interface
-
+Cloud-Based Media Integration
 ---
 
-## Technologies Used
+● Image uploads powered by Cloudinary
 
-### Frontend Technologies
+● Optimized cloud media storage
 
-* HTML5
-* CSS3
-* JavaScript
-* Bootstrap 5.3
-* Font Awesome
-* Google Fonts
+● Efficient file handling using Multer middleware
 
-### Backend Technologies
-
-* Node.js
-* Express.js
-
-### Database Technologies
-
-* MongoDB
-* Mongoose ODM
-
-### Authentication & Security
-
-* JSON Web Token (JWT)
-* Bcrypt.js
-
-### Cloud & Media Services
-
-* Cloudinary
-* Multer
-* multer-storage-cloudinary
-
-### Development & Deployment Tools
-
-* Git & GitHub
-* Visual Studio Code
-* npm
-* Render.com
-
+Nested Discussion System
 ---
 
-## Installation Instructions
+● Hierarchical threaded comments and replies
 
-### 1. Clone the Repository
+● Structured technical discussions
 
-```bash
-git clone https://github.com/your-username/nexuswrites.git
-```
+● Interactive user engagement system
 
-### 2. Navigate to the Backend Directory
+● Notification support for replies and interactions
 
-```bash
-cd backend
-```
+GitHub Portfolio Integration
+---
 
-### 3. Install Required Dependencies
+● GitHub username synchronization
 
-```bash
-npm install
-```
+● Live repository fetching through GitHub REST API
 
-### 4. Configure Environment Variables
+● Public technical portfolio display
 
-Create a `.env` file inside the backend directory and add the following configuration:
+● Repository details including language, stars, and descriptions
 
-```env
-PORT=5000
-MONGO_URI=your_mongodb_atlas_uri
-JWT_SECRET=your_secret_key
+Personalized Social Features
+---
 
-CLOUDINARY_CLOUD_NAME=your_cloud_name
-CLOUDINARY_API_KEY=your_api_key
-CLOUDINARY_API_SECRET=your_api_secret
-```
+● Follow and unfollow functionality
 
-### 5. Start the Development Server
+● Personalized content feed
 
-```bash
-npm start
-```
+● Real-time notification system
 
-### 6. Access the Application
+● User profile customization
+
+Search & Categorization
+---
+
+● Dynamic search functionality
+
+● Technical category filtering
+
+● Real-time search suggestions
+
+● Organized content navigation
+
+Progressive Web Application (PWA)
+---
+
+● Installable web application support
+
+● Offline asset caching using service workers
+
+● Responsive and mobile-friendly interface
+
+# Technologies Used
+
+Frontend Technologies
+---
+
+● HTML
+
+● CSS3
+
+● JavaScript
+
+● Bootstrap 5.3
+
+Backend Technologies
+---
+
+● Node.js
+
+● Express.js
+
+Database Technologies
+---
+
+● MongoDB
+
+● Mongoose 
+
+Authentication & Security
+--- 
+
+● JSON Web Token (JWT)
+
+● Bcrypt.js
+
+Cloud & Media Services
+---
+
+● Cloudinary
+
+● Multer
+
+● multer-storage-cloudinary
+
+Development & Deployment Tools
+---
+
+● Git & GitHub
+
+● Visual Studio Code
+
+● npm
+
+● Render.com
+
+
+# Installation Instructions
+
+1. Clone the Repository
+---
+
+        git clone https://github.com/your-username/nexuswrites.git
+
+2. Navigate to the Backend Directory
+---
+
+        cd backend
+
+3. Install Required Dependencies
+---
+
+        npm install
+
+4. Configure Environment Variables
+---
+
+Create a .env file inside the backend directory and add the following configuration:
+
+        PORT=5000
+
+        MONGO_URI=your_mongodb_atlas_uri
+
+        JWT_SECRET=your_secret_key
+
+
+        CLOUDINARY_CLOUD_NAME=your_cloud_name
+
+        CLOUDINARY_API_KEY=your_api_key
+
+        CLOUDINARY_API_SECRET=your_api_secret
+
+
+5. Start the Development Server
+---
+
+        npm start
+
+6. Access the Application
+---
 
 Open the application in your browser:
 
-```bash
-http://localhost:5000
-```
+    http://localhost:5000
 
+
+# Contributors
+
+Group Powerpuffgals
 ---
 
-## Contributors
+Ivy Angel R. Hidalgo — Backend Developer & Project Manager
 
-### Group Powerpuffgals
+Kris Ann B. Apoon — Frontend Developer
 
-* **Ivy Angel R. Hidalgo** — Backend Developer & Project Manager
-* **Kris Ann B. Apoon** — Frontend Developer
-* **April Grace R. Dacanay** — Documentation & Testing
-* **Princes Mateo** — Database Manager
-* **Milan A. Rellora** — GitHub Manager
+April Grace R. Dacanay — Documentation & Testing
 
----
+Princes Mateo — Database Manager
 
-## Screenshots (Bonus)
+Milan A. Rellora — GitHub Manager
 
-### Homepage
-
-```md
-/screenshots/homepage.png
-```
-
-### User Dashboard
-
-```md
-/screenshots/dashboard.png
-```
-
-### Nested Discussion System
-
-```md
-/screenshots/discussions.png
-```
-
-### GitHub Portfolio Integration
-
-```md
-/screenshots/github-portfolio.png
-```

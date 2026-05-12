@@ -1179,3 +1179,4 @@ document.addEventListener('DOMContentLoaded', applyGlobalTheme);
   function showLogoutModal() {
     new bootstrap.Modal(document.getElementById("nexusLogoutModal")).show();
   }
+  }

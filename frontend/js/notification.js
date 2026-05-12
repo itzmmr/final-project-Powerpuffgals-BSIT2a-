@@ -19,7 +19,7 @@
     }
 
     try {
-        const response = await fetch('http://localhost:5000/api/notifications', {
+        const response = await fetch('https://final-project-powerpuffgals-bsit2a.onrender.com/api/notifications', {
             method: 'GET',
             headers: { 
                 'Authorization': `Bearer ${token}`, 
@@ -91,7 +91,7 @@ function renderSimpleNotificationItem(n) {
     if (!token) return;
 
     try {
-        const response = await fetch('http://localhost:5000/api/notifications', {
+        const response = await fetch('https://final-project-powerpuffgals-bsit2a.onrender.com/api/notifications', {
             method: 'GET',
             headers: { 'Authorization': `Bearer ${token}` }
         });
@@ -142,7 +142,7 @@ function renderSimpleNotificationItem(n) {
     if (!token) return;
 
     try {
-        const response = await fetch('http://localhost:5000/api/notifications/read', {
+        const response = await fetch('https://final-project-powerpuffgals-bsit2a.onrender.com/api/notifications/read', {
             method: 'PUT',
             headers: { 
                 'Authorization': `Bearer ${token}`,

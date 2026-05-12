@@ -20,7 +20,7 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
 
     try {
         // 3. HIT THE REAL BACKEND
-        const response = await fetch('http://localhost:5000/api/users/login', {
+        const response = await fetch('https://final-project-powerpuffgals-bsit2a.onrender.com/api/users/login', {
             method: 'POST',
             headers: { 
                 'Content-Type': 'application/json' 
