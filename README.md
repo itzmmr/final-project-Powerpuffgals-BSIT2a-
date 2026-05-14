@@ -1,6 +1,6 @@
 # Powerpuffgals – FullStack Web Application
 
-<img width="1275" height="1650" alt="NEXUSWrites_Logo" src="https://github.com/user-attachments/assets/942a9b75-b748-470d-88dc-c44d67311c9a" />
+<img width="350" height="400" alt="NEXUSWrites_Logo" src="https://github.com/user-attachments/assets/942a9b75-b748-470d-88dc-c44d67311c9a" />
 
 ---
 Project Description
