@@ -1,6 +1,6 @@
 # Powerpuffgals – FullStack Web Application
 
-<img width="350" height="400" alt="NEXUSWrites_Logo" src="https://github.com/user-attachments/assets/942a9b75-b748-470d-88dc-c44d67311c9a" />
+<img width="450" height="550" alt="NEXUSWrites_Logo" src="https://github.com/user-attachments/assets/942a9b75-b748-470d-88dc-c44d67311c9a" />
 
 ---
 Project Description
@@ -204,11 +204,11 @@ Milan A. Rellora — GitHub Manager
 
 # Screenshots
 
-<img width="1351" height="629" alt="Screenshot 2026-05-14 085823" src="https://github.com/user-attachments/assets/5d85ae1c-ea3a-4cd4-a9c0-c0918e3352c3" />
+<img width="1350" height="630" alt="Screenshot 2026-05-14 085823" src="https://github.com/user-attachments/assets/5d85ae1c-ea3a-4cd4-a9c0-c0918e3352c3" />
 
-<img width="1350" height="631" alt="Screenshot 2026-05-14 090802" src="https://github.com/user-attachments/assets/313c924e-759e-4272-a79b-51ff5a40f48e" />
+<img width="1350" height="630" alt="Screenshot 2026-05-14 090802" src="https://github.com/user-attachments/assets/313c924e-759e-4272-a79b-51ff5a40f48e" />
 
-<img width="1349" height="630" alt="Screenshot 2026-05-14 085803" src="https://github.com/user-attachments/assets/8faad941-1b91-456f-a3e8-bd0e928c6853" />
+<img width="1350" height="630" alt="Screenshot 2026-05-14 085803" src="https://github.com/user-attachments/assets/8faad941-1b91-456f-a3e8-bd0e928c6853" />
 
 
 
