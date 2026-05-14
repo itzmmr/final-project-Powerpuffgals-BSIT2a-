@@ -1,6 +1,5 @@
 # Powerpuffgals – FullStack Web Application
 
-![NEXUSWrites](ttps:/http:/github.com/user-attachments/assets/64bd8b5a-5e71-4890-b7e7-3eb0a42a19a0)
 ---
 Project Description
 ---
@@ -12,6 +11,7 @@ This project was developed as the Final Laboratory Requirement for IT 112: Web S
 
 Live Demo Link
 ---
+        https://final-project-powerpuffgals-bsit2a.onrender.com/
 
 
 # Key Features
@@ -163,48 +163,26 @@ Development & Deployment Tools
 1. Clone the Repository
 ---
 
-        git clone https://github.com/your-username/nexuswrites.git
+        git clone https://github.com/itzmmr/final-project-Powerpuffgals-BSIT2a-.git
 
 2. Navigate to the Backend Directory
 ---
-
         cd backend
 
 3. Install Required Dependencies
 ---
-
         npm install
 
 4. Configure Environment Variables
 ---
-
-Create a .env file inside the backend directory and add the following configuration:
-
-        PORT=5000
-
-        MONGO_URI=your_mongodb_atlas_uri
-
-        JWT_SECRET=your_secret_key
-
-
-        CLOUDINARY_CLOUD_NAME=your_cloud_name
-
-        CLOUDINARY_API_KEY=your_api_key
-
-        CLOUDINARY_API_SECRET=your_api_secret
-
+        cd backend
+        cp .env.example .env
+        # Edit .env with own configuration
 
 5. Start the Development Server
 ---
-
-        npm start
-
-6. Access the Application
----
-
-Open the application in your browser:
-
-    http://localhost:5000
+        cd backend
+        node server.js
 
 
 # Contributors
