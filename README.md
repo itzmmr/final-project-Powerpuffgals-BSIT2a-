@@ -13,7 +13,7 @@ This project was developed as the Final Laboratory Requirement for IT 112: Web S
 
 Live Demo Link
 ---
-        https://final-project-powerpuffgals-bsit2a.onrender.com/
+       https://final-project-powerpuffgals-bsit2a.onrender.com/
 
 
 # Key Features
