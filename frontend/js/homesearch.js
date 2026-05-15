@@ -362,3 +362,4 @@ document.getElementById('YOUR_INPUT_ID').addEventListener('keyup', function() {
     const modalInstance = bootstrap.Modal.getOrCreateInstance(modalEl);
     modalInstance.show();
 });
+

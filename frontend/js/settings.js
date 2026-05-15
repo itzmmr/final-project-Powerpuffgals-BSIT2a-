@@ -177,7 +177,7 @@ async function saveProfile() {
     }
 
     try {
-        const response = await fetch('http://localhost:5000/api/users/update', {
+        const response = await fetch('https://final-project-powerpuffgals-bsit2a.onrender.com/api/users/update', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -262,7 +262,7 @@ async function handlePasswordChange() {
     }
 
     try {
-        const response = await fetch('http://localhost:5000/api/users/update-password', {
+        const response = await fetch('https://final-project-powerpuffgals-bsit2a.onrender.com/api/users/update-password', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',

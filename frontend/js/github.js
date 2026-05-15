@@ -81,7 +81,7 @@ async function fetchGitHubRepos() {
         </div>`;
 
     try {
-        const response = await fetch(`http://localhost:5000/api/github/${username}`);
+        const response = await fetch(`https://final-project-powerpuffgals-bsit2a.onrender.com/api/github/${username}`);
         if (!response.ok) throw new Error('User not found');
 
         const repos = await response.json();
@@ -156,7 +156,7 @@ async function syncThisAccount(username) {
     }
 
     try {
-        const response = await fetch('http://localhost:5000/api/users/update', {
+        const response = await fetch('https://final-project-powerpuffgals-bsit2a.onrender.com/api/users/update', {
             method:  'PUT',
             headers: {
                 'Content-Type':  'application/json',
@@ -186,3 +186,4 @@ async function syncThisAccount(username) {
         nexusAlert('Connection error. Is your backend running on port 5000?', 'Connection Error', 'fa-plug');
     }
 }
+
