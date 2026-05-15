@@ -1,116 +1,215 @@
-Powerpuffgals – FullStack Web Application
----
-Group Information
----
-Project Name: NEXUSWrites          
-Course & Section: BSIT – 2A         
-Semester: 2nd Semester, SY 2025-2026         
-Project Type: Full-Stack Web Application         
+# Powerpuffgals – FullStack Web Application
+
+<img width="450" height="550" alt="NEXUSWrites_Logo" src="https://github.com/user-attachments/assets/942a9b75-b748-470d-88dc-c44d67311c9a" />
 
 ---
 Project Description
 ---
-NEXUSWrites is a tech platform that allows students, developers, and tech enthusiasts to share tutorials, showcase projects, and connect with others in a secure and organized environment. It combines technical blogging with interactive features, like threaded discussions and multimedia support, to make learning and collaboration easier. Users can also link their GitHub profiles to display their work, making NEXUSWrites a useful space for both learning and building a professional presence online.
+NEXUSWrites is a full-stack web application developed for students, developers, and technology enthusiasts to publish technical content, showcase projects, and engage in collaborative discussions within a secure and structured digital environment. The platform integrates technical blogging, portfolio presentation, and social interaction features into a centralized system tailored specifically for the IT community.
 
+Designed as more than a traditional blogging platform, NEXUSWrites emphasizes professional knowledge sharing through categorized technical posts, threaded discussions, GitHub portfolio integration, cloud-based media management, and personalized user interaction. The system provides an accessible and responsive experience across desktop and mobile devices while promoting collaborative learning and technical growth.
+
+This project was developed as the Final Laboratory Requirement for IT 112: Web Systems and Technologies at Bicol University Polangui Campus during the Academic Year 2025–2026 by Group Powerpuffgals.
+
+Live Demo Link
+---
+        https://final-project-powerpuffgals-bsit2a.onrender.com/
+
+
+# Key Features
+
+Secure Authentication & User Management 
+---
+● JWT-based authentication and authorization
+
+● Two-step user registration process
+
+● Server-side age validation (18+ requirement)
+
+● Secure password hashing using Bcrypt.js
+
+● Protected routes and session management
+
+Technical Content Management System
 ---
 
-This project demonstrates our understanding of:
----
-Full-Stack Architecture: Integrating a Bootstrap frontend with a Node.js/Express backend and MongoDB database.        
-RESTful API Design: Implementing CRUD operations for posts, users, and comments.          
-Database Modeling: Designing Mongoose schemas with proper relationships for technical posts, users, and discussions.      
-UI/UX Design: Applying an intuitive layout with a professional color scheme and typography.            
-Group Collaboration: Coordinating team roles and managing the GitHub repository efficiently.          
-System Documentation: Creating diagrams such as ERD, DFD, and UML Use Case diagrams.          
+● Create, edit, and delete technical tutorials and posts
 
----
+● Categorized content organization
 
-Project Identity & Theme
----
-Project Brand Name: NEXUSWrites
---
-Tagline: Your Tech, Your Story.                     
-Brand Logo:                                          
+● Tag-based filtering and discovery
 
-![NEXUSWrites](https://github.com/user-attachments/assets/64bd8b5a-5e71-4890-b7e7-3eb0a42a19a0)
+● Rich technical discussion environment
 
----
-Visual Theme:
----
-Aesthetic Goal: A professional, clean, and user-friendly environment that highlights technical content while encouraging collaboration. The design emphasizes readability, accessibility, and clarity for tutorials, code snippets, and discussions.                     
-Color Palette: Primary colors include a vibrant Electric Cobalt Blue (#2D5BFF) and a Deep Teal (#0E7490), which create a professional, tech-forward gradient for the "NW" emblem and primary branding elements. These are balanced by soft background accents of Pale Mint (#E1FFBB) and Periwinkle (#A5C9FF) to ensure the digital space feels accessible and inviting for writers.                                    
-Typography: This project utilizes the elegant, flowing script Symphony for "NEXUS" to give the brand a creative, artistic touch, paired with the bold and clean Stoic font for "Writes" to keep the platform looking modern and professional. The Old Standard font is used for the tagline to add a classic, academic vibe that grounds the design and highlights the focus on quality storytelling.       
+● Responsive dashboard interface
 
-
-Team Composition & Roles       
+Cloud-Based Media Integration
 ---
 
+● Image uploads powered by Cloudinary
 
-    |                                          | Assigned                           |                                                         |
-    |   Role                                   | Member                             |                   Responsibility                        |
-    | ---------------------------------------- | -----------------------------------|---------------------------------------------------------|
-    | Project Manager / Backend Developer      | Ivy Angel R. Hidalgo               | Overall team coordination and milestone tracking.       |
-    |                                          |                                    | Node.js server setup, express routes, and API logic to  | 
-    |                                          |                                    | handle data processing and business logic.              | 
-    |------------------------------------------|------------------------------------|---------------------------------------------------------|
-    | Frontend Developer                       | Kris Ann B. Apoon                  | UI/UX design using HTML, CSS, and Bootstrap, following  |
-    |                                          |                                    | the project's color scheme and typography for a         |
-    |                                          |                                    | professional and aesthetic interface.                   |
-    |------------------------------------------|------------------------------------|---------------------------------------------------------|
-    | Database Manager                         | Princes Mae Mateo                  | MongoDB/Mongoose schema design, data organization, and  |
-    |                                          |                                    | management of collections and relationships.            |
-    |------------------------------------------|------------------------------------|---------------------------------------------------------|
-    | GitHub Manager                           | Milan A. Rellora                   | Repository maintenance, version control handling, and   |
-    |                                          |                                    | review of documentation and project consistency.        |
-    |------------------------------------------|------------------------------------|---------------------------------------------------------|
-    | Documentation Officer                    | April Grace R. Dacanay             | Preparation of project documentation, including         |
-    |                                          |                                    | project proposal.                                       |
-    |__________________________________________|____________________________________|_________________________________________________________|
+● Optimized cloud media storage
 
+● Efficient file handling using Multer middleware
+
+Nested Discussion System
 ---
 
-Weekly Development Roadmap
+● Hierarchical threaded comments and replies
+
+● Structured technical discussions
+
+● Interactive user engagement system
+
+● Notification support for replies and interactions
+
+GitHub Portfolio Integration
 ---
 
-Phase 1 – Project Planning (Week 10)
----
-Defined the overall system architecture, identified key features, and drafted database schemas. Completed the NEXUSWrites proposal and set up the initial GitHub repository structure. Established the platform’s visual identity, including color palette and typography.                  
+● GitHub username synchronization
 
-Phase 2 – Backend Setup (Week 12)
----
-Initialized the server using Node.js and Express. Created API scaffolding and designed MongoDB/Mongoose schemas in alignment with the planning phase.                        
+● Live repository fetching through GitHub REST API
 
-Phase 3 – Frontend Design (Week 12)
----
-Developed interface layouts using HTML, CSS, and Bootstrap. Built homepage, tutorial pages, and navigation components while applying the platform’s color scheme and typography.          
+● Public technical portfolio display
 
-Phase 4 – Form Submission & Data Integration (Week 13)
----
-Implemented frontend forms for posting tutorials, projects, and discussions. Connected forms to backend APIs, validated inputs, and stored data in MongoDB.         
+● Repository details including language, stars, and descriptions
 
-Phase 5 – Data Retrieval & Display (Week 14)
----
-Fetched and displayed content dynamically using JavaScript and Bootstrap components. Created dashboards, live feeds, and structured project/tutorial listings for easy user navigation.          
-
-Phase 6 – Update & Delete Functionality (Week 15)
----
-Implemented full CRUD operations with PUT and DELETE methods. Added modals and interactive elements for editing or removing posts and content.
-
-Phase 7 – Project Finalization & Deployment (Week 16)
----
-Conducted testing and debugging, polished UI/UX elements, integrated GitHub API for live project portfolios, and deployed the platform. Prepared documentation and final submission materials..
-
----
-## Tools Used
----
-- HTML5 & CSS3: For structural and visual architecture.
-- JavaScript (ES6): For logic and asynchronous operations.
-- Node.js & Express: For server-side logic and API routing.
-- MongoDB & Mongoose: For NoSQL data storage and object modeling.
-- Bootstrap 5: For responsive UI components.
-- GitHub & Render: For version control and cloud deployment.
-
+Personalized Social Features
 ---
 
-## Notes
-This project is developed as part of the Final Laboratory Requirement to highlight the shift from generic blogging platforms to NexusWrites—a full-stack, API-driven hub for structured technical documentation, professional networking, and credible knowledge exchange.
+● Follow and unfollow functionality
+
+● Personalized content feed
+
+● Real-time notification system
+
+● User profile customization
+
+Search & Categorization
+---
+
+● Dynamic search functionality
+
+● Technical category filtering
+
+● Real-time search suggestions
+
+● Organized content navigation
+
+Progressive Web Application (PWA)
+---
+
+● Installable web application support
+
+● Offline asset caching using service workers
+
+● Responsive and mobile-friendly interface
+
+# Technologies Used
+
+Frontend Technologies
+---
+
+● HTML
+
+● CSS3
+
+● JavaScript
+
+● Bootstrap 5.3
+
+Backend Technologies
+---
+
+● Node.js
+
+● Express.js
+
+Database Technologies
+---
+
+● MongoDB
+
+● Mongoose 
+
+Authentication & Security
+--- 
+
+● JSON Web Token (JWT)
+
+● Bcrypt.js
+
+Cloud & Media Services
+---
+
+● Cloudinary
+
+● Multer
+
+● multer-storage-cloudinary
+
+Development & Deployment Tools
+---
+
+● Git & GitHub
+
+● Visual Studio Code
+
+● npm
+
+● Render.com
+
+
+# Installation Instructions
+
+1. Clone the Repository
+---
+
+        git clone https://github.com/itzmmr/final-project-Powerpuffgals-BSIT2a-.git
+
+2. Navigate to the Backend Directory
+---
+        cd backend
+
+3. Install Required Dependencies
+---
+        npm install
+
+4. Configure Environment Variables
+---
+        cd backend
+        cp .env.example .env
+        # Edit .env with own configuration
+
+5. Start the Development Server
+---
+        cd backend
+        node server.js
+
+
+# Contributors
+
+Group Powerpuffgals
+---
+
+Ivy Angel R. Hidalgo — Backend Developer & Project Manager
+
+Kris Ann B. Apoon — Frontend Developer
+
+April Grace R. Dacanay — Documentation & Testing
+
+Princes Mateo — Database Manager
+
+Milan A. Rellora — GitHub Manager
+
+# Screenshots
+
+<img width="1350" height="630" alt="Screenshot 2026-05-14 085823" src="https://github.com/user-attachments/assets/5d85ae1c-ea3a-4cd4-a9c0-c0918e3352c3" />
+
+<img width="1350" height="630" alt="Screenshot 2026-05-14 090802" src="https://github.com/user-attachments/assets/313c924e-759e-4272-a79b-51ff5a40f48e" />
+
+<img width="1350" height="630" alt="Screenshot 2026-05-14 085803" src="https://github.com/user-attachments/assets/8faad941-1b91-456f-a3e8-bd0e928c6853" />
+
+
+
+

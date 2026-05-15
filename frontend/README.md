@@ -90,4 +90,3 @@ Detailed Folder Structure
 Notes
 ---
 This project is developed as part of the Final Laboratory Requirement to highlight the shift from generic blogging platforms to NexusWrites—a full-stack, API-driven hub for structured technical documentation, professional networking, and credible knowledge exchange.
-
